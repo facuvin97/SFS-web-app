@@ -1,0 +1,36 @@
+/* Account.css */
+
+.account-container {
+  width: 100%;
+  max-width: 600px;
+  border: 1px solid #1976D2;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background: linear-gradient(to bottom, #1976D2, #2196F3);
+}
+
+.account-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.user-info p {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.user-info strong {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.edit-icon {
+  align-items: end;
+  padding-left: 10px;
+}
+
+.span {
+  display: flex;
+}
