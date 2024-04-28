@@ -48,7 +48,6 @@ function ResponsiveAppBar({ loggedInUser }) {
           <Typography
             variant="h6"
             noWrap
-            component="a"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -110,11 +109,18 @@ function ResponsiveAppBar({ loggedInUser }) {
               </Menu>
             </Box>
           ) : (
+            <>
             <MenuItem onClick={handleCloseNavMenu}>
             <Link to={'/register'} style={{ textDecoration: 'none', color: 'inherit' }}>
               <Typography textAlign="center">Registro</Typography>
             </Link>
             </MenuItem>
+            <MenuItem onClick={handleCloseNavMenu}>
+            <Link to={'/login'} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Typography textAlign="center">LogIn</Typography>
+            </Link>
+            </MenuItem>
+            </>
           )}
 
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

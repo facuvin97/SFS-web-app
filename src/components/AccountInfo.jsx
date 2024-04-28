@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/Account.css'; // Importamos el archivo CSS para los estilos
 import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
+import DeleteUser from '../pages/DeleteUser';
 
-const Account = ({ user }) => {
+const Account = ({ user, onLogin }) => {
+  const [showDeleteUser, setShowDeleteUser] = useState(false);
+
+  const handleDeleteUser = () => {
+    setShowDeleteUser(true);
+  };
+
   return (
     <div className="account-container">
       <span className='span'>
         <h2 className="account-title">Account Information</h2>
-        <Link to={`/modify/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={`/modify-client/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
           <EditIcon className='edit-icon'></EditIcon>
         </Link>
       </span>
@@ -21,7 +28,10 @@ const Account = ({ user }) => {
         <p><strong>Direccion:</strong> {user.direccion}</p>
         {/* Añade más campos de información del usuario según sea necesario */}
       </div>
-      {/* Añade más secciones para información adicional de la cuenta */}
+      
+      <button onClick={handleDeleteUser}>Eliminar usuario</button>
+
+      {showDeleteUser && <DeleteUser userLog={user} onLogin={onLogin} />}
     </div>
   );
 };
