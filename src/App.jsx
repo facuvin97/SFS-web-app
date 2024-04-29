@@ -3,7 +3,7 @@ import './App.css'
 import RegisterClient from './pages/clients/RegisterClient'
 import ModifyClient from './pages/clients/ModifyClient'
 import DeleteClient from './pages/clients/DeleteClient'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import RegisterWalker from './pages/walkers/RegisterWalker';
 import ModifyWalker from './pages/walkers/ModifyWalker';
 import DeleteWalker from './pages/walkers/DeleteWalker'
@@ -16,39 +16,50 @@ import LoginPage from './pages/LogIn';
 
 
 function App() {
-  
-  const [userLog, setUserLog] = useState(null)
+  const [userLog, setUserLog] = useState(null);
+
+  // Verificar si hay datos de inicio de sesión en localStorage al cargar la aplicación
+  useEffect(() => {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      setUserLog(JSON.parse(userData));
+    }
+  }, []);
 
   const handleLogin = async (user) => {
-    // Establece el usuario en el estado userLog
     setUserLog(user);
-    console.log(userLog)
+    localStorage.setItem('userData', JSON.stringify(user));
+  };
+  const handleLogout = () => {
+    // Limpiar el estado del usuario y los datos de sesión
+    setUserLog(null);
+    localStorage.removeItem('userData');
   };
 
   return (
     <>
-    <Container className='root-container'>
-      <div className='App'>
-        <header className='App-header'>
-          
-          <ResponsiveAppBar loggedInUser={userLog} />
-          <Routes>
-            <Route path='/' element={<Contact />}></Route>
-            <Route path='/login' element={<LoginPage onLogin={handleLogin} />}></Route>
-            <Route path="/register" element={<RegisterClient />} />
-            <Route path={`/client/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
-            <Route path={`/modify-client/${userLog?.id}`} element={<ModifyClient userLog={userLog} />} />
-            <Route path={`/delete-client/${userLog?.id}`} element={<DeleteClient userLog={userLog} />} />
-            <Route path="/walker-register" element={<RegisterWalker />} />
-            <Route path={`/modify-walker/${userLog?.id}`} element={<ModifyWalker userLog={userLog} />} />
-            <Route path={`/delete-walker/${userLog?.id}`} element={<DeleteWalker userLog={userLog} />} />
-            <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />
-          </Routes>
-        </header>
-      </div>
+      <Container className='root-container'>
+        <div className='App'>
+          <header className='App-header'>
+            <ResponsiveAppBar loggedInUser={userLog} onLogout={handleLogout} />
+            <Routes>
+              <Route path='/' element={<Contact />} />
+              <Route path='/login' element={<LoginPage onLogin={handleLogin} />} />
+              <Route path='/register' element={<RegisterClient />} />
+              <Route path={`/client/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
+              <Route path={`/modify-client/${userLog?.id}`} element={<ModifyClient userLog={userLog} />} />
+              <Route path={`/delete-client/${userLog?.id}`} element={<DeleteClient userLog={userLog} />} />
+              <Route path='/walker-register' element={<RegisterWalker />} />
+              <Route path={`/modify-walker/${userLog?.id}`} element={<ModifyWalker userLog={userLog} />} />
+              <Route path={`/delete-walker/${userLog?.id}`} element={<DeleteWalker userLog={userLog} />} />
+              <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />
+              <Route path="*" element={<div>404</div> } />
+            </Routes>
+          </header>
+        </div>
       </Container>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

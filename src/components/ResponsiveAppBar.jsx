@@ -20,9 +20,14 @@ import ModifyClient from '../pages/clients/ModifyClient';
 const pages = ['Products', 'Pricing', 'Blog'];
 
 
-function ResponsiveAppBar({ loggedInUser }) {
+function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  
+
+
+  
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -105,7 +110,12 @@ function ResponsiveAppBar({ loggedInUser }) {
                     <Link to={`/client/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                       <Typography textAlign="center">Account</Typography>
                     </Link>
-                  </MenuItem>                
+                  </MenuItem>
+                  <MenuItem onClick={onLogout}>
+                    <Link to={`/`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      <Typography textAlign="center">Deslogueo</Typography>
+                    </Link>
+                  </MenuItem>                 
               </Menu>
             </Box>
           ) : (
