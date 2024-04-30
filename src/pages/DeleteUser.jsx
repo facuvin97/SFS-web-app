@@ -10,10 +10,9 @@ function DeleteUser({ userLog, onLogin }) {
 
   // Función para manejar cambios en los inputs del formulario
   const onDelete = async () => {
-    console.log(userLog.tipo)
     try {
       var response;
-      if (userLog.tipo = 'client') {
+      if (userLog.tipo == 'client') {
         response = await fetch(`http://localhost:3001/api/v1/clients/${userLog.id}`, {
           method: 'DELETE',
           headers: {
@@ -37,6 +36,7 @@ function DeleteUser({ userLog, onLogin }) {
         //Seteo en null el usuario logeado
         onLogin(null);
         // Redirige al usuario a la página principal "/"
+        alert('Cuenta eliminada correctamente')
         navigate('/')
 
       } else {

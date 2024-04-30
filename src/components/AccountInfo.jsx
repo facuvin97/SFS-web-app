@@ -15,7 +15,7 @@ const Account = ({ user, onLogin }) => {
     <div className="account-container">
       <span className='span'>
         <h2 className="account-title">Account Information</h2>
-        <Link to={`/modify-client/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={`/modify-user/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
           <EditIcon className='edit-icon'></EditIcon>
         </Link>
       </span>

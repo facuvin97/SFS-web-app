@@ -23,6 +23,7 @@ const pages = ['Products', 'Pricing', 'Blog'];
 function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [typeUser, setTypeUser] = React.useState(null);
 
   
 
@@ -43,7 +44,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
+  
   return (
     <AppBar position="fixed">
       <Container maxWidth="xl">
@@ -120,11 +121,40 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
             </Box>
           ) : (
             <>
-            <MenuItem onClick={handleCloseNavMenu}>
-            <Link to={'/register'} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Typography textAlign="center">Registro</Typography>
-            </Link>
-            </MenuItem>
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <MenuItem onClick={handleOpenUserMenu}>
+                    <Typography textAlign="center">Registrarse</Typography>
+                  </MenuItem>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link to={`/register/walker`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      <Typography textAlign="center">Como Paseador</Typography>
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link to={`/register/client`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      <Typography textAlign="center">Como Cliente</Typography>
+                    </Link>
+                  </MenuItem>                 
+              </Menu>
+            </Box>
             <MenuItem onClick={handleCloseNavMenu}>
             <Link to={'/login'} style={{ textDecoration: 'none', color: 'inherit' }}>
               <Typography textAlign="center">LogIn</Typography>
