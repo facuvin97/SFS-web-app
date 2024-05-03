@@ -34,3 +34,15 @@
 .span {
   display: flex;
 }
+.profile-image-container {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%; /* Esto redondeará el contenedor */
+  overflow: hidden; /* Esto ocultará cualquier parte de la imagen que se salga del contenedor */
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Esto asegurará que la imagen se ajuste al contenedor redondeado */
+}
