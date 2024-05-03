@@ -27,9 +27,6 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
 
   
 
-
-  
-
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -64,7 +61,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            SFS
           </Typography>
           </Link>
 
@@ -107,9 +104,10 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                <Link to={`/client/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <MenuItem onClick={handleCloseNavMenu}>
                     <Link to={`/client/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <Typography textAlign="center">Cuenta</Typography>
+                      <Typography textAlign="center">Account</Typography>
                     </Link>
                   </MenuItem>
                   <MenuItem onClick={onLogout}>
@@ -117,20 +115,15 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
                       <Typography textAlign="center">Deslogueo</Typography>
                     </Link>
                   </MenuItem>                 
-                  <MenuItem onClick={handleCloseNavMenu}>
-                    <Link to={`/image/single/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <Typography textAlign="center">Imagen de Perfil</Typography>
-                    </Link>
-                  </MenuItem>                
               </Menu>
             </Box>
           ) : (
             <>
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
+              <Tooltip title="Registrarse">
                 <MenuItem onClick={handleOpenUserMenu}>
                     <Typography textAlign="center">Registrarse</Typography>
-                  </MenuItem>
+                </MenuItem>
               </Tooltip>
               <Menu
                 sx={{ mt: '45px' }}
@@ -148,23 +141,23 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                <Link to={`/register/walker`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <MenuItem onClick={handleCloseUserMenu}>
-                    <Link to={`/register/walker`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <Typography textAlign="center">Como Paseador</Typography>
-                    </Link>
+                    <Typography textAlign="center">Como Paseador</Typography>
                   </MenuItem>
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Link to={`/register/client`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <Typography textAlign="center">Como Cliente</Typography>
-                    </Link>
-                  </MenuItem>                 
+                </Link>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Link to={`/register/client`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Typography textAlign="center">Como Cliente</Typography>
+                  </Link>
+                </MenuItem>                 
               </Menu>
             </Box>
-            <MenuItem onClick={handleCloseNavMenu}>
             <Link to={'/login'} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <MenuItem onClick={handleCloseNavMenu}>
               <Typography textAlign="center">LogIn</Typography>
-            </Link>
             </MenuItem>
+            </Link>
             </>
           )}
 

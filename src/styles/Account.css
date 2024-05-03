@@ -33,6 +33,7 @@
 
 .span {
   display: flex;
+  justify-content: space-evenly;
 }
 .profile-image-container {
   width: 150px;
