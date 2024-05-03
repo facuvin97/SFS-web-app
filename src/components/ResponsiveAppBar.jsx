@@ -107,14 +107,21 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
                 <Link to={`/client/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <MenuItem onClick={handleCloseNavMenu}>
                     <Link to={`/client/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <Typography textAlign="center">Account</Typography>
+                      <Typography textAlign="center">Cuenta</Typography>
                     </Link>
+                    <Typography textAlign="center">Account</Typography>
                   </MenuItem>
-                  <MenuItem onClick={onLogout}>
-                    <Link to={`/`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <Typography textAlign="center">Deslogueo</Typography>
-                    </Link>
+                </Link>
+                <Link to={`/`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <MenuItem onClick={() => { onLogout(); handleCloseUserMenu(); }}>
+                    <Typography textAlign="center">Deslogueo</Typography>
                   </MenuItem>                 
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Link to={`/image/single/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      <Typography textAlign="center">Imagen de Perfil</Typography>
+                    </Link>
+                  </MenuItem>                
+                </Link>
               </Menu>
             </Box>
           ) : (
