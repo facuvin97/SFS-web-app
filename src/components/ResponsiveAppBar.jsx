@@ -1,47 +1,50 @@
 /* eslint-disable react/prop-types */
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import ImageProfile from './ImageProfile';
+import * as React from 'react'
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import Menu from '@mui/material/Menu'
+import MenuIcon from '@mui/icons-material/Menu'
+import Container from '@mui/material/Container'
+import Avatar from '@mui/material/Avatar'
+import Button from '@mui/material/Button'
+import Tooltip from '@mui/material/Tooltip'
+import MenuItem from '@mui/material/MenuItem'
+import AdbIcon from '@mui/icons-material/Adb'
+import ImageProfile from './ImageProfile'
 
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import ModifyClient from '../pages/clients/ModifyClient';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import ModifyClient from '../pages/clients/ModifyClient'
+
+const pages = ['Products', 'Pricing', 'Blog']
 
 
 function ResponsiveAppBar({ loggedInUser, onLogout }) {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [typeUser, setTypeUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = React.useState(null)
+  const [anchorElUser, setAnchorElUser] = React.useState(null)
+  const [typeUser, setTypeUser] = React.useState(null)
  
   
 
   const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
+    setAnchorElNav(event.currentTarget)
+  }
   const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
+    setAnchorElUser(event.currentTarget)
+  }
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+    setAnchorElNav(null)
+  }
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+    setAnchorElUser(null)
+  }
+  
+
   
   return (
     <AppBar position="fixed">
@@ -86,9 +89,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
             <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Link to="/settings">
-                  <ImageProfile username={loggedInUser.nombre_usuario} />
-                </Link>
+                <ImageProfile username={loggedInUser.nombre_usuario} />
               </IconButton>
             </Tooltip>
               <Menu
@@ -108,11 +109,8 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
                 onClose={handleCloseUserMenu}
                 
               >
-                <Link to={`/client/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <MenuItem onClick={handleCloseNavMenu}>
-                    <Link to={`/client/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <Typography textAlign="center">Cuenta</Typography>
-                    </Link>
+                <Link to={`/user/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <MenuItem onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">Account</Typography>
                   </MenuItem>
                 </Link>
@@ -120,10 +118,10 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
                   <MenuItem onClick={() => { onLogout(); handleCloseUserMenu(); }}>
                     <Typography textAlign="center">Deslogueo</Typography>
                   </MenuItem>                 
-                  <MenuItem onClick={handleCloseNavMenu}>
-                    <Link to={`/image/single/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <Typography textAlign="center">Imagen de Perfil</Typography>
-                    </Link>
+                </Link>
+                <Link to={`/image/single/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">Imagen de Perfil</Typography>
                   </MenuItem>                
                 </Link>
               </Menu>

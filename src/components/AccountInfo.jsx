@@ -6,6 +6,9 @@ import DeleteUser from '../pages/DeleteUser';
 import useUserImage from '../hook/UseUserImage';
 
 
+// Método que fuerza la actualización del componente  
+
+
 const Account = ({ user, onLogin }) => {
   const [showDeleteUser, setShowDeleteUser] = useState(false);
   const imageSrc = useUserImage(user.nombre_usuario)
@@ -24,7 +27,7 @@ const Account = ({ user, onLogin }) => {
       </span>
       <div className="profile-image-container">
         <Link to={`/image/single/${user.id}`}>
-        <img src={imageSrc || '/public/no_image.png'} alt="User Avatar" className='profile-image' />
+          <img src={imageSrc || '/no_image.png'} alt="User Avatar" className='profile-image' />
         </Link>
       </div>
       

@@ -9,11 +9,7 @@ const ImageProfile = ({ username }) => {
   
 
   return (
-    <Tooltip title="Perfil de usuario">
-      <IconButton sx={{ p: 0 }}>
-        <Avatar alt="avatar" src={imageSrc || '/public/no_image.png'} />
-      </IconButton>
-    </Tooltip>
+        <Avatar alt="avatar" src={imageSrc || '/no_image.png'} />    
   )
 }
 

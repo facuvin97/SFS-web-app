@@ -49,7 +49,7 @@ function App() {
               <Route path='/' element={<Contact />} />
               <Route path='/login' element={<LoginPage onLogin={handleLogin} />} />
               <Route path='/register/:typeUser' element={<Register />} />
-              <Route path={`/client/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
+              <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
               <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
               <Route path={`/delete-client/${userLog?.id}`} element={<DeleteClient userLog={userLog} />} />
               <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog}/>}/>
