@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import ImageProfile from './ImageProfile';
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import ModifyClient from '../pages/clients/ModifyClient';
@@ -24,7 +25,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [typeUser, setTypeUser] = React.useState(null);
-
+ 
   
 
   const handleOpenNavMenu = (event) => {
@@ -83,11 +84,13 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
 
           {loggedInUser ? (
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={'avatar'} src={'../assets/no_image.png'} />
-                </IconButton>
-              </Tooltip>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Link to="/settings">
+                  <ImageProfile username={loggedInUser.nombre_usuario} />
+                </Link>
+              </IconButton>
+            </Tooltip>
               <Menu
                 sx={{ mt: '45px' }}
                 id="menu-appbar"
@@ -103,6 +106,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
+                
               >
                 <Link to={`/client/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <MenuItem onClick={handleCloseNavMenu}>

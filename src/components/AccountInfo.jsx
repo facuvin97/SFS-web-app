@@ -3,9 +3,12 @@ import '../styles/Account.css'; // Importamos el archivo CSS para los estilos
 import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 import DeleteUser from '../pages/DeleteUser';
+import useUserImage from '../hook/UseUserImage';
+
 
 const Account = ({ user, onLogin }) => {
   const [showDeleteUser, setShowDeleteUser] = useState(false);
+  const imageSrc = useUserImage(user.nombre_usuario)
 
   const handleDeleteUser = () => {
     setShowDeleteUser(true);
@@ -19,6 +22,11 @@ const Account = ({ user, onLogin }) => {
           <EditIcon className='edit-icon'></EditIcon>
         </Link>
       </span>
+      <div className="profile-image-container">
+        <Link to={`/image/single/${user.id}`}>
+        <img src={imageSrc || '/public/no_image.png'} alt="User Avatar" className='profile-image' />
+        </Link>
+      </div>
       
       <div className="user-info">
         <p><strong>UserName:</strong> {user.nombre_usuario}</p>
