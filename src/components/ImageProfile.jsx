@@ -4,12 +4,11 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import useUserImage from '../hook/UseUserImage'
 
-const ImageProfile = ({ username }) => {
+function ImageProfile ({ username }){
   const imageSrc = useUserImage(username)
   
-
   return (
-        <Avatar alt="avatar" src={imageSrc || '/no_image.png'} />    
+    <Avatar alt="avatar" src={imageSrc || '/no_image.png'} />    
   )
 }
 

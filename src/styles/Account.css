@@ -47,3 +47,23 @@
   height: 100%;
   object-fit: cover; /* Esto asegurará que la imagen se ajuste al contenedor redondeado */
 }
+
+.button-base-custom {
+  background-color: #757575; /* Gris */
+  border: none;
+  color: #fff; /* Letra blanca para contraste */
+  padding: 10px 20px;
+  margin: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Efecto de transición al pasar el cursor */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.button-base-custom:hover {
+  background-color: #616161; /* Cambio de color al pasar el cursor */
+}

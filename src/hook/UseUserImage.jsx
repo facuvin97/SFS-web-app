@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-const useUserImage = (username) => {
+function useUserImage(username) {
   const [imageSrc, setImageSrc] = useState(null);
   const [usernameToUpdate, setUsernameToUpdate] = useState(username);
 

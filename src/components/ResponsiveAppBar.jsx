@@ -18,6 +18,7 @@ import ImageProfile from './ImageProfile'
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import ModifyClient from '../pages/clients/ModifyClient'
+import { useEffect } from 'react'
 
 const pages = ['Products', 'Pricing', 'Blog']
 
@@ -26,7 +27,8 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [anchorElUser, setAnchorElUser] = React.useState(null)
   const [typeUser, setTypeUser] = React.useState(null)
- 
+  const [refresh, setRefresh] = React.useState(null)
+
   
 
   const handleOpenNavMenu = (event) => {

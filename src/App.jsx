@@ -16,6 +16,7 @@ import LoginPage from './pages/LogIn';
 import Register from './pages/Register';
 import ModifyUser from './pages/ModifyUser';
 import ProfileImageUploader from './pages/ProfileImageUploader';
+import useUserImage from './hook/UseUserImage';
 
 
 function App() {
@@ -52,7 +53,7 @@ function App() {
               <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
               <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
               <Route path={`/delete-client/${userLog?.id}`} element={<DeleteClient userLog={userLog} />} />
-              <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog}/>}/>
+              <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} onImageUpload={() => useUserImage(userLog.nombre_usuario)}/>}/>
               <Route path='/walker-register' element={<RegisterWalker />} />
               <Route path={`/delete-walker/${userLog?.id}`} element={<DeleteWalker userLog={userLog} />} />
               <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />

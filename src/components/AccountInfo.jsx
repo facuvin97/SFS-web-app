@@ -4,18 +4,20 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 import DeleteUser from '../pages/DeleteUser';
 import useUserImage from '../hook/UseUserImage';
+import { Button, ButtonBase } from '@mui/material';
 
 
 // Método que fuerza la actualización del componente  
 
 
-const Account = ({ user, onLogin }) => {
+function Account ({ user, onLogin }) {
   const [showDeleteUser, setShowDeleteUser] = useState(false);
   const imageSrc = useUserImage(user.nombre_usuario)
 
   const handleDeleteUser = () => {
     setShowDeleteUser(true);
   };
+
 
   return (
     <div className="account-container">
@@ -26,15 +28,18 @@ const Account = ({ user, onLogin }) => {
         </Link>
       </span>
       <div className="profile-image-container">
+        <img src={imageSrc || '/no_image.png'} alt="User Avatar" className='profile-image' />
+      </div>
+      <div>
         <Link to={`/image/single/${user.id}`}>
-          <img src={imageSrc || '/no_image.png'} alt="User Avatar" className='profile-image' />
+          <button className='button-base-custom'>Modificar Imagen</button>
         </Link>
       </div>
       
       <div className="user-info">
-        <p><strong>UserName:</strong> {user.nombre_usuario}</p>
+        <p><strong>Nombre de Usuario:</strong> {user.nombre_usuario}</p>
         <p><strong>Telefono:</strong> {user.telefono}</p>
-        <p><strong>Fecha de Nacimiento:</strong> {user.fecha_nacimiento}</p>
+        <p><strong>Fecha de Nacimiento:</strong>{new Date(user.fecha_nacimiento).toLocaleDateString()}</p>
         <p><strong>Email:</strong> {user.email}</p>
         <p><strong>Direccion:</strong> {user.direccion}</p>
         {/* Añade más campos de información del usuario según sea necesario */}
