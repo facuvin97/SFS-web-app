@@ -1,10 +1,11 @@
 // UseUserImage.jsx
 
 import React, { useState, useEffect } from 'react';
+import { useUserImageContext } from '../contexts/UserImageContext';
+
 
 function useUserImage(username) {
-  const [imageSrc, setImageSrc] = useState(null);
-  const [usernameToUpdate, setUsernameToUpdate] = useState(username);
+  const { setImageSrc } = useUserImageContext();
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -30,9 +31,8 @@ function useUserImage(username) {
         URL.revokeObjectURL(imageSrc);
       }
     };
-  }, [username]);
+  }, [username, setImageSrc]);
 
-  return imageSrc;
 };
 
 export default useUserImage;

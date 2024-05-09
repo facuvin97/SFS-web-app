@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import DeleteUser from '../pages/DeleteUser';
 import useUserImage from '../hook/UseUserImage';
 import { Button, ButtonBase } from '@mui/material';
+import { useUserImageContext } from '../contexts/UserImageContext';
 
 
 // Método que fuerza la actualización del componente  
@@ -12,7 +13,7 @@ import { Button, ButtonBase } from '@mui/material';
 
 function Account ({ user, onLogin }) {
   const [showDeleteUser, setShowDeleteUser] = useState(false);
-  const imageSrc = useUserImage(user.nombre_usuario)
+  const { imageSrc} = useUserImageContext();
 
   const handleDeleteUser = () => {
     setShowDeleteUser(true);

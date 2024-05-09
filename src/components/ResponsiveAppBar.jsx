@@ -19,6 +19,7 @@ import ImageProfile from './ImageProfile'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import ModifyClient from '../pages/clients/ModifyClient'
 import { useEffect } from 'react'
+import { UserImageContextProvider, useUserImageContext } from '../contexts/UserImageContext'
 
 const pages = ['Products', 'Pricing', 'Blog']
 
@@ -46,6 +47,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
     setAnchorElUser(null)
   }
   
+  const { imageSrc} = useUserImageContext();
 
   
   return (

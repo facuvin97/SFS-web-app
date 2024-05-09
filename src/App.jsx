@@ -17,6 +17,7 @@ import Register from './pages/Register';
 import ModifyUser from './pages/ModifyUser';
 import ProfileImageUploader from './pages/ProfileImageUploader';
 import useUserImage from './hook/UseUserImage';
+import { UserImageContextProvider } from './contexts/UserImageContext';
 
 
 function App() {
@@ -44,22 +45,24 @@ function App() {
     <>
       <Container className='root-container'>
         <div className='App'>
-          <header className='App-header'>
-            <ResponsiveAppBar loggedInUser={userLog} onLogout={handleLogout} />
-            <Routes>
-              <Route path='/' element={<Contact />} />
-              <Route path='/login' element={<LoginPage onLogin={handleLogin} />} />
-              <Route path='/register/:typeUser' element={<Register />} />
-              <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
-              <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
-              <Route path={`/delete-client/${userLog?.id}`} element={<DeleteClient userLog={userLog} />} />
-              <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} onImageUpload={() => useUserImage(userLog.nombre_usuario)}/>}/>
-              <Route path='/walker-register' element={<RegisterWalker />} />
-              <Route path={`/delete-walker/${userLog?.id}`} element={<DeleteWalker userLog={userLog} />} />
-              <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />
-              <Route path="*" element={<div>404</div> } />
-            </Routes>
-          </header>
+          <UserImageContextProvider>
+            <header className='App-header'>
+              <ResponsiveAppBar loggedInUser={userLog} onLogout={handleLogout} />
+              <Routes>
+                <Route path='/' element={<Contact />} />
+                <Route path='/login' element={<LoginPage onLogin={handleLogin} />} />
+                <Route path='/register/:typeUser' element={<Register />} />
+                <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
+                <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
+                <Route path={`/delete-client/${userLog?.id}`} element={<DeleteClient userLog={userLog} />} />
+                <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} onImageUpload={() => useUserImage(userLog.nombre_usuario)}/>}/>
+                <Route path='/walker-register' element={<RegisterWalker />} />
+                <Route path={`/delete-walker/${userLog?.id}`} element={<DeleteWalker userLog={userLog} />} />
+                <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />
+                <Route path="*" element={<div>404</div> } />
+              </Routes>
+            </header>
+          </UserImageContextProvider>
         </div>
       </Container>
     </>
