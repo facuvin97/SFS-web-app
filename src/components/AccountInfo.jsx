@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import '../styles/Account.css'; // Importamos el archivo CSS para los estilos
 import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
-import DeleteUser from '../pages/DeleteUser';
-import useUserImage from '../hook/UseUserImage';
+import DeleteUser from '../pages/users/DeleteUser';
 import { Button, ButtonBase } from '@mui/material';
 import { useUserImageContext } from '../contexts/UserImageContext';
 

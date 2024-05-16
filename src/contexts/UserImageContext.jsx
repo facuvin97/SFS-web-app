@@ -1,7 +1,6 @@
 // UserImageContext.js
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import useUserImage from '../hook/UseUserImage';
 
 const UserImageContext = createContext();
 

@@ -1,27 +1,35 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css'
-import RegisterClient from './pages/clients/RegisterClient'
-import ModifyClient from './pages/clients/ModifyClient'
-import DeleteClient from './pages/clients/DeleteClient'
 import { useState, useEffect } from 'react';
-import RegisterWalker from './pages/walkers/RegisterWalker';
-import ModifyWalker from './pages/walkers/ModifyWalker';
-import DeleteWalker from './pages/walkers/DeleteWalker'
-import UserDetails from './pages/clients/FindUser';
+import UserDetails from './pages/users/FindUser';
 import ResponsiveAppBar from './components/ResponsiveAppBar';
 import Container from  '@mui/material/Container';
 import Contact from './pages/Contact'
 import AccountInfo from './components/AccountInfo'
 import LoginPage from './pages/LogIn';
-import Register from './pages/Register';
-import ModifyUser from './pages/ModifyUser';
+import Register from './pages/users/Register';
+import ModifyUser from './pages/users/ModifyUser';
 import ProfileImageUploader from './pages/ProfileImageUploader';
 import useUserImage from './hook/UseUserImage';
 import { UserImageContextProvider } from './contexts/UserImageContext';
+import TurnCard from './components/TurnCard';
+import AddTurnForm from './pages/turns/AddTurn';
 
 
 function App() {
   const [userLog, setUserLog] = useState(null);
+
+  const turno = {
+    "id": 1,
+    "dias": ["lunes", "miércoles", "viernes"],
+    "hora_inicio": "09:00:00",
+    "hora_fin": "13:00:00",
+    "tarifa": 250,
+    "zona": "Pocitos",
+    "createdAt": "2024-05-15T10:15:00",
+    "updatedAt": "2024-05-15T10:15:00",
+    "WalkerId": 1
+  }
 
   // Verificar si hay datos de inicio de sesión en localStorage al cargar la aplicación
   useEffect(() => {
@@ -54,11 +62,10 @@ function App() {
                 <Route path='/register/:typeUser' element={<Register />} />
                 <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
                 <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
-                <Route path={`/delete-client/${userLog?.id}`} element={<DeleteClient userLog={userLog} />} />
                 <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} onImageUpload={() => useUserImage(userLog.nombre_usuario)}/>}/>
-                <Route path='/walker-register' element={<RegisterWalker />} />
-                <Route path={`/delete-walker/${userLog?.id}`} element={<DeleteWalker userLog={userLog} />} />
                 <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />
+                <Route path={`/card`} element={<TurnCard turn={turno} />} />
+                <Route path={`/agregar-turno`} element={<AddTurnForm userLog={userLog} />} />
                 <Route path="*" element={<div>404</div> } />
               </Routes>
             </header>
