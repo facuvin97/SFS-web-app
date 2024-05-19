@@ -1,0 +1,37 @@
+.account-container {
+    margin-top: 80px;
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid #096d8c89;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: linear-gradient(to bottom, #95cbf8, #03626c);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .account-container h2 {
+    margin-top: 0;
+    margin-bottom: 20px; /* Ajusta el margen inferior según tus necesidades */
+    color: #040618a0;
+  }
+  
+  .account-container div {
+    margin-bottom: 10px; /* Ajusta el margen inferior según tus necesidades */
+  }
+  
+  .login-button {
+    display: block;
+    margin: 20px 0 0; /* Ajusta el margen superior según tus necesidades */
+    padding: 10px 20px;
+    background-color: #03626c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .login-button:hover {
+    background-color: #024a52;
+  }
+  

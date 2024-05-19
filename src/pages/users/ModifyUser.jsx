@@ -59,7 +59,7 @@ function ModifyUser({ userLog }) {
   };
 
   return (
-    <div>
+    <div className="account-container">
       { userLog.tipo == 'client' ? (<h2>Modificar Cliente</h2>) : (<h2>Modificar Paseador</h2>) }
       <form onSubmit={handleSubmit}>
         <label>

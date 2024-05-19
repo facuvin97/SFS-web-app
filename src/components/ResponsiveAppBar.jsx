@@ -50,7 +50,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
 
   
   return (
-    <AppBar position="fixed">
+    <AppBar position="fixed" className='AppBar'>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
         <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -113,7 +113,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
                 
               >
                 <Link to={`/user/${loggedInUser.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <MenuItem onClick={handleCloseUserMenu}>
+                  <MenuItem onClick={handleCloseUserMenu} >
                     <Typography textAlign="center">Account</Typography>
                   </MenuItem>
                 </Link>

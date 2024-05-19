@@ -15,6 +15,8 @@ import { UserImageContextProvider } from './contexts/UserImageContext';
 import TurnCard from './components/TurnCard';
 import AddTurnForm from './pages/turns/AddTurn';
 
+import { ThemeProvider } from '@mui/material/styles';
+import { theme, globalStyles } from './theme';
 
 function App() {
   const [userLog, setUserLog] = useState(null);
@@ -50,7 +52,8 @@ function App() {
   };
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
+    {globalStyles}
       <Container className='root-container'>
         <div className='App'>
           <UserImageContextProvider>
@@ -72,7 +75,7 @@ function App() {
           </UserImageContextProvider>
         </div>
       </Container>
-    </>
+      </ThemeProvider>
   );
 }
 

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/LoginPage.css';
+
 
 function LoginPage(props) {
   const [username, setUsername] = useState('');
@@ -40,7 +42,7 @@ function LoginPage(props) {
   };
 
   return (
-    <div>
+    <div className="account-container">
       <h2>Iniciar Sesión</h2>
       {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
       <div>
@@ -51,7 +53,7 @@ function LoginPage(props) {
         <label>Contraseña:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
-      <button onClick={handleLogin}>Iniciar Sesión</button>
+      <button className="login-button" onClick={handleLogin}>Iniciar Sesión</button>
     </div>
   );
 }

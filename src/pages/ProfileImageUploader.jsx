@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../styles/Account.css';
 import { useNavigate } from 'react-router-dom';
 import useUserImage from '../hook/UseUserImage';
 import { useUserImageContext } from '../contexts/UserImageContext'; // Importa el contexto
+import { Save } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 
 function ProfileImageUploader(props) { // Asegúrate de recibir props como parámetro
   const [image, setImage] = useState(null);
   const { setImageSrc } = useUserImageContext(); // Obtiene setImageSrc del contexto
   const navigate = useNavigate()
+  const fileInputRef = useRef(null)
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
     setImage(selectedImage);
   };
 
-
+  const handleUploadButtonClick = () => {
+    fileInputRef.current.click(); // Simula un clic en el input de tipo file
+  };
 
   const uploadImage = async () => {
     const formData = new FormData()
@@ -60,13 +65,23 @@ function ProfileImageUploader(props) { // Asegúrate de recibir props como pará
   };
 
   return (
-    <div>
+    <div className="account-container">
       <h2>Subir imagen de perfil</h2>
-      <input type="file" accept="image/*" onChange={handleImageChange} />
-      <button onClick={uploadImage}>Subir imagen</button>
+      <input type="file" accept="image/*" ref={fileInputRef} // Asigna la referencia al input de tipo file
+        onChange={handleImageChange}
+        style={{ display: 'none' }} // Oculta visualmente el input de tipo file
+      />
+      <button onClick={handleUploadButtonClick}>Seleccionar imagen</button>
       {image && (
-        <div className="profile-image-container">
-          <img className="profile-image" src={URL.createObjectURL(image)} alt="Profile" />
+        <div>      
+            <div className="profile-image-container">
+              <img className="profile-image" src={URL.createObjectURL(image)} alt="Profile" />
+            </div>
+            <Tooltip title="Guardar Imagen" arrow>
+              <IconButton className="edit-icon" onClick={uploadImage}>
+                <Save />
+              </IconButton>
+            </Tooltip>   
         </div>
       )}
     </div>

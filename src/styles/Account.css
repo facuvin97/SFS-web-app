@@ -1,24 +1,52 @@
 /* Account.css */
 
 .account-container {
+  margin-top: 80px;
   width: 100%;
   max-width: 600px;
-  border: 1px solid #1976D2;
+  border: 1px solid #096d8c89;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
-  background: linear-gradient(to bottom, #1976D2, #2196F3);
+  background: linear-gradient(to bottom, #95cbf8, #03626c);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .account-title {
   margin-top: 0;
-  margin-bottom: 20px;
-  color: #333;
+  margin-bottom: 10px;
+  color: #040618a0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.span {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-image-container {
+  margin: 20px auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 
 .user-info p {
   margin: 0;
   margin-bottom: 10px;
+  color: #fff;
 }
 
 .user-info strong {
@@ -26,44 +54,40 @@
   margin-right: 5px;
 }
 
-.edit-icon {
-  align-items: end;
-  padding-left: 10px;
-}
-
-.span {
-  display: flex;
-  justify-content: space-evenly;
-}
-.profile-image-container {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%; /* Esto redondeará el contenedor */
-  overflow: hidden; /* Esto ocultará cualquier parte de la imagen que se salga del contenedor */
-}
-
-.profile-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Esto asegurará que la imagen se ajuste al contenedor redondeado */
-}
-
 .button-base-custom {
   background-color: #757575; /* Gris */
   border: none;
   color: #fff; /* Letra blanca para contraste */
-  padding: 10px 20px;
-  margin: 10px;
+  padding: 8px 16px; /* Botones más pequeños */
+  margin: 10px 0;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
-  border-radius: 5px;
+  font-size: 14px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Efecto de transición al pasar el cursor */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Efecto de transición al pasar el cursor */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
 .button-base-custom:hover {
   background-color: #616161; /* Cambio de color al pasar el cursor */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada al pasar el cursor */
 }
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* Espacio entre los iconos */
+}
+
+.edit-icon {
+  transition: color 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
+}
+
+.edit-icon:hover {
+  color: #03626c; /* Cambia el color al pasar el mouse */
+  transform: scale(1.3); /* Aumenta un poco el tamaño al pasar el mouse */
+}
+

@@ -80,7 +80,7 @@ function Register() {
 
 
   return (
-    <div>
+    <div className='account-container'>
       { typeUser == 'client' ? (<h2>Registro de Cliente</h2>) : (<h2>Registro de Paseador</h2>) }
       <form onSubmit={handleSubmit}>
         <label>

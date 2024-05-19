@@ -38,13 +38,36 @@
 
 .card {
   padding: 2em;
+  background: #fff; /* Fondo blanco para contraste */
+  border: 1px solid #096d8c89; /* Borde similar al contenedor de la cuenta */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  margin-bottom: 20px; /* Espacio debajo de la tarjeta */
 }
 
 .read-the-docs {
-  color: #888;
+  color: #888; /* Mantener el color gris para el texto */
 }
 
 .root-container {
   display: flex;
-  width: 1000px;
+  flex-direction: column; /* Cambiar a columna para diseño vertical */
+  align-items: center; /* Centrar los elementos */
+  width: 100%;
+  max-width: 1000px; /* Mantener el ancho máximo */
+  margin: 0 auto; /* Centrar horizontalmente */
 }
+
+@media (min-width: 768px) {
+  .root-container {
+    flex-direction: row;
+    flex-direction: row; /* Cambiar a fila en pantallas más grandes */
+    justify-content: center; /* Centrar los elementos en la fila */
+  }
+}
+
+.AppBar {
+  background: linear-gradient(to bottom, #95cbf8, #03626c);
+  border-radius: 8px;
+}
+
