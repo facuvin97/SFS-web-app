@@ -20,6 +20,7 @@ import AddTurnForm from './pages/turns/AddTurn';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme, globalStyles } from './theme';
 import { Box } from '@mui/material';
+import ModifyTurn from './pages/turns/ModifyTurn';
 
 function App() {
   const [userLog, setUserLog] = useState(null);
@@ -62,7 +63,9 @@ function App() {
                   <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} onImageUpload={() => useUserImage(userLog.nombre_usuario)}/>}/>
                   <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />
                   <Route path={`/turns`} element={<TurnsList walkerId={userLog?.id} />} />
-                  <Route path='/turn-details' element={<SelectedTurnCard />} />                  <Route path={`/agregar-turno`} element={<AddTurnForm userLog={userLog} />} />
+                  <Route path='/turn-details' element={<SelectedTurnCard />} />                  
+                  <Route path='/turn-modify' element={<ModifyTurn />} />                  
+                  <Route path={`/agregar-turno`} element={<AddTurnForm userLog={userLog} />} />
                   <Route path="*" element={<div>404</div> } />
                 </Routes>
               </header>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -11,6 +11,7 @@ import { Tooltip } from '@mui/material';
 function SelectedTurnCard() {
     const location = useLocation();
     const turn = location.state.turn;
+
 
   if (!turn) {
     return <div>Error: No se encontró información del turno.</div>;
@@ -32,17 +33,6 @@ function SelectedTurnCard() {
         <Typography variant="body2" color="text.secondary">
           Servicios agendados:
         </Typography>
-        {/* Aquí puedes colocar los iconos de editar y eliminar */}
-        <Tooltip title="Editar" arrow>
-          <IconButton aria-label="editar">
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Eliminar" arrow>
-          <IconButton aria-label="eliminar">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
       </CardContent>
     </Card>
   )

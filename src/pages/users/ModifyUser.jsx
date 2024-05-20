@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function ModifyUser({ userLog }) {
   // Estado para almacenar los datos del formulario
   const [userData, setUserData] = useState(userLog);
 
   const [mensaje, setMensaje] = useState(null)
+  const navigate = useNavigate();
 
   // Función para manejar cambios en los inputs del formulario
   const handleInputChange = (e) => {
@@ -46,10 +48,12 @@ function ModifyUser({ userLog }) {
         const responseData = await response.json()
         console.log('Cliente modificado correctamente');
         setMensaje(responseData.message)
-        // Aquí puedes redirigir a otra página, mostrar un mensaje de éxito, etc.
+        alert('Cuenta modificada correctamente')
+        navigate('/')
       } else {
         console.error('Error al modificar cliente:', response.statusText);
         // Aquí puedes manejar el error de alguna manera, como mostrar un mensaje de error al usuario
+        alert('Error al modificar cliente:', response.statusText)
       }
     } catch (error) {
       console.error('Error:', error);

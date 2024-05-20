@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Importamos useNavigate para la navegación programática
+import { useNavigate } from 'react-router-dom'; // Importamos useNavigate para la navegación programática
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Toolbar, Tooltip } from '@mui/material';
+import {Tooltip } from '@mui/material';
 
 
 function TurnCard({ turn, onDelete }) {
@@ -22,15 +22,20 @@ function TurnCard({ turn, onDelete }) {
   };
 
   const handleClick = () => {
-    setIsActive(!isActive);
+    //setIsActive(!isActive);
     // Navegar a la página de detalles del turno cuando se hace clic en la tarjeta
-    navigate('/turn-details', { state: { turn } });
+    navigate('/turn-details', { state: { turn} });
   };
 
   const handleDeleteClick = (event) => {
     event.stopPropagation(); // Evita la propagación del evento click al componente Card
     onDelete();
-   } // Llama a la función onDelete proporcionada como prop
+   }
+   
+  const handleModifyClick = (event) => {
+    event.stopPropagation(); // Evita la propagación del evento click al componente Card
+    navigate('/turn-modify', { state: { turn } });
+   }
 
   return (
     <Card
@@ -57,7 +62,7 @@ function TurnCard({ turn, onDelete }) {
             </Typography>
             {/* Aquí puedes colocar los iconos de editar y eliminar */}
             <Tooltip title='Editar turno' arrow>
-              <IconButton aria-label="editar">
+              <IconButton aria-label="editar" onClick={handleModifyClick}>
                 <EditIcon />
               </IconButton>
             </Tooltip>

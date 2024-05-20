@@ -1,7 +1,9 @@
 import { useState, } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
+  const navigate = useNavigate();
   // Estado para almacenar los datos del formulario
   const [userData, setUserData] = useState({
     nombre_usuario: '',
@@ -56,10 +58,11 @@ function Register() {
         const responseData = await response.json()
         console.log('Usuario registrado correctamente');
         setMensaje(responseData.message)
-        // Aquí puedes redirigir a otra página, mostrar un mensaje de éxito, etc.
+        alert('Cuenta creada correctamente')
+        navigate('/')
       } else {
         console.error('Error al registrar cliente:', response.statusText);
-        // Aquí puedes manejar el error de alguna manera, como mostrar un mensaje de error al usuario
+        alert('Error al registrar cliente:', response.statusText)
       }
     } catch (error) {
       console.error('Error:', error);
