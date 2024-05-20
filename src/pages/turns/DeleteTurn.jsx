@@ -1,0 +1,51 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+function DeleteTurn({ turnId }) {
+  const [mensaje, setMensaje] = useState(null);
+  const navigate = useNavigate();
+
+  const onDelete = async () => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/v1/turn/${turnId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('Turno eliminado correctamente');
+        setMensaje(responseData.message);
+        // Redirige al usuario a la página de inicio de turnos
+        alert('Turno eliminado correctamente');
+        navigate('/turns');
+      } else {
+        console.error('Error al eliminar turno:', response.statusText);
+        const responseData = await response.json();
+        setMensaje(responseData.message);
+        // Aquí puedes manejar el error de alguna manera, como mostrar un mensaje de error al usuario
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const onCancel = () => {
+    console.log("Cancelar eliminar turno");
+  };
+
+  return (
+    <div>
+      <p>¿Estás seguro de que deseas eliminar este turno?</p>
+      <button onClick={onDelete}>Eliminar</button>
+      <button onClick={onCancel}>Cancelar</button>
+      <br />
+      {mensaje && <p>{mensaje}</p>}
+      <br />
+    </div>
+  );
+}
+
+export default DeleteTurn;

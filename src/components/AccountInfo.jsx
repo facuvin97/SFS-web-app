@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import DeleteUser from '../pages/users/DeleteUser';
 import { Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { useUserImageContext } from '../contexts/UserImageContext';
+import noImage from '../assets/no_image.png'
 
 
 // Método que fuerza la actualización del componente  
@@ -27,7 +28,7 @@ function Account ({ user, onLogin }) {
         <h2 className="account-title">Account Information</h2>
       </span>
       <div className="profile-image-container">
-        <img src={imageSrc || '/no_image.png'} alt="User Avatar" className='profile-image' />
+        <img src={imageSrc || noImage} alt="User Avatar" className='profile-image' />
       </div>
       
       <div className="user-info">

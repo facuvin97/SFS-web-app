@@ -13,25 +13,18 @@ import ProfileImageUploader from './pages/ProfileImageUploader';
 import useUserImage from './hook/UseUserImage';
 import { UserImageContextProvider } from './contexts/UserImageContext';
 import TurnCard from './components/TurnCard';
+import SelectedTurnCard from './pages/turns/SelectedTurnCard';
+import TurnsList from './components/TurnsList';
 import AddTurnForm from './pages/turns/AddTurn';
 
 import { ThemeProvider } from '@mui/material/styles';
 import { theme, globalStyles } from './theme';
+import { Box } from '@mui/material';
 
 function App() {
   const [userLog, setUserLog] = useState(null);
 
-  const turno = {
-    "id": 1,
-    "dias": ["lunes", "miércoles", "viernes"],
-    "hora_inicio": "09:00:00",
-    "hora_fin": "13:00:00",
-    "tarifa": 250,
-    "zona": "Pocitos",
-    "createdAt": "2024-05-15T10:15:00",
-    "updatedAt": "2024-05-15T10:15:00",
-    "WalkerId": 1
-  }
+  const [selectedTurn, setSelectedTurn] = useState(null); 
 
   // Verificar si hay datos de inicio de sesión en localStorage al cargar la aplicación
   useEffect(() => {
@@ -54,28 +47,30 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
     {globalStyles}
-      <Container className='root-container'>
-        <div className='App'>
-          <UserImageContextProvider>
-            <header className='App-header'>
-              <ResponsiveAppBar loggedInUser={userLog} onLogout={handleLogout} />
-              <Routes>
-                <Route path='/' element={<Contact />} />
-                <Route path='/login' element={<LoginPage onLogin={handleLogin} />} />
-                <Route path='/register/:typeUser' element={<Register />} />
-                <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
-                <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
-                <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} onImageUpload={() => useUserImage(userLog.nombre_usuario)}/>}/>
-                <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />
-                <Route path={`/card`} element={<TurnCard turn={turno} />} />
-                <Route path={`/agregar-turno`} element={<AddTurnForm userLog={userLog} />} />
-                <Route path="*" element={<div>404</div> } />
-              </Routes>
-            </header>
-          </UserImageContextProvider>
-        </div>
-      </Container>
-      </ThemeProvider>
+      <Box sx={{ minHeight: '100vh', paddingTop: '64px' }}>
+        <Container className='root-container'>
+          <div className='App'>
+            <UserImageContextProvider>
+              <header className='App-header'>
+                <ResponsiveAppBar loggedInUser={userLog} onLogout={handleLogout} />
+                <Routes>
+                  <Route path='/' element={userLog ? (userLog.tipo === 'walker' ? <TurnsList walkerId={userLog?.id} /> : <AccountInfo user={userLog}/>) : <Contact />} /> {/* modificar service usuario */}
+                  <Route path='/login' element={<LoginPage onLogin={handleLogin} />} />
+                  <Route path='/register/:typeUser' element={<Register />} />
+                  <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
+                  <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
+                  <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} onImageUpload={() => useUserImage(userLog.nombre_usuario)}/>}/>
+                  <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />
+                  <Route path={`/turns`} element={<TurnsList walkerId={userLog?.id} />} />
+                  <Route path='/turn-details' element={<SelectedTurnCard />} />                  <Route path={`/agregar-turno`} element={<AddTurnForm userLog={userLog} />} />
+                  <Route path="*" element={<div>404</div> } />
+                </Routes>
+              </header>
+            </UserImageContextProvider>
+          </div>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 }
 

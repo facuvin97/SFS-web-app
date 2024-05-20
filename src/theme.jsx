@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { GlobalStyles } from '@mui/material';
+import backgroundImage from './assets/fondo4.jpeg'; // Ajusta el camino según sea necesario
+
 
 const theme = createTheme({
   palette: {
@@ -15,10 +17,13 @@ const theme = createTheme({
 const globalStyles = (
   <GlobalStyles
     styles={{
+      html: {
+        height: '100%', // Asegura que el html ocupe toda la altura del viewport
+        overflowY: 'scroll', // Fuerza la barra de desplazamiento
+      },
       body: {
-        backgroundImage: `url('/fondo4.jpeg')`,  // Asegúrate de que la imagen está en la carpeta public
+        background: `url(${backgroundImage}) center center / cover no-repeat fixed`,  // Combina todas las propiedades de fondo en una sola declaración
         backgroundColor: '#03626c',
-        backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
         margin: 0,

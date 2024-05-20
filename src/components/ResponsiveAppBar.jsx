@@ -14,13 +14,27 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
 import ImageProfile from './ImageProfile'
+import { useNavigate } from 'react-router-dom'
 
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { useEffect } from 'react'
 import { UserImageContextProvider, useUserImageContext } from '../contexts/UserImageContext'
 
-const pages = ['Products', 'Pricing', 'Blog']
+const pagesWalker = ['Turno', 'Pricing', 'Blog']
+const pagesClient = ['Servicio', 'Pricing', 'Blog']
+
+const routesWalker = {
+  Turno: '/agregar-turno',
+  Pricing: '/walker/pricing',
+  Blog: '/walker/blog',
+};
+
+const routesClient = {
+  Servicio: '/services',
+  Pricing: '/client/pricing',
+  Blog: '/client/blog',
+};
 
 
 function ResponsiveAppBar({ loggedInUser, onLogout }) {
@@ -47,6 +61,9 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
   }
   
   const { imageSrc} = useUserImageContext();
+
+  const pages = loggedInUser?.tipo === 'walker' ? pagesWalker : pagesClient
+  const routes = loggedInUser?.tipo === 'walker' ? routesWalker : routesClient
 
   
   return (
@@ -77,6 +94,8 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
               {pages.map((page) => (
                 <Button
                   key={page}
+                  component={Link}
+                  to={routes[page]}
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >

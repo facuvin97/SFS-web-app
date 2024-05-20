@@ -27,8 +27,6 @@ function DeleteUser({ userLog, onLogin }) {
         },
       });
       }
-
-
       if (response.ok) {
         const responseData = await response.json()
         console.log('Cuenta eliminada correctamente');
