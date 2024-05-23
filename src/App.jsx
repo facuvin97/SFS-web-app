@@ -21,6 +21,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme, globalStyles } from './theme';
 import { Box } from '@mui/material';
 import ModifyTurn from './pages/turns/ModifyTurn';
+import AddServiceForm from './pages/services/AddService';
+import ServicesList from './components/ServicesClientList';
 
 function App() {
   const [userLog, setUserLog] = useState(null);
@@ -55,7 +57,7 @@ function App() {
               <header className='App-header'>
                 <ResponsiveAppBar loggedInUser={userLog} onLogout={handleLogout} />
                 <Routes>
-                  <Route path='/' element={userLog ? (userLog.tipo === 'walker' ? <TurnsList walkerId={userLog?.id} /> : <AccountInfo user={userLog}/>) : <Contact />} /> {/* modificar service usuario */}
+                  <Route path='/' element={userLog ? (userLog.tipo === 'walker' ? <TurnsList walkerId={userLog?.id} /> : <ServicesList clientId={userLog?.id} />) : <Contact />} /> {/* modificar service usuario */}
                   <Route path='/login' element={<LoginPage onLogin={handleLogin} />} />
                   <Route path='/register/:typeUser' element={<Register />} />
                   <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
@@ -66,6 +68,10 @@ function App() {
                   <Route path='/turn-details' element={<SelectedTurnCard />} />                  
                   <Route path='/turn-modify' element={<ModifyTurn />} />                  
                   <Route path={`/agregar-turno`} element={<AddTurnForm userLog={userLog} />} />
+                  <Route path={`/services`} element={<ServicesList walkerId={userLog?.id} />} />
+                  {/* <Route path={'/service-details'} element={<SelectedServiceCard />} />                  
+                  <Route path='/service-modify' element={<ModifyService />} />  */} 
+                  <Route path={`/add-service`} element={<AddServiceForm userLog={userLog}/>}/>
                   <Route path="*" element={<div>404</div> } />
                 </Routes>
               </header>

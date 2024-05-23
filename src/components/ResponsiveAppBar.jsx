@@ -31,7 +31,7 @@ const routesWalker = {
 };
 
 const routesClient = {
-  Servicio: '/services',
+  Servicio: '/add-service',
   Pricing: '/client/pricing',
   Blog: '/client/blog',
 };

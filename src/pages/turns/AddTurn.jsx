@@ -3,7 +3,7 @@ import { TextField, Button, Grid, Checkbox, FormControlLabel } from '@mui/materi
 import { useNavigate } from 'react-router-dom';
 
 
-export default function AddTurnForm({ userLog }) {
+function AddTurnForm({ userLog }) {
   const [dias, setDias] = useState([]);
   const [horaInicio, setHoraInicio] = useState('');
   const [horaFin, setHoraFin] = useState('');
@@ -133,3 +133,5 @@ export default function AddTurnForm({ userLog }) {
     </div>
   );
 }
+
+export default AddTurnForm
