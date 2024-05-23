@@ -35,16 +35,15 @@ function AddServiceForm({ userLog }) {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log('Servicio agregado correctamente');
-        setMensaje('Servicio agregado correctamente');
-        // Limpiar el formulario después de enviar los datos
+        //console.log('Servicio agregado correctamente');
+        //setMensaje('Servicio agregado correctamente');
         setFecha('');
         setDireccionPickUp('');
         setCantidadMascotas('');
         setNota('');
         setTurnId('');
-        navigate('/services');
-        alert(setMensaje);
+        navigate('/');
+        alert('Servicio agregado correctamente');
       } else {
         console.error('Error al agregar el servicio:', response.statusText);
         setMensaje('Error al agregar el servicio');

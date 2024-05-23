@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import ServiceCard from './ServiceCard'; // Asegúrate de que la ruta es correcta
+import TurnCard from '../../components/TurnCard'; // Asegúrate de que la ruta es correcta
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
@@ -11,23 +11,23 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Tooltip } from '@mui/material';
+import {Tooltip } from '@mui/material';
 
-function ServicesList({ clientId }) {
-  const [services, setServices] = useState([]);
+function TurnsList({ walkerId }) {
+  const [turns, setTurns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const navigate= useNavigate()
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchTurns = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/services/client/${clientId}`);
+        const response = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setServices(data.body);
+        setTurns(data.body);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -35,29 +35,32 @@ function ServicesList({ clientId }) {
       }
     };
 
-    if (clientId) {
-      fetchServices();
+    if (walkerId) {
+      fetchTurns();
     }
-  }, [clientId]);
+  }, [walkerId]);
 
-  const handleDeleteService = async (serviceId) => {
+  const handleDeleteTurn = async (turnId) => {
+    // Lógica para eliminar el turno con el ID proporcionado
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/service/${serviceId}`, {
+      const response = await fetch(`http://localhost:3001/api/v1/turn/${turnId}`, {
         method: 'DELETE',
       });
       if (!response.ok) {
-        throw new Error('Error al eliminar el servicio');
+        throw new Error('Error al eliminar el turno');
       }
-      const updatedServices = services.filter((service) => service.id !== serviceId);
-      setServices(updatedServices);
+      // Actualizar la lista de turnos después de la eliminación
+      const updatedTurns = turns.filter((turn) => turn.id !== turnId);
+      setTurns(updatedTurns);
     } catch (error) {
-      console.error('Error al eliminar el servicio:', error.message);
+      console.error('Error al eliminar el turno:', error.message);
     }
   };
 
-  const handleClick = () => {
-    navigate('/agregar-servicio');
+  const handleClick = async () => {
+    navigate('/agregar-turno')
   };
+  
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -68,13 +71,15 @@ function ServicesList({ clientId }) {
         <Grid item xs={12} sm={6} md={4}>
           <Card
             sx={{ maxWidth: 345 }}
+            // onMouseEnter={handleMouseEnter}
+            // onMouseLeave={handleMouseLeave}
             onClick={handleClick}
           >
             <CardContent>
               <Typography gutterBottom variant="h6" component="div">
-                Nuevo Servicio
+                Nuevo Turno
               </Typography>
-              <Tooltip title='Agregar servicio' arrow>
+              <Tooltip title='Agregar turno' arrow>
                 <IconButton aria-label="agregar" size='large'>
                   <AddIcon fontSize="large" />
                 </IconButton>
@@ -82,14 +87,14 @@ function ServicesList({ clientId }) {
             </CardContent>
           </Card>
         </Grid>
-        {services.map((service) => (
-          <Grid item xs={12} sm={6} md={4} key={service.id}>
-            <ServiceCard service={service} onDelete={() => handleDeleteService(service.id)} />
+        {turns.map((turn) => (
+          <Grid item xs={12} sm={6} md={4} key={turn.id}>
+            <TurnCard turn={turn} onDelete={() => handleDeleteTurn(turn.id)} />
           </Grid>
         ))}
       </Grid>
     </Box>
-  );
+  )
 }
 
-export default ServicesList;
+export default TurnsList;
