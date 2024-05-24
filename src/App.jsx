@@ -14,7 +14,7 @@ import useUserImage from './hook/UseUserImage';
 import { UserImageContextProvider } from './contexts/UserImageContext';
 import TurnCard from './components/TurnCard';
 import SelectedTurnCard from './pages/turns/SelectedTurnCard';
-import TurnsList from './components/TurnsList';
+import TurnsList from './pages/turns/TurnsList';
 import AddTurnForm from './pages/turns/AddTurn';
 
 import { ThemeProvider } from '@mui/material/styles';
@@ -22,7 +22,7 @@ import { theme, globalStyles } from './theme';
 import { Box } from '@mui/material';
 import ModifyTurn from './pages/turns/ModifyTurn';
 import AddServiceForm from './pages/services/AddService';
-import ServicesList from './components/ServicesClientList';
+import ServicesList from './pages/services/ServicesClientList';
 
 function App() {
   const [userLog, setUserLog] = useState(null);
