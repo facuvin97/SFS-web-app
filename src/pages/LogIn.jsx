@@ -53,7 +53,9 @@ function LoginPage(props) {
         <label>Contraseña:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
-      <button className="login-button" onClick={handleLogin}>Iniciar Sesión</button>
+      <div>
+        <button className="login-button" onClick={handleLogin}>Iniciar Sesión</button>
+      </div>
     </div>
   );
 }

@@ -9,7 +9,7 @@ function AddTurnForm({ userLog }) {
   const [horaFin, setHoraFin] = useState('');
   const [tarifa, setTarifa] = useState('');
   const [zona, setZona] = useState('');
-  const [mensaje, setMensaje] = useState(null);
+  const [mensaje, setMensaje] = useState('');
   const navigate = useNavigate();
 
   const handleAddTurn = async () => {
@@ -41,8 +41,8 @@ function AddTurnForm({ userLog }) {
         setHoraFin('');
         setTarifa('');
         setZona('');
+        alert('Turno agregado correctamente')
         navigate('/turns')
-        alert(setMensaje)
       } else {
         console.error('Error al agregar el turno:', response.statusText);
         setMensaje('Error al agregar el turno');

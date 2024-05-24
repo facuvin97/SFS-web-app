@@ -50,7 +50,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
     {globalStyles}
-      <Box sx={{ minHeight: '100vh', paddingTop: '64px' }}>
+      <Box sx={{ minHeight: '100vh', minWidth: '100vh' , paddingTop: '64px'}}>
         <Container className='root-container'>
           <div className='App'>
             <UserImageContextProvider>

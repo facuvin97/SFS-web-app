@@ -39,7 +39,7 @@ function TurnCard({ turn, onDelete }) {
 
   return (
     <Card
-      sx={{ maxWidth: 345 }}
+      sx={{ maxWidth: 'none', minWidth: '250px', maxHeight: 'none', height: '100%' }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}

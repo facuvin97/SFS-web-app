@@ -64,10 +64,10 @@ function ServicesList({ clientId }) {
 
   return (
 <Box sx={{ flexGrow: 1, p: 2 }}>
-  <Grid container spacing={2}>
-    <Grid item xs={12} sm={6} md={4}>
+  <Grid container spacing={2} sx={{display: 'flex', justifyContent: 'center', alignItems: 'flex-start'}}>
+    <Grid item>
       <Card
-        sx={{ width: '100%', maxWidth: 345 }}
+        sx={{ maxWidth: 'none', minWidth: '250px', maxHeight: 'none', height: '100%' }}
         onClick={handleClick}
       >
         <CardContent>
@@ -83,7 +83,7 @@ function ServicesList({ clientId }) {
       </Card>
     </Grid>
     {services.map((service) => (
-      <Grid item xs={12} sm={6} md={4} key={service.id}>
+      <Grid item key={service.id}>
         <ServiceCard service={service} onDelete={() => handleDeleteService(service.id)} />
       </Grid>
     ))}

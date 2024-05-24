@@ -1,6 +1,8 @@
 .account-container {
+    display: flex;
+    flex-direction: column;
     margin-top: 80px;
-    width: 100%;
+    width: 70%;
     max-width: 600px;
     border: 1px solid #096d8c89;
     border-radius: 8px;
@@ -21,7 +23,6 @@
   }
   
   .login-button {
-    display: block;
     margin: 20px 0 0; /* Ajusta el margen superior según tus necesidades */
     padding: 10px 20px;
     background-color: #03626c;

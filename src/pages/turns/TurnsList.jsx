@@ -66,11 +66,11 @@ function TurnsList({ walkerId }) {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <Box sx={{ flexGrow: 1, p: 2 }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={4}>
+    <Box sx={{ flexGrow: 1, p: 2, }}>
+      <Grid container spacing={2} sx={ {display: 'flex', justifyContent: 'center', alignItems: 'flex-start'} }>
+        <Grid item>
           <Card
-            sx={{ maxWidth: 345 }}
+            sx={{ maxWidth: 'none', minWidth: '250px', maxHeight: 'none', height: '100%' }}
             // onMouseEnter={handleMouseEnter}
             // onMouseLeave={handleMouseLeave}
             onClick={handleClick}
@@ -87,8 +87,8 @@ function TurnsList({ walkerId }) {
             </CardContent>
           </Card>
         </Grid>
-        {turns.map((turn) => (
-          <Grid item xs={12} sm={6} md={4} key={turn.id}>
+        {turns.length > 0 && turns.map((turn) => (
+          <Grid item key={turn.id}>
             <TurnCard turn={turn} onDelete={() => handleDeleteTurn(turn.id)} />
           </Grid>
         ))}
