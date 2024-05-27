@@ -23,6 +23,8 @@ import { Box } from '@mui/material';
 import ModifyTurn from './pages/turns/ModifyTurn';
 import AddServiceForm from './pages/services/AddService';
 import ServicesList from './pages/services/ServicesClientList';
+import WalkersList from './pages/walkers/WalkerList';
+import WalkerDetails from './pages/walkers/WalkerDetails';
 
 function App() {
   const [userLog, setUserLog] = useState(null);
@@ -57,18 +59,20 @@ function App() {
               <header className='App-header'>
                 <ResponsiveAppBar loggedInUser={userLog} onLogout={handleLogout} />
                 <Routes>
-                  <Route path='/' element={userLog ? (userLog.tipo === 'walker' ? <TurnsList walkerId={userLog?.id} /> : <ServicesList clientId={userLog?.id} />) : <Contact />} /> {/* modificar service usuario */}
+                  <Route path='/' element={userLog ? (userLog.tipo === 'walker' ? <TurnsList walkerId={userLog?.id} /> : <WalkersList clientId={userLog?.id} />) : <Contact />} /> {/* modificar service usuario */}
                   <Route path='/login' element={<LoginPage onLogin={handleLogin} />} />
                   <Route path='/register/:typeUser' element={<Register />} />
                   <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
                   <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
                   <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} onImageUpload={() => useUserImage(userLog.nombre_usuario)}/>}/>
+                  <Route path={`/walker-details/`} element={<WalkerDetails />}/>
                   <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />
                   <Route path={`/turns`} element={<TurnsList walkerId={userLog?.id} />} />
                   <Route path='/turn-details' element={<SelectedTurnCard />} />                  
                   <Route path='/turn-modify' element={<ModifyTurn />} />                  
                   <Route path={`/agregar-turno`} element={<AddTurnForm userLog={userLog} />} />
                   <Route path={`/services`} element={<ServicesList walkerId={userLog?.id} />} />
+
                   {/* <Route path={'/service-details'} element={<SelectedServiceCard />} />                  
                   <Route path='/service-modify' element={<ModifyService />} />  */} 
                   <Route path={`/add-service`} element={<AddServiceForm userLog={userLog}/>}/>
