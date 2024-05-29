@@ -1,20 +1,27 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation , useNavigate} from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
+import { Button } from '@mui/material';
 
 const WalkerDetails = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { walker, turns } = location.state || {};
 
   if (!walker || !walker.User) {
     return <p>No hay datos disponibles para este paseador.</p>;
   }
+  
 
   const walkerImage = walker.imageSrc || 'path/to/default/image.png'; // Ruta de la imagen por defecto si no hay imagen
+  
+  const handleAddService = (turn) => {
+    navigate('/add-service', { state: { turn } });
+  };
 
   return (
     <Container maxWidth="md" sx={{ p: 4, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
@@ -37,12 +44,15 @@ const WalkerDetails = () => {
               <Typography variant="body1" color="text.primary">
                 <strong>Días:</strong> {turn.dias.join(', ')}
               </Typography>
-{/*               <Typography variant="body1" color="text.primary">
-                <strong>Hora de inicio:</strong> {turn.hora_inicio.join(', ')}
+              <Typography variant="body1" color="text.primary">
+                <strong>Hora de inicio:</strong> {turn.hora_inicio}
               </Typography>
               <Typography variant="body1" color="text.primary">
-                <strong>Hora de fin:</strong> {turn.hora_fin.join(', ')}
-              </Typography> */}
+                <strong>Hora de fin:</strong> {turn.hora_fin}
+              </Typography>
+              <Button variant="contained" color="primary" onClick={() => handleAddService(turn)}>
+                solicitar Servicio
+              </Button>
             </Box>
           ))
         ) : (

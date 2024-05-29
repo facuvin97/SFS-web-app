@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import { TextField, Button, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Grid, Typography } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function AddServiceForm({ userLog }) {
-  if(userLog.tipo === 'walker'){
-    throw error('El paseador no puede ingresar servicios.')
+  const location = useLocation();
+  const { turn } = location.state || {};
+
+  if (userLog.tipo === 'walker') {
+    throw new Error('El paseador no puede ingresar servicios.');
   }
+
   const [fecha, setFecha] = useState('');
   const [direccionPickUp, setDireccionPickUp] = useState('');
   const [cantidadMascotas, setCantidadMascotas] = useState('');
   const [nota, setNota] = useState('');
-  const [turnId, setTurnId] = useState('');
   const [mensaje, setMensaje] = useState(null);
   const navigate = useNavigate();
 
@@ -20,7 +23,7 @@ function AddServiceForm({ userLog }) {
       direccionPickUp,
       cantidad_mascotas: parseInt(cantidadMascotas, 10),
       nota,
-      TurnId: parseInt(turnId, 10),//falta manejar el turno seleccionado
+      TurnId: turn.id, // ID del turno seleccionado
       ClientId: userLog.id // El ID del usuario logeado se utiliza como el ClientId del servicio
     };
 
@@ -35,13 +38,10 @@ function AddServiceForm({ userLog }) {
 
       if (response.ok) {
         const responseData = await response.json();
-        //console.log('Servicio agregado correctamente');
-        //setMensaje('Servicio agregado correctamente');
         setFecha('');
         setDireccionPickUp('');
         setCantidadMascotas('');
         setNota('');
-        setTurnId('');
         navigate('/');
         alert('Servicio agregado correctamente');
       } else {
@@ -100,14 +100,19 @@ function AddServiceForm({ userLog }) {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="ID del Turno"
-              type="number"
-              value={turnId}
-              onChange={(e) => setTurnId(e.target.value)}
-              variant="outlined"
-            />
+            <Typography variant="body1" color="text.primary">
+              <strong>Días:</strong> {turn ? turn.dias.join(', ') : ''}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body1" color="text.primary">
+              <strong>Hora de inicio:</strong> {turn ? turn.hora_inicio : ''}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body1" color="text.primary">
+              <strong>Hora de fin:</strong> {turn ? turn.hora_fin : ''}
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <Button variant="contained" color="primary" onClick={handleAddService}>
@@ -121,4 +126,4 @@ function AddServiceForm({ userLog }) {
   );
 }
 
-export default AddServiceForm
+export default AddServiceForm;
