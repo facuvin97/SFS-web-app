@@ -21,20 +21,10 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { useEffect } from 'react'
 import { UserImageContextProvider, useUserImageContext } from '../contexts/UserImageContext'
 
-const pagesWalker = ['Turno', 'Pricing', 'Blog']
+const pagesWalker = ['Turno', 'Servicios', 'Blog']
 const pagesClient = ['Servicio', 'Pricing', 'Blog']
 
-const routesWalker = {
-  Turno: '/agregar-turno',
-  Pricing: '/walker/pricing',
-  Blog: '/walker/blog',
-};
 
-const routesClient = {
-  Servicio: '/add-service',
-  Pricing: '/client/pricing',
-  Blog: '/client/blog',
-};
 
 
 function ResponsiveAppBar({ loggedInUser, onLogout }) {
@@ -43,7 +33,17 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const [typeUser, setTypeUser] = React.useState(null)
   const [refresh, setRefresh] = React.useState(null)
 
+  const routesWalker = {
+    Turno: '/agregar-turno',
+    Servicios : `/walker-service-request/${loggedInUser.id}`,
+    Blog: '/walker/blog',
+  };
   
+  const routesClient = {
+    Servicio: '/add-service',
+    Pricing: '/client/pricing',
+    Blog: '/client/blog',
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget)

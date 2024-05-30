@@ -12,7 +12,6 @@ import ModifyUser from './pages/users/ModifyUser';
 import ProfileImageUploader from './pages/ProfileImageUploader';
 import useUserImage from './hook/UseUserImage';
 import { UserImageContextProvider } from './contexts/UserImageContext';
-import TurnCard from './components/TurnCard';
 import SelectedTurnCard from './pages/turns/SelectedTurnCard';
 import TurnsList from './pages/turns/TurnsList';
 import AddTurnForm from './pages/turns/AddTurn';
@@ -25,6 +24,7 @@ import AddServiceForm from './pages/services/AddService';
 import ServicesList from './pages/services/ServicesClientList';
 import WalkersList from './pages/walkers/WalkerList';
 import WalkerDetails from './pages/walkers/WalkerDetails';
+import WalkerServiceRequest from './pages/services/WalkerServicesRequests'
 
 function App() {
   const [userLog, setUserLog] = useState(null);
@@ -69,7 +69,8 @@ function App() {
                   <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />
                   <Route path={`/turns`} element={<TurnsList walkerId={userLog?.id} />} />
                   <Route path='/turn-details' element={<SelectedTurnCard />} />                  
-                  <Route path='/turn-modify' element={<ModifyTurn />} />                  
+                  <Route path='/turn-modify' element={<ModifyTurn />} />                 
+                  <Route path={`/walker-service-request/${userLog?.id}`} element={<WalkerServiceRequest walkerId={userLog?.id} />} />                 
                   <Route path={`/agregar-turno`} element={<AddTurnForm userLog={userLog} />} />
                   <Route path={`/services`} element={<ServicesList walkerId={userLog?.id} />} />
 
