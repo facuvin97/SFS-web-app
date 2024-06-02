@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { TextField, Button, Grid, Typography } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { format, parseISO, getDay } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 function AddServiceForm({ userLog }) {
   const location = useLocation();
@@ -18,6 +20,29 @@ function AddServiceForm({ userLog }) {
   const navigate = useNavigate();
 
   const handleAddService = async () => {
+
+    const selectedDate = parseISO(fecha);
+    const selectedDay = getDay(selectedDate); // Obtener el día de la semana como un número (0 para domingo, 1 para lunes, etc.)
+    const dayNames = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+
+    const turnDays = turn.dias.map(day => {
+      switch (day.toLowerCase()) {
+        case 'lunes': return 1;
+        case 'martes': return 2;
+        case 'miercoles': return 3;
+        case 'jueves': return 4;
+        case 'viernes': return 5;
+        case 'sabado': return 6;
+        case 'domingo': return 0;
+        default: return -1;
+      }
+    })
+
+    if (!turnDays.includes(selectedDay)) {
+      setMensaje(`El día seleccionado (${dayNames[selectedDay]}) no coincide con los días permitidos del turno (${turn.dias.join(', ')}).`);
+      return;
+    }
+    
     const serviceData = {
       fecha,
       direccionPickUp,

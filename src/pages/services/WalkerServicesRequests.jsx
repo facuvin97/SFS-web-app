@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ServiceCard from '../../components/ServiceCard'; // Asegúrate de que la ruta es correcta
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import CheckIcon from '@mui/icons-material/Check';
-
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import { Tooltip } from '@mui/material';
 import ServiceRequestCard from '../../components/ServiceRequestCard';
 
 function WalkerServicesRequests({ walkerId }) {
@@ -86,7 +78,9 @@ function WalkerServicesRequests({ walkerId }) {
     } catch (error) {
       console.error('Error al aceptar el servicio:', error.message);
     }
-  };
+  }
+
+  const confirmService= services.filter(service => !service.aceptado)
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -94,7 +88,7 @@ function WalkerServicesRequests({ walkerId }) {
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
       <Grid container spacing={2} sx={{display: 'flex', justifyContent: 'center', alignItems: 'flex-start'}}>
-        {services.map((service) => (
+        {confirmService.map((service) => (
           <Grid item key={service.id}>
             <ServiceRequestCard service={service} onAccept={() => handleAcceptService(service)} onReject={() => handleRejectService(service)} />
           </Grid>
