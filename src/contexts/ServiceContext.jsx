@@ -8,7 +8,7 @@ export const useServicesContext = () => useContext(ServicesContext);
 
 export const ServicesProvider = ({ children }) => {
   const [pendingServicesCount, setPendingServicesCount] = useState(0);
-  const [pendingServices, setPendingServices] = useState(null);
+  const [pendingServices, setPendingServices] = useState([]);//inicializa como array vacio
   const { userLog } = useUser();
 
   const getPendingServicesCount = async () => {
@@ -23,30 +23,11 @@ export const ServicesProvider = ({ children }) => {
       setPendingServices(serviciosPendientes);
       setPendingServicesCount(serviciosPendientes.length);
 
-      // if (serviciosPendientes) {
-      //   localStorage.setItem('pendingServices', serviciosPendientes)
-      // }
-
-
     } catch (error) {
       console.error('Error al obtener los servicios:', error);
     }
   };
 
-    //Verificar si hay datos de servicios pendientes en localStorage al cargar la aplicación
-    // useEffect(() => {
-    //   const serviciosPendientes = localStorage.getItem('pendingServices');
-    //   if (serviciosPendientes) {
-    //     console.log('En el useEffect: ', serviciosPendientes)
-    //     setPendingServices(JSON.parse(serviciosPendientes));
-    //     setPendingServicesCount((JSON.parse(serviciosPendientes)).length);
-    //   }
-    // }, []);
-
-  useEffect(() => {
-    console.log('Cantidad de servicios pendientes: ', pendingServicesCount);
-  }, [pendingServicesCount]);
-  
   
 
 
@@ -72,9 +53,6 @@ export const ServicesProvider = ({ children }) => {
 
   const authorizeService = async (service) => {
     try {
-      // const response = await fetch(`http://localhost:3001/api/v1/service/${serviceId}`, {
-      //   method: 'POST'
-      // });
 
       service.aceptado = true;
 
