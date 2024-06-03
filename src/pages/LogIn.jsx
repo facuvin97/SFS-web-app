@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 import '../styles/LoginPage.css';
+import { useUser } from '../contexts/UserLogContext';
 
 
-function LoginPage(props) {
+function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const { userLog, setUserLog } = useUser();
 
   const navigate = useNavigate();
 
@@ -26,7 +28,11 @@ function LoginPage(props) {
       if (response.ok) {
         // Si el inicio de sesión es exitoso, llama a la función onLogin
         // pasando el usuario obtenido del servicio de inicio de sesión
-        props.onLogin(data.logedUser);
+        // props.onLogin(data.logedUser);
+
+        //si el inicio de sesion es exitoso, guardo el usuario loggeado en el contexto
+        setUserLog(data.logedUser)
+        localStorage.setItem('userData', JSON.stringify(data.logedUser))
         console.log('Inicio de sesión exitoso:', data.logedUser);
         
         // Redirige al usuario a la página principal "/"

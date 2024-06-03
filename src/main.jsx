@@ -9,13 +9,19 @@ import '@fontsource/roboto/700.css';
 import { BrowserRouter } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { WalkersImageContextProvider } from './contexts/WalkersImageContext.jsx';
+import { UserProvider, useUser } from './contexts/UserLogContext';
+import { ServicesProvider } from './contexts/ServiceContext.jsx'; 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <WalkersImageContextProvider>
       <BrowserRouter>
         <CssBaseline />
+        <UserProvider>
+        <ServicesProvider>
         <App />
+        </ServicesProvider>
+        </UserProvider>
       </BrowserRouter>
     </WalkersImageContextProvider>
   </React.StrictMode>,

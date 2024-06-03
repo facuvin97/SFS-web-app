@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ImageProfile from './ImageProfile';
 import { useUserImageContext } from '../contexts/UserImageContext';
+import { useServicesContext } from '../contexts/ServiceContext';
 
 const pagesWalker = ['Turno', 'Servicios', 'Blog'];
 const pagesClient = ['Servicio', 'Pricing', 'Blog'];
@@ -24,7 +25,7 @@ const pagesClient = ['Servicio', 'Pricing', 'Blog'];
 function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [pendingServicesCount, setPendingServicesCount] = useState(0);
+  const {pendingServicesCount, setPendingServicesCount} = useServicesContext();
 
   // Rutas para los paseadores
   const routesWalker = {
@@ -59,36 +60,6 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const { imageSrc } = useUserImageContext();
   const pages = loggedInUser?.tipo === 'walker' ? pagesWalker : pagesClient;
   const routes = loggedInUser?.tipo === 'walker' ? routesWalker : routesClient;
-
-  // Función para obtener la cantidad de servicios pendientes
-  const getPendingServicesCount = async () => {
-    try {
-      // Realizar la llamada a la API para obtener todos los servicios del paseador
-      const response = await fetch(`http://localhost:3001/api/v1/services/walker/${loggedInUser.id}`);
-      
-      
-      if (!response.ok) {
-        throw new Error('Error al obtener los servicios');
-      }
-      
-      // Obtener los datos de la respuesta
-      const data = await response.json();
-  
-      // Filtrar solo los servicios pendientes de autorización
-      const pendingServices = data.body.filter(service => !service.aceptado);
-      console.log(pendingServices)
-      // Establecer el contador de servicios pendientes
-      setPendingServicesCount(pendingServices.length);
-    } catch (error) {
-      console.error('Error al obtener los servicios:', error);
-    }
-  }
-
-  useEffect(() => {
-    if (loggedInUser?.tipo === 'walker') {
-      getPendingServicesCount();
-    }
-  }, [loggedInUser]);
 
   return (
     <AppBar position="fixed" className="AppBar">

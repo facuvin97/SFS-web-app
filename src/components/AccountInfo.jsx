@@ -60,7 +60,7 @@ function Account ({ user, onLogin }) {
           </IconButton>
         </Tooltip>
       </div>
-      {showDeleteUser && <DeleteUser userLog={user} onLogin={onLogin} />}
+      {showDeleteUser && <DeleteUser />}
     </div>
   );
 };

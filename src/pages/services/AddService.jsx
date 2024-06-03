@@ -2,49 +2,53 @@ import React, { useState } from 'react';
 import { TextField, Button, Grid, Typography } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { format, parseISO, getDay } from 'date-fns';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { es } from 'date-fns/locale';
 
 function AddServiceForm({ userLog }) {
   const location = useLocation();
   const { turn } = location.state || {};
 
+  console.log(userLog)
   if (userLog.tipo === 'walker') {
     throw new Error('El paseador no puede ingresar servicios.');
   }
 
-  const [fecha, setFecha] = useState('');
+  const [fecha, setFecha] = useState(null);
   const [direccionPickUp, setDireccionPickUp] = useState('');
   const [cantidadMascotas, setCantidadMascotas] = useState('');
   const [nota, setNota] = useState('');
   const [mensaje, setMensaje] = useState(null);
   const navigate = useNavigate();
 
+  //pasamos los dias del turno a numeros
+  const turnDays = turn.dias.map(day => {
+    switch (day.toLowerCase()) {
+      case 'lunes': return 1;
+      case 'martes': return 2;
+      case 'miercoles': return 3;
+      case 'jueves': return 4;
+      case 'viernes': return 5;
+      case 'sabado': return 6;
+      case 'domingo': return 0;
+      default: return -1;
+    }
+  })
+
   const handleAddService = async () => {
 
-    const selectedDate = parseISO(fecha);
-    const selectedDay = getDay(selectedDate); // Obtener el día de la semana como un número (0 para domingo, 1 para lunes, etc.)
+    const selectedDay = getDay(fecha);
     const dayNames = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
 
-    const turnDays = turn.dias.map(day => {
-      switch (day.toLowerCase()) {
-        case 'lunes': return 1;
-        case 'martes': return 2;
-        case 'miercoles': return 3;
-        case 'jueves': return 4;
-        case 'viernes': return 5;
-        case 'sabado': return 6;
-        case 'domingo': return 0;
-        default: return -1;
-      }
-    })
 
     if (!turnDays.includes(selectedDay)) {
       setMensaje(`El día seleccionado (${dayNames[selectedDay]}) no coincide con los días permitidos del turno (${turn.dias.join(', ')}).`);
       return;
     }
-    
+
     const serviceData = {
-      fecha,
+      fecha: format(fecha, 'yyyy-MM-dd'),
       direccionPickUp,
       cantidad_mascotas: parseInt(cantidadMascotas, 10),
       nota,
@@ -81,12 +85,27 @@ function AddServiceForm({ userLog }) {
     }
   };
 
+  // Función para deshabilitar días no incluidos en turnDays
+  const disableDates = (date) => {
+    const day = date.getDay();
+    return !turnDays.includes(day);
+  };
+
   return (
     <div className='account-container'>
       <form onSubmit={(e) => e.preventDefault()}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12}>
-            <TextField
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Fecha"
+              value={fecha}
+              onChange={(newValue) => setFecha(newValue)}
+              renderInput={(params) => <TextField {...params} fullWidth variant="outlined" />}
+              shouldDisableDate={disableDates}
+            />
+          </LocalizationProvider>
+            {/* <TextField
               fullWidth
               label="Fecha"
               type="date"
@@ -94,7 +113,8 @@ function AddServiceForm({ userLog }) {
               onChange={(e) => setFecha(e.target.value)}
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-            />
+            /> */}
+
           </Grid>
           <Grid item xs={12}>
             <TextField

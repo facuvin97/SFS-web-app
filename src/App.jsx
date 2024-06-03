@@ -25,13 +25,16 @@ import ServicesList from './pages/services/ServicesClientList';
 import WalkersList from './pages/walkers/WalkerList';
 import WalkerDetails from './pages/walkers/WalkerDetails';
 import WalkerServiceRequest from './pages/services/WalkerServicesRequests'
+import { UserProvider, useUser } from './contexts/UserLogContext';
+
 
 function App() {
-  const [userLog, setUserLog] = useState(null);
-
+  // const [userLog, setUserLog] = useState(null);
+  const { userLog, setUserLog } = useUser();
   const [selectedTurn, setSelectedTurn] = useState(null); 
 
-  // Verificar si hay datos de inicio de sesión en localStorage al cargar la aplicación
+
+  //Verificar si hay datos de inicio de sesión en localStorage al cargar la aplicación
   useEffect(() => {
     const userData = localStorage.getItem('userData');
     if (userData) {
@@ -39,13 +42,11 @@ function App() {
     }
   }, []);
 
-  const handleLogin = async (user) => {
-    setUserLog(user);
-    localStorage.setItem('userData', JSON.stringify(user));
-  };
+  
   const handleLogout = () => {
     // Limpiar el estado del usuario y los datos de sesión
     setUserLog(null);
+    // setUserLog(null);
     localStorage.removeItem('userData');
   };
 
@@ -56,13 +57,14 @@ function App() {
         <Container className='root-container'>
           <div className='App'>
             <UserImageContextProvider>
+
               <header className='App-header'>
                 <ResponsiveAppBar loggedInUser={userLog} onLogout={handleLogout} />
                 <Routes>
                   <Route path='/' element={userLog ? (userLog.tipo === 'walker' ? <TurnsList walkerId={userLog?.id} /> : <WalkersList clientId={userLog?.id} />) : <Contact />} /> {/* modificar service usuario */}
-                  <Route path='/login' element={<LoginPage onLogin={handleLogin} />} />
+                  <Route path='/login' element={<LoginPage />} />
                   <Route path='/register/:typeUser' element={<Register />} />
-                  <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} onLogin={handleLogin} />} />
+                  <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} />} />
                   <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
                   <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} onImageUpload={() => useUserImage(userLog.nombre_usuario)}/>}/>
                   <Route path={`/walker-details/`} element={<WalkerDetails />}/>
@@ -80,6 +82,7 @@ function App() {
                   <Route path="*" element={<div>404</div> } />
                 </Routes>
               </header>
+
             </UserImageContextProvider>
           </div>
         </Container>

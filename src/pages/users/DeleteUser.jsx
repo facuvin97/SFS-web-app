@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../contexts/UserLogContext';
 
-function DeleteUser({ userLog, onLogin }) {
+function DeleteUser() {
 
   const [mensaje, setMensaje] = useState(null)
+  const { userLog, setUserLog } = useUser();
 
   const navigate = useNavigate();
 
@@ -32,7 +34,7 @@ function DeleteUser({ userLog, onLogin }) {
         console.log('Cuenta eliminada correctamente');
         setMensaje(responseData.message)
         //Seteo en null el usuario logeado
-        onLogin(null);
+        setUserLog(null);
         // Redirige al usuario a la página principal "/"
         alert('Cuenta eliminada correctamente')
         navigate('/')
