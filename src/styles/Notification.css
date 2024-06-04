@@ -1,0 +1,42 @@
+.notification-list-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  justify-content: space-between;
+}
+
+.notification-icon {
+  margin-right: 12px;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  font-weight: bold;
+}
+
+.notification-subtitle {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.notification-time {
+  font-size: 0.8em;
+  color: #999;
+}
+
+.notification-list-item .notification-actions {
+  display: flex;
+  align-items: center;
+}
+
+.notification-unread {
+  background-color: lightblue; /* Color de fondo para notificaciones no leídas */
+}
+
+.notification-read {
+  background-color: white; /* Color de fondo para notificaciones leídas */
+}

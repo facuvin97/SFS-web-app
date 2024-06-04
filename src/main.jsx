@@ -11,6 +11,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { WalkersImageContextProvider } from './contexts/WalkersImageContext.jsx';
 import { UserProvider, useUser } from './contexts/UserLogContext';
 import { ServicesProvider } from './contexts/ServiceContext.jsx'; 
+import { NotificationsProvider } from './contexts/NotificationsContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -18,9 +19,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <BrowserRouter>
         <CssBaseline />
         <UserProvider>
+        <NotificationsProvider>
         <ServicesProvider>
-        <App />
+          <App />
         </ServicesProvider>
+        </NotificationsProvider>
         </UserProvider>
       </BrowserRouter>
     </WalkersImageContextProvider>

@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import ImageProfile from './ImageProfile';
 import { useUserImageContext } from '../contexts/UserImageContext';
 import { useServicesContext } from '../contexts/ServiceContext';
+import Notifications from './Notifications';
 
 const pagesWalker = ['Turno', 'Servicios', 'Blog'];
 const pagesClient = ['Servicio', 'Pricing', 'Blog'];
@@ -109,6 +110,10 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
           )}
 
           {loggedInUser ? (
+            <>
+            <Box sx={{ flexGrow: 0, margin: '10px'  }}>
+              <Notifications></Notifications>
+            </Box>
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -143,6 +148,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
                 </Link>
               </Menu>
             </Box>
+            </>
           ) : (
             <>
               <Box sx={{ flexGrow: 0 }}>

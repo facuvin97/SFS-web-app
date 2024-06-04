@@ -26,6 +26,7 @@ import WalkersList from './pages/walkers/WalkerList';
 import WalkerDetails from './pages/walkers/WalkerDetails';
 import WalkerServiceRequest from './pages/services/WalkerServicesRequests'
 import { UserProvider, useUser } from './contexts/UserLogContext';
+import Notifications from './components/Notifications';
 
 
 function App() {

@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext } from 'react';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [userLog, setUserLog] = useState(null);
+  const [userLog, setUserLog] = useState(JSON.parse(localStorage.getItem('userData')));
 
   return (
     <UserContext.Provider value={{ userLog, setUserLog }}>
