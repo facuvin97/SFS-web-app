@@ -40,3 +40,24 @@
 .notification-read {
   background-color: white; /* Color de fondo para notificaciones leídas */
 }
+
+.notification-list-item {
+  transition: background-color 0.3s ease;
+}
+
+.notification-list-item.notification-hover {
+  background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
+}
+
+.notification-list-item.notification-unread {
+  font-weight: bold; /* Texto en negrita para las notificaciones no leídas */
+}
+
+.notification-list-item.notification-read {
+  font-weight: normal; /* Texto normal para las notificaciones leídas */
+}
+
+.notification-actions {
+  display: flex;
+  align-items: center;
+}

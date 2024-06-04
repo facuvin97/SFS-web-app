@@ -12,18 +12,23 @@ export const NotificationsProvider = ({ children }) => {
   
   // Función para cargar notificaciones del usuario
   const loadNotifications = async () => {
-  
-    console.log('Usuario: ', userLog)
-    console.log('Id de usuario: ', userLog.id)
     try {
       const response = await fetch(`http://localhost:3001/api/v1/notifications/${userLog.id}`);
+      if (!response.ok) {
+        throw new Error('Error al obtener las notificaciones');
+      }
       const data = await response.json();
-      console.log('respuesta: ', response)
       setNotifications(data);
     } catch (error) {
       console.error('Error al cargar las notificaciones:', error);
     }
   };
+
+  useEffect(() => {
+    if (userLog?.id) {
+      loadNotifications();
+    }
+  }, [userLog]);
 
   // Función para agregar una notificación
   const addNotification = async (notification) => {
@@ -52,12 +57,12 @@ export const NotificationsProvider = ({ children }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ ...notification, read: true }),
+          body: JSON.stringify({ ...notification, leido: true }),
         });
         if (response.ok) {
           setNotifications((prevNotifications) =>
             prevNotifications.map((n) =>
-              n.id === notificationId ? { ...n, read: true } : n
+              n.id === notificationId ? { ...n, leido: true } : n
             )
           );
         }
@@ -66,11 +71,6 @@ export const NotificationsProvider = ({ children }) => {
       console.error('Error al marcar la notificación como leída:', error);
     }
   };
-
-  // Cargar notificaciones al montar el componente
-  useEffect(() => {
-    loadNotifications();
-  }, []);
 
   return (
     <NotificationsContext.Provider
