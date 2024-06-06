@@ -27,6 +27,7 @@ import WalkerDetails from './pages/walkers/WalkerDetails';
 import WalkerServiceRequest from './pages/services/WalkerServicesRequests'
 import { UserProvider, useUser } from './contexts/UserLogContext';
 import Notifications from './components/Notifications';
+import ClientDetails from './pages/clients/ClientDetails';
 
 
 function App() {
@@ -69,6 +70,7 @@ function App() {
                   <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
                   <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} onImageUpload={() => useUserImage(userLog.nombre_usuario)}/>}/>
                   <Route path={`/walker-details/`} element={<WalkerDetails />}/>
+                  <Route path={`/client-details/`} element={<ClientDetails />}/>
                   <Route path={`/find/${userLog?.id}`} element={<UserDetails userId={userLog?.id} />} />
                   <Route path={`/turns`} element={<TurnsList walkerId={userLog?.id} />} />
                   <Route path='/turn-details' element={<SelectedTurnCard />} />                  
