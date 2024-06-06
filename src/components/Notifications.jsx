@@ -5,11 +5,13 @@ import DraftsIcon from '@mui/icons-material/Drafts';
 import { useNotificationsContext } from '../contexts/NotificationsContext';
 import { formatDistanceToNow } from 'date-fns';
 import '../styles/Notification.css';
+import { useUser } from '../contexts/UserLogContext';
 
 const Notifications = () => {
   const { notifications, markAsRead } = useNotificationsContext(); // Obtiene notificaciones y función para marcarlas como leídas del contexto
   const [anchorEl, setAnchorEl] = useState(null); // Estado para el elemento de anclaje del popover
   const [unreadCount, setUnreadCount] = useState(0); // Estado para el conteo de notificaciones no leídas
+  const { userLog } = useUser();
 
   useEffect(() => {
     // Actualiza el conteo de notificaciones no leídas cada vez que cambian las notificaciones
@@ -20,13 +22,10 @@ const Notifications = () => {
     setAnchorEl(event.currentTarget); // Establece el elemento de anclaje cuando se hace clic en el icono de notificaciones
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     // Marca todas las notificaciones como leídas
-    notifications.forEach(notification => {
-      if (!notification.leido) {
-        markAsRead(notification.id);
-      }
-    });
+    const unreadNotifications = notifications.filter(notification => !notification.leido);
+    await Promise.all(unreadNotifications.map(notification => markAsRead(notification.id)));
     setAnchorEl(null); // Cierra el popover estableciendo el elemento de anclaje a null
   };
 
@@ -34,7 +33,8 @@ const Notifications = () => {
   const id = open ? 'simple-popover' : undefined; // Asigna un id al popover si está abierto
 
   const handleNotificationClick = (url) => {
-    window.location.href = url; // Redirige a la URL proporcionada
+    handleClose();
+    window.location.href = `/walker-service-request/${userLog.id}`; // Redirige a la URL proporcionada
   };
 
   return (
@@ -93,7 +93,10 @@ const Notifications = () => {
                 {!notification.leido && ( // Muestra un botón para marcar como leída si la notificación no está leída
                   <div className="notification-actions"> {/* Contenedor para el botón */}
                     <Tooltip title="Marcar como leído" arrow>
-                      <IconButton onClick={() => markAsRead(notification.id)}>
+                      <IconButton onClick={(e) => {
+                        e.stopPropagation(); // Detiene la propagación del evento para que no se dispare el redireccionamiento
+                        markAsRead(notification.id);
+                      }}>
                         <DraftsIcon />
                       </IconButton>
                     </Tooltip>
@@ -109,4 +112,3 @@ const Notifications = () => {
 };
 
 export default Notifications;
-
