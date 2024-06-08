@@ -37,7 +37,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
   
   // Rutas para los clientes
   const routesClient = {
-    Servicio: '/add-service',
+    Servicio: '/',
     Pricing: '/client/pricing',
     Blog: '/client/blog',
   };
