@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -10,10 +10,31 @@ import { Button } from '@mui/material';
 const ClientDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { client, pets } = location.state || {};
+  const [client, setClient] = useState(null);
+  const [pets, setPets] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/v1/clients/${location.state.client.id}/pets`);
+        if (response.ok) {
+          const data = await response.json();
+          setClient(location.state.client);
+          setPets(data.body);
+        } else {
+          console.error('Error al obtener los datos del cliente y sus mascotas:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error al obtener los datos del cliente y sus mascotas:', error);
+      }
+    };
 
-  if (!client || !client.User) {
-    return <p>No hay datos disponibles para este cliente.</p>;
+    if (location.state && location.state.client) {
+      fetchData();
+    }
+  }, [location.state]);
+
+  if (!client) {
+    return <p>Cargando...</p>;
   }
 
   const clientImage = client.imageSrc || 'path/to/default/image.png'; // Ruta de la imagen por defecto si no hay imagen

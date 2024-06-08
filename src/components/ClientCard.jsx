@@ -7,12 +7,12 @@ import Avatar from '@mui/material/Avatar';
 import Collapse from '@mui/material/Collapse';
 import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
-import { useUserImageContext } from '../contexts/UserImageContext';
+import { useClientImageContext } from '../contexts/ClientImageContext';
 
 const ClientCard = ({ client }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
-  const { clientImages } = useUserImageContext();
+  const { clientImages } = useClientImageContext();
 
   const handleMouseEnter = () => {
     setIsExpanded(true);

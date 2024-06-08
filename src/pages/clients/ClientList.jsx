@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ClientCard from '../../components/ClientCard'; 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { ClientsImageContextProvider } from '../../contexts/ClientsImageContext';
+import { ClientImageContextProvider } from '../../contexts/ClientImageContext';
 
 function ClientsList() {
   const [clients, setClients] = useState([]);
@@ -32,7 +32,7 @@ function ClientsList() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <ClientsImageContextProvider>
+    <ClientImageContextProvider>
       <Box sx={{ flexGrow: 1, p: 2 }}>
         <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
           {clients.map((client) => (
@@ -42,7 +42,7 @@ function ClientsList() {
           ))}
         </Grid>
       </Box>
-    </ClientsImageContextProvider>
+    </ClientImageContextProvider>
   );
 }
 
