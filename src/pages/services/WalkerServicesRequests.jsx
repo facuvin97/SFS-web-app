@@ -15,9 +15,8 @@ function WalkerServicesRequests({ walkerId }) {
   const handleRejectService = async (service) => {
     try {
 
-      deleteService(service.id)
-
-      //ENVIAR UNA NOTIFICACION AL CLIENTE
+      const msg = await deleteService(service, 'walker')
+      alert(msg)
 
      } catch (error) {
       console.error('Error al eliminar el servicio:', error.message);
@@ -26,9 +25,8 @@ function WalkerServicesRequests({ walkerId }) {
 
   const handleAcceptService = async (service) => {
     try {
-      authorizeService(service);
-
-      //ENVIAR UNA NOTIFICACION AL CLIENTE
+      const msg = await authorizeService(service);
+      alert(msg)
 
     } catch (error) {
       console.error('Error al aceptar el servicio:', error.message);

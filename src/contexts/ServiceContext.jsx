@@ -37,19 +37,46 @@ export const ServicesProvider = ({ children }) => {
     }
   }, [userLog]);
 
-  const deleteService = async (serviceId) => {
+  const deleteService = async (service, execUserType) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/service/${serviceId}`, {
-        method: 'DELETE'
+      // Primero, intenta eliminar el servicio
+      const deleteResponse = await fetch(`http://localhost:3001/api/v1/service/${service.id}`, {
+        method: 'DELETE',
       });
-      if (!response.ok) {
+  
+      if (!deleteResponse.ok) {
         throw new Error('Error al eliminar el servicio');
       }
+  
       await getPendingServicesCount(); // Actualizar el conteo después de eliminar
+  
+      if (execUserType === 'walker') {
+        // Intentar enviar la notificación solo si la eliminación del servicio fue exitosa
+        const notificationResponse = await fetch(`http://localhost:3001/api/v1/notifications`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "titulo": "Servicio Cancelado",
+            "contenido": `Su servicio para el día ${new Date(service.fecha).toLocaleDateString()} con el paseador ${service.Turn.Walker.User.nombre_usuario} ha sido cancelado`,
+            "leido": false,
+            "userId": service.ClientId,
+          }),
+        });
+  
+        if (!notificationResponse.ok) {
+          throw new Error('Error al enviar la notificación');
+        }
+  
+        return "Servicio cancelado correctamente";
+      }
     } catch (error) {
-      console.error('Error al eliminar el servicio:', error);
+      console.error('Error al procesar la solicitud:', error.message);
+      return 'Error al cancelar servicio';
     }
   };
+  
 
   const authorizeService = async (service) => {
     try {
@@ -68,6 +95,25 @@ export const ServicesProvider = ({ children }) => {
         throw new Error('Error al autorizar el servicio');
       }
       await getPendingServicesCount(); // Actualizar el conteo después de autorizar
+
+      const notificationResponse = await fetch(`http://localhost:3001/api/v1/notifications`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "titulo": "Servicio confirmado",
+            "contenido": `El paseador ${service.Turn.Walker.User.nombre_usuario} ha confirmado su servicio para el día ${new Date(service.fecha).toLocaleDateString()}`,
+            "leido": false,
+            "userId": service.ClientId,
+          }),
+        });
+  
+        if (!notificationResponse.ok) {
+          throw new Error('Error al enviar la notificación');
+        }
+  
+        return "Servicio aceptado correctamente";
     } catch (error) {
       console.error('Error al autorizar el servicio:', error);
     }

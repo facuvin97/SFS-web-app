@@ -10,6 +10,8 @@ function AddServiceForm({ userLog }) {
   const location = useLocation();
   const { turn } = location.state || {};
 
+  console.log('Location state turn: ', turn)
+
   console.log(userLog)
   if (userLog.tipo === 'walker') {
     throw new Error('El paseador no puede ingresar servicios.');
