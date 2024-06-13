@@ -57,7 +57,6 @@ function AddServiceForm({ userLog }) {
       TurnId: turn.id, // ID del turno seleccionado
       ClientId: userLog.id // El ID del usuario logeado se utiliza como el ClientId del servicio
     };
-
     try {
       const response = await fetch('http://localhost:3001/api/v1/service', {
         method: 'POST',
@@ -76,18 +75,6 @@ function AddServiceForm({ userLog }) {
         navigate('/');
         alert('Servicio agregado correctamente');
 
-        const notificationResponse = await fetch(`http://localhost:3001/api/v1/notifications`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            "titulo": "Servicio Creado",
-            "contenido": `Tienes pendiente a autorizar un servicio para el día ${new Date(serviceData.fecha).toLocaleDateString()},en el turno${turn.hora_inicio},  para el cliente ${userLog.nombre_usuario}`,
-            "leido": false,
-            "userId": turn.WalkerId,
-          }),
-        })
       } else {
         console.error('Error al agregar el servicio:', response.statusText);
         setMensaje('Error al agregar el servicio');

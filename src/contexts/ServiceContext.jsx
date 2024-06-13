@@ -95,19 +95,6 @@ export const ServicesProvider = ({ children }) => {
         throw new Error('Error al autorizar el servicio');
       }
       await getPendingServicesCount(); // Actualizar el conteo después de autorizar
-
-      const notificationResponse = await fetch(`http://localhost:3001/api/v1/notifications`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            "titulo": "Servicio confirmado",
-            "contenido": `El paseador ${service.Turn.Walker.User.nombre_usuario} ha confirmado su servicio para el día ${new Date(service.fecha).toLocaleDateString()}`,
-            "leido": false,
-            "userId": service.ClientId,
-          }),
-        });
   
         if (!notificationResponse.ok) {
           throw new Error('Error al enviar la notificación');

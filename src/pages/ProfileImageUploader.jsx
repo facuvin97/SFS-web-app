@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/Account.css';
 import { useNavigate } from 'react-router-dom';
-import useUserImage from '../hook/UseUserImage';
 import { useUserImageContext } from '../contexts/UserImageContext'; // Importa el contexto
 import { Save } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';

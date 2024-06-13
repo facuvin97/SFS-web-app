@@ -10,7 +10,6 @@ import LoginPage from './pages/LogIn';
 import Register from './pages/users/Register';
 import ModifyUser from './pages/users/ModifyUser';
 import ProfileImageUploader from './pages/ProfileImageUploader';
-import useUserImage from './hook/UseUserImage';
 import { UserImageContextProvider } from './contexts/UserImageContext';
 import SelectedTurnCard from './pages/turns/SelectedTurnCard';
 import TurnsList from './pages/turns/TurnsList';
@@ -69,7 +68,7 @@ function App() {
                   <Route path='/register/:typeUser' element={<Register />} />
                   <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} />} />
                   <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
-                  <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} onImageUpload={() => useUserImage(userLog.nombre_usuario)}/>}/>
+                  <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} />}/>
                   <Route path={`/walker-details/`} element={<WalkerDetails />}/>
                   <Route path={`/client-details/`} element={<ClientDetails />}/>
                   <Route path={'/client-list/'} element={< ClientsList/>} />
