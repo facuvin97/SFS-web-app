@@ -37,11 +37,20 @@ export const ServicesProvider = ({ children }) => {
     }
   }, [userLog]);
 
-  const deleteService = async (service, execUserType) => {
+  const deleteService = async (service) => {
     try {
+      const data = {
+        execUserType: 'walker',
+        userId: service.ClientId,
+        fecha: service.fecha
+      }
       // Primero, intenta eliminar el servicio
       const deleteResponse = await fetch(`http://localhost:3001/api/v1/service/${service.id}`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
       });
   
       if (!deleteResponse.ok) {
@@ -49,28 +58,9 @@ export const ServicesProvider = ({ children }) => {
       }
   
       await getPendingServicesCount(); // Actualizar el conteo después de eliminar
-  
-      if (execUserType === 'walker') {
-        // Intentar enviar la notificación solo si la eliminación del servicio fue exitosa
-        const notificationResponse = await fetch(`http://localhost:3001/api/v1/notifications`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            "titulo": "Servicio Cancelado",
-            "contenido": `Su servicio para el día ${new Date(service.fecha).toLocaleDateString()} con el paseador ${service.Turn.Walker.User.nombre_usuario} ha sido cancelado`,
-            "leido": false,
-            "userId": service.ClientId,
-          }),
-        });
-  
-        if (!notificationResponse.ok) {
-          throw new Error('Error al enviar la notificación');
-        }
-  
-        return "Servicio cancelado correctamente";
-      }
+   
+      return "Servicio cancelado correctamente";
+      
     } catch (error) {
       console.error('Error al procesar la solicitud:', error.message);
       return 'Error al cancelar servicio';

@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ImageProfile from './ImageProfile';
 import { useUserImageContext } from '../contexts/UserImageContext';
-import { useServicesContext } from '../contexts/ServiceContext';
+import { useServicesContext } from '../contexts/PendingServiceContext';
 import Notifications from './Notifications';
 
 const pagesWalker = ['Turno', 'Servicios', 'Blog'];

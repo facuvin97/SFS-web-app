@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import ServiceRequestCard from '../../components/ServiceRequestCard';
-import { useServicesContext } from '../../contexts/ServiceContext';
+import { useServicesContext } from '../../contexts/PendingServiceContext';
 import { Typography } from '@mui/material';
 
 function WalkerServicesRequests({ walkerId }) {
