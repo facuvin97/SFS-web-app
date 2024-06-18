@@ -20,7 +20,7 @@ import { theme, globalStyles } from './theme';
 import { Box } from '@mui/material';
 import ModifyTurn from './pages/turns/ModifyTurn';
 import AddServiceForm from './pages/services/AddService';
-import ServicesList from './pages/services/ServicesClientList';
+import ServicesList from './pages/services/ServicesList';
 import WalkersList from './pages/walkers/WalkerList';
 import WalkerDetails from './pages/walkers/WalkerDetails';
 import WalkerServiceRequest from './pages/services/WalkerServicesRequests'
@@ -78,7 +78,7 @@ function App() {
                   <Route path='/turn-modify' element={<ModifyTurn />} />                 
                   <Route path={`/walker-service-request/${userLog?.id}`} element={<WalkerServiceRequest walkerId={userLog?.id} />} />                 
                   <Route path={`/agregar-turno`} element={<AddTurnForm userLog={userLog} />} />
-                  <Route path={`/services`} element={<ServicesList walkerId={userLog?.id} />} />
+                  <Route path={`/services`} element={<ServicesList />} />
 
                   {/* <Route path={'/service-details'} element={<SelectedServiceCard />} />                  
                   <Route path='/service-modify' element={<ModifyService />} />  */} 

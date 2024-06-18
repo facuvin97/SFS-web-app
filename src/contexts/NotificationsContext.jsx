@@ -18,7 +18,11 @@ export const NotificationsProvider = ({ children }) => {
         throw new Error('Error al obtener las notificaciones');
       }
       const data = await response.json();
-      setNotifications(data);
+
+      // Ordenar las notificaciones por fecha, las más recientes primero
+      const sortedNotifications = data.sort((a, b) => new Date(b.fechaHora) - new Date(a.fechaHora));
+
+      setNotifications(sortedNotifications);
     } catch (error) {
       console.error('Error al cargar las notificaciones:', error);
     }

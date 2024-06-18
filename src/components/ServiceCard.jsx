@@ -29,11 +29,6 @@ function ServiceCard({ service, onDelete }) {
     onDelete();
   };
 
-  const handleModifyClick = (event) => {
-    event.stopPropagation();
-    navigate('/service-modify', { state: { service } });
-  };
-
   return (
     <Card
       sx={{ maxWidth: 'none', minWidth: '250px', maxHeight: 'none', height: '100%' }}
@@ -56,11 +51,6 @@ function ServiceCard({ service, onDelete }) {
             <Typography variant="body2" color="text.secondary">
               <strong>Cantidad de mascotas:</strong> {service.cantidad_mascotas}
             </Typography>
-            <Tooltip title='Editar servicio' arrow>
-              <IconButton aria-label="editar" onClick={handleModifyClick}>
-                <EditIcon />
-              </IconButton>
-            </Tooltip>
             <Tooltip title='Eliminar servicio' arrow>
               <IconButton aria-label="eliminar" onClick={handleDeleteClick}>
                 <DeleteIcon />

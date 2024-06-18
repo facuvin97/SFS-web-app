@@ -5,17 +5,23 @@ import Box from '@mui/material/Box';
 import ServiceRequestCard from '../../components/ServiceRequestCard';
 import { useServicesContext } from '../../contexts/PendingServiceContext';
 import { Typography } from '@mui/material';
+import { useUser } from '../../contexts/UserLogContext';
 
 function WalkerServicesRequests({ walkerId }) {
   const {pendingServices, setPendingServices, deleteService, authorizeService} = useServicesContext();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { userLog } = useUser();
+
+  if (userLog.tipo !== 'walker') {
+    navigate('/')
+  }
 
   const handleRejectService = async (service) => {
     try {
 
-      const msg = await deleteService(service, 'walker')
+      const msg = await deleteService(service)
       alert(msg)
 
      } catch (error) {
