@@ -5,14 +5,12 @@ import { format, parseISO, getDay } from 'date-fns';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { es } from 'date-fns/locale';
+import { useConfirmedServicesContext } from '../../contexts/ServicesContext';
 
 function AddServiceForm({ userLog }) {
   const location = useLocation();
   const { turn } = location.state || {};
 
-  console.log('Location state turn: ', turn)
-
-  console.log(userLog)
   if (userLog.tipo === 'walker') {
     throw new Error('El paseador no puede ingresar servicios.');
   }
@@ -23,6 +21,7 @@ function AddServiceForm({ userLog }) {
   const [nota, setNota] = useState('');
   const [mensaje, setMensaje] = useState(null);
   const navigate = useNavigate();
+  const {setPendingServices} = useConfirmedServicesContext()
 
   //pasamos los dias del turno a numeros
   const turnDays = turn.dias.map(day => {
@@ -44,7 +43,11 @@ function AddServiceForm({ userLog }) {
     const dayNames = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
 
 
-    if (!turnDays.includes(selectedDay)) {
+    if(!selectedDay){
+      setMensaje(`Debe seleccionar un dìa valido`);
+      return
+    }
+    else if (!turnDays.includes(selectedDay) & selectedDay) {
       setMensaje(`El día seleccionado (${dayNames[selectedDay]}) no coincide con los días permitidos del turno (${turn.dias.join(', ')}).`);
       return;
     }
@@ -68,6 +71,9 @@ function AddServiceForm({ userLog }) {
 
       if (response.ok) {
         const responseData = await response.json();
+
+        setPendingServices((prevPendingServices) => [...prevPendingServices, responseData.data]);
+
         setFecha('');
         setDireccionPickUp('');
         setCantidadMascotas('');

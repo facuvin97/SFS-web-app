@@ -8,6 +8,8 @@ export const useConfirmedServicesContext = () => useContext(ConfirmedServicesCon
 
 export const ConfirmedServicesProvider = ({ children }) => {
   const [confirmedServices, setConfirmedServices] = useState([]);//inicializa como array vacio
+  const [pendingServices, setPendingServices] = useState([])
+  const [pendingServicesCount, setPendingServicesCount] = useState(0);
   const { userLog } = useUser();
   const today = new Date();
 
@@ -15,9 +17,9 @@ export const ConfirmedServicesProvider = ({ children }) => {
     try {
       let response;
 
-      if (userLog.tipo === 'walker') {
+      if (userLog?.tipo === 'walker') {
         response = await fetch(`http://localhost:3001/api/v1/services/walker/${userLog.id}`);
-      } else if (userLog.tipo === 'client') {
+      } else if (userLog?.tipo === 'client') {
         response = await fetch(`http://localhost:3001/api/v1/services/client/${userLog.id}`);
       } else {
         throw new Error('Tipo de usuario invalido')
@@ -29,11 +31,26 @@ export const ConfirmedServicesProvider = ({ children }) => {
       }
 
       const data = await response.json();
+
+      // filtro la lista de servicios pendientes 
+        const serviciosPendientes = data.body.filter(service => {
+        const serviceDate = new Date(service.fecha); // Convierte service.fecha a un objeto Date
+        return !service.aceptado && serviceDate >= today; // Verifica si aceptado es false y la fecha es igual o mayor a hoy
+      });
+
+      // cargo la lista de servicios pendientes
+      setPendingServices(serviciosPendientes);
+      setPendingServicesCount(serviciosPendientes.length);
+
+
+
+      // obtengo solo los servicios confirmados en el futuro
       const serviciosConfirmados = data.body.filter(service => {
         const serviceDate = new Date(service.fecha); // Convierte service.fecha a un objeto Date
         return service.aceptado && serviceDate >= today; // Verifica si aceptado es true y la fecha es igual o mayor a hoy
       });
 
+      //cargo la lista de servicios confirmados
       setConfirmedServices(serviciosConfirmados);
 
     } catch (error) {
@@ -43,19 +60,21 @@ export const ConfirmedServicesProvider = ({ children }) => {
 
   
   useEffect(() => {
-    getConfirmedServices();
+    if (userLog) {
+      getConfirmedServices();
+    }
   }, [userLog]);
 
   const deleteService = async (service) => {
     try {
       let data;
-      if (userLog.tipo === 'walker') {
+      if (userLog?.tipo === 'walker') {
         data = {
           execUserType: userLog.tipo,
           userId: service.ClientId,
           fecha: service.fecha
         }
-      } else if (userLog.tipo === 'client') {
+      } else if (userLog?.tipo === 'client') {
         const turnResponse = await fetch(`http://localhost:3001/api/v1/turn/${service.TurnId}`)
         const turn = await turnResponse.json();
         console.log('Turn en service context:', turn)
@@ -98,12 +117,40 @@ export const ConfirmedServicesProvider = ({ children }) => {
     }
   };
 
+  const authorizeService = async (service) => {
+    try {
 
+      service.aceptado = true;
+
+      const response = await fetch(`http://localhost:3001/api/v1/service/${service.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(service)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al autorizar el servicio');
+      }
+      await getConfirmedServices(); // Actualizar el conteo después de autorizar
+  
+        console.log("GetPending")
+        return "Servicio aceptado correctamente";
+    } catch (error) {
+      console.error('Error al autorizar el servicio:', error);
+    }
+  };
+
+  
   return (
     <ConfirmedServicesContext.Provider value={{ 
       confirmedServices, 
-      setConfirmedServices, 
+      pendingServices,
+      pendingServicesCount,
       deleteService, 
+      authorizeService,
+      setPendingServices
     }}>
       {children}
     </ConfirmedServicesContext.Provider>

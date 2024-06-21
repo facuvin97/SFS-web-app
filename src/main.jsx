@@ -10,7 +10,6 @@ import { BrowserRouter } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { WalkersImageContextProvider } from './contexts/WalkersImageContext.jsx';
 import { UserProvider, useUser } from './contexts/UserLogContext';
-import { ServicesProvider } from './contexts/PendingServiceContext.jsx'; 
 import { NotificationsProvider } from './contexts/NotificationsContext.jsx';
 import { ConfirmedServicesProvider } from './contexts/ServicesContext.jsx';
 
@@ -21,11 +20,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <CssBaseline />
         <UserProvider>
         <NotificationsProvider>
-        <ServicesProvider>
         <ConfirmedServicesProvider>
           <App />
         </ConfirmedServicesProvider>
-        </ServicesProvider>
         </NotificationsProvider>
         </UserProvider>
       </BrowserRouter>

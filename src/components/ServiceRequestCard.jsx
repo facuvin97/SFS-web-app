@@ -11,6 +11,8 @@ import { Tooltip } from '@mui/material';
 function ServiceRequestCard({ service, onAccept, onReject }) {
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
+  const fechaFormateada = new Date(service.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' });
+
 
   const handleMouseEnter = () => {
     setIsActive(true);
@@ -46,7 +48,7 @@ function ServiceRequestCard({ service, onAccept, onReject }) {
           {service.direccionPickUp}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          <strong>Fecha:</strong> {new Date(service.fecha).toLocaleDateString()}
+          <strong>Fecha:</strong> {fechaFormateada}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           <strong>Nota:</strong> {service.nota}

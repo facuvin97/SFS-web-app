@@ -3,20 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import ServiceRequestCard from '../../components/ServiceRequestCard';
-import { useServicesContext } from '../../contexts/PendingServiceContext';
+import {useConfirmedServicesContext} from '../../contexts/ServicesContext'
 import { Typography } from '@mui/material';
 import { useUser } from '../../contexts/UserLogContext';
 
 function WalkerServicesRequests({ walkerId }) {
-  const {pendingServices, setPendingServices, deleteService, authorizeService} = useServicesContext();
+  const {pendingServices, deleteService, authorizeService} = useConfirmedServicesContext();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { userLog } = useUser();
 
-  if (userLog.tipo !== 'walker') {
-    navigate('/')
-  }
+  useEffect(() => {
+    if (userLog.tipo !== 'walker') {
+      navigate('/')
+    }
+  });
+
 
   const handleRejectService = async (service) => {
     try {

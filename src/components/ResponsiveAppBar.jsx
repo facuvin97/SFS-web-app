@@ -17,27 +17,27 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ImageProfile from './ImageProfile';
 import { useUserImageContext } from '../contexts/UserImageContext';
-import { useServicesContext } from '../contexts/PendingServiceContext';
+import { useConfirmedServicesContext } from '../contexts/ServicesContext';
 import Notifications from './Notifications';
 
-const pagesWalker = ['Turno', 'Servicios', 'Blog'];
-const pagesClient = ['Servicio', 'Pricing', 'Blog'];
+const pagesWalker = ['Turno', 'Solicitudes', 'Servicios'];
+const pagesClient = ['Servicios', 'Pricing', 'Blog'];
 
 function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const {pendingServicesCount, setPendingServicesCount} = useServicesContext();
+  const {pendingServicesCount} = useConfirmedServicesContext();
 
   // Rutas para los paseadores
   const routesWalker = {
     Turno: '/agregar-turno',
-    Servicios: `/walker-service-request/${loggedInUser?.id}`,
-    Blog: '/walker/blog',
+    Servicios: `/services`,
+    Solicitudes: `/walker-service-request/${loggedInUser?.id}`,
   };
   
   // Rutas para los clientes
   const routesClient = {
-    Servicio: '/',
+    Servicios: '/services',
     Pricing: '/client/pricing',
     Blog: '/client/blog',
   };
@@ -95,7 +95,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                  {page === 'Servicios' && loggedInUser?.tipo === 'walker' ? (
+                  {page === 'Solicitudes' && loggedInUser?.tipo === 'walker' ? (
                     <Badge badgeContent={pendingServicesCount} color="error">
                       {page}
                     </Badge>

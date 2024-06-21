@@ -4,12 +4,15 @@ import ServiceCard from '../../components/ServiceCard';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useConfirmedServicesContext } from '../../contexts/ServicesContext';
+import { Typography } from '@mui/material';
+import { useUser } from '../../contexts/UserLogContext';
 
 function ServicesList({}) {
-  const { confirmedServices, deleteService } = useConfirmedServicesContext();
+  const { confirmedServices, deleteService, pendingServices } = useConfirmedServicesContext();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mensaje, setMensaje] = useState('');
+  const { userLog } = useUser()
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +40,20 @@ function ServicesList({}) {
           </Grid>
         ))}
       </Grid>
+      {  pendingServices[0] && userLog.tipo === 'client' &&
+      <>
+        <Typography variant='h2'>
+            Servicios pendientes.
+        </Typography>
+        <Grid container spacing={2} sx={{display: 'flex', justifyContent: 'center', alignItems: 'flex-start'}}>
+          {pendingServices.map((service) => (
+            <Grid item key={service.id}>
+              <ServiceCard service={service} onDelete={() => handleDeleteService(service)} />
+            </Grid>
+          ))}
+        </Grid>
+      </>
+      }
       {mensaje && <p>{mensaje}</p>}
     </Box>
   )
