@@ -9,9 +9,19 @@ export const useConfirmedServicesContext = () => useContext(ConfirmedServicesCon
 export const ConfirmedServicesProvider = ({ children }) => {
   const [confirmedServices, setConfirmedServices] = useState([]);//inicializa como array vacio
   const [pendingServices, setPendingServices] = useState([])
+  const [oldServices, setOldServices] = useState([])
   const [pendingServicesCount, setPendingServicesCount] = useState(0);
   const { userLog } = useUser();
   const today = new Date();
+
+  // Función auxiliar para verificar si dos fechas son del mismo día
+  function isSameDay(date1, date2) {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  }
 
   const getConfirmedServices = async () => {
     try {
@@ -53,17 +63,50 @@ export const ConfirmedServicesProvider = ({ children }) => {
       //cargo la lista de servicios confirmados
       setConfirmedServices(serviciosConfirmados);
 
-    } catch (error) {
-      console.error('Error al obtener los servicios:', error);
-    }
-  };
 
-  
-  useEffect(() => {
-    if (userLog) {
-      getConfirmedServices();
+  // Obtengo solo los servicios concretados
+  const serviciosConcretados = data.body.filter(service => {
+    const serviceDate = new Date(service.fecha); // Convierte service.fecha a un objeto Date
+
+    // Verifica si el servicio está aceptado y si la fecha es igual o menor a hoy
+    if (service.aceptado && serviceDate <= today) {
+      // Si la fecha es hoy, verifica si service.Turn.hora_fin es menor a la hora actual
+      if (isSameDay(serviceDate, today) && service.Turn.hora_fin) {
+        const horaActual = new Date(); // Hora actual
+        const horaFinString = `1970-01-01T${service.Turn.hora_fin}`;
+        const horaFin = new Date(horaFinString);
+        horaFin.setFullYear(horaActual.getFullYear());
+        horaFin.setMonth(horaActual.getMonth());
+        horaFin.setDate(horaActual.getDate());
+
+        // Compara la hora especificada (horaFin) con la hora actual (horaActual)
+        if (horaFin <= horaActual) {
+          return true; // Si la hora final es antes o igual a la hora actual, el servicio está concretado
+        }
+      } else {
+        return true; // Si no es hoy, el servicio está concretado sin importar la hora
+      }
     }
-  }, [userLog]);
+    
+    return false; // Si no está aceptado o la fecha es futura, el servicio no está concretado
+  });
+
+        console.log('Servicios concretados: ', serviciosConcretados)
+      
+        //cargo la lista de servicios confirmados
+        setOldServices(serviciosConcretados);
+
+      } catch (error) {
+        console.error('Error al obtener los servicios:', error);
+      }
+    };
+
+    //cargo todos los estados de servicio cada vez que cambia el userLog
+    useEffect(() => {
+      if (userLog) {
+        getConfirmedServices();
+      }
+    }, [userLog]);
 
   const deleteService = async (service) => {
     try {
