@@ -30,6 +30,7 @@ import ClientDetails from './pages/clients/ClientDetails';
 import ClientsList from './pages/clients/ClientList';
 import ServiceHistory from './pages/services/ServiceHistory';
 import AddReviewForm from './pages/reviews/AddReview';
+import WalkerProfile from './pages/walkers/WalkerProfile';
 
 
 function App() {
@@ -83,9 +84,7 @@ function App() {
                   <Route path={`/services`} element={<ServicesList />} />
                   <Route path={`/service-history`} element={<ServiceHistory />} />
                   <Route path={`/add-review/:receiverId`} element={<AddReviewForm />} />
-
-                  {/* <Route path={'/service-details'} element={<SelectedServiceCard />} />                  
-                  <Route path='/service-modify' element={<ModifyService />} />  */} 
+                  <Route path={`/profile`} element={<WalkerProfile />} />
                   <Route path={`/add-service`} element={<AddServiceForm userLog={userLog}/>}/>
                   <Route path="*" element={<div>404</div> } />
                 </Routes>

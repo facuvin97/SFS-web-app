@@ -20,8 +20,8 @@ import { useUserImageContext } from '../contexts/UserImageContext';
 import { useConfirmedServicesContext } from '../contexts/ServicesContext';
 import Notifications from './Notifications';
 
-const pagesWalker = ['Turno', 'Solicitudes', 'Servicios'];
-const pagesClient = ['Servicios', 'Pricing', 'Blog'];
+const pagesWalker = ['Turno', 'Solicitudes', 'Servicios', 'Historial'];
+const pagesClient = ['Servicios', 'Historial', 'Blog'];
 
 function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -33,12 +33,13 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
     Turno: '/agregar-turno',
     Servicios: `/services`,
     Solicitudes: `/walker-service-request/${loggedInUser?.id}`,
+    Historial: `/service-history`
   };
   
   // Rutas para los clientes
   const routesClient = {
     Servicios: '/services',
-    Pricing: '/client/pricing',
+    Historial: '/service-history',
     Blog: '/client/blog',
   };
 

@@ -3,18 +3,22 @@ import WalkerCard from '../../components/WalkerCard';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { WalkersImageContextProvider } from '../../contexts/WalkersImageContext';
+import StarIcon from '@mui/icons-material/Star';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 function WalkersList() {
   const [walkers, setWalkers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({  // estado para los filtros
-    calificacion: '',
+  const [filters, setFilters] = useState({
+    calificacion: 0,
     zona: '',
     tarifa: ''
   });
 
-  //carga la lista de walkers en el primer render
   useEffect(() => {
     const fetchWalkers = async () => {
       try {
@@ -34,7 +38,6 @@ function WalkersList() {
     fetchWalkers();
   }, []);
 
-  // funcion para el manejo de los cambios en los filtros
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prevFilters) => ({
@@ -43,7 +46,13 @@ function WalkersList() {
     }));
   };
 
-  // lista de paseadores con los filtros aplicados
+  const handleRatingChange = (event) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      calificacion: event.target.value
+    }));
+  };
+
   const filteredWalkers = walkers.filter((walker) => {
     const calificacionMatch = filters.calificacion ? walker.User.calificacion >= filters.calificacion : true;
     const zonaMatch = filters.zona ? walker.Turns.some(turn => turn.zona.toLowerCase().includes(filters.zona.toLowerCase())) : true;
@@ -52,26 +61,36 @@ function WalkersList() {
     return calificacionMatch && zonaMatch && tarifaMatch;
   });
 
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <WalkersImageContextProvider>
       <Box sx={{ flexGrow: 1, p: 2 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-          <select
-            name="calificacion"
-            value={filters.calificacion}
-            onChange={handleFilterChange}
-          >
-            <option value="">Sin filtrar</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, gap: 2 }}>
+          <FormControl>
+            <InputLabel id="rating-label">Calificación</InputLabel>
+            <Select
+              labelId="rating-label"
+              id="rating-select"
+              value={filters.calificacion}
+              onChange={handleRatingChange}
+              label="Calificación"
+            >
+              {[0, 1, 2, 3, 4, 5].map((rating) => (
+                <MenuItem key={rating} value={rating}>
+                  {rating === 0 ? 'Sin filtrar' : (
+                    <>
+                      {rating}
+                      {Array.from({ length: rating }, (_, i) => (
+                        <StarIcon key={i} sx={{ color: 'yellow' }} />
+                      ))}
+                    </>
+                  )}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <input
             type="text"
             name="zona"
