@@ -33,26 +33,41 @@ function ServicesList({}) {
 
   return (
     <Box sx={{ flexGrow: 1, p: 2 }}>
-      <Grid container spacing={2} sx={{display: 'flex', justifyContent: 'center', alignItems: 'flex-start'}}>
-        {confirmedServices.map((service) => (
-          <Grid item key={service.id}>
-            <ServiceCard service={service} onDelete={() => handleDeleteService(service)} />
-          </Grid>
-        ))}
-      </Grid>
-      {  pendingServices[0] && userLog.tipo === 'client' &&
-      <>
-        <Typography variant='h2'>
-            Servicios pendientes.
-        </Typography>
+      {confirmedServices.length > 0 ? (
         <Grid container spacing={2} sx={{display: 'flex', justifyContent: 'center', alignItems: 'flex-start'}}>
-          {pendingServices.map((service) => (
+          {confirmedServices.map((service) => (
             <Grid item key={service.id}>
               <ServiceCard service={service} onDelete={() => handleDeleteService(service)} />
             </Grid>
           ))}
         </Grid>
-      </>
+      ) : (
+        <Typography variant="body1" color="text.secondary">
+          Usted no tiene ningun servicio confirmado proximamente.
+        </Typography>
+      )
+      }
+      {
+        userLog.tipo === 'client' && (
+          pendingServices[0] ? (
+            <>
+              <Typography variant='h2'>
+                Servicios pendientes.
+              </Typography>
+              <Grid container spacing={2} sx={{display: 'flex', justifyContent: 'center', alignItems: 'flex-start'}}>
+                {pendingServices.map((service) => (
+                  <Grid item key={service.id}>
+                    <ServiceCard service={service} onDelete={() => handleDeleteService(service)} />
+                  </Grid>
+                ))}
+              </Grid>
+            </>
+          ) : (
+            <Typography variant="body1" color="text.secondary">
+              No hay servicios pendientes.
+            </Typography>
+          )
+        )
       }
       {mensaje && <p>{mensaje}</p>}
     </Box>

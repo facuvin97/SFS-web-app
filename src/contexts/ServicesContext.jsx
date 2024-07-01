@@ -7,9 +7,9 @@ const ConfirmedServicesContext = createContext();
 export const useConfirmedServicesContext = () => useContext(ConfirmedServicesContext);
 
 export const ConfirmedServicesProvider = ({ children }) => {
-  const [confirmedServices, setConfirmedServices] = useState([]);//inicializa como array vacio
-  const [pendingServices, setPendingServices] = useState([])
-  const [oldServices, setOldServices] = useState([])
+  const [confirmedServices, setConfirmedServices] = useState([]); //servicios aceptados que no han sucedido
+  const [pendingServices, setPendingServices] = useState([]) //servicios sin aceptar que no han sucedido
+  const [oldServices, setOldServices] = useState([]) //servicios aceptados que ya sucedieron
   const [pendingServicesCount, setPendingServicesCount] = useState(0);
   const { userLog } = useUser();
   const today = new Date();
@@ -90,10 +90,8 @@ export const ConfirmedServicesProvider = ({ children }) => {
     
     return false; // Si no está aceptado o la fecha es futura, el servicio no está concretado
   });
-
-        console.log('Servicios concretados: ', serviciosConcretados)
       
-        //cargo la lista de servicios confirmados
+        //cargo la lista de servicios concretados
         setOldServices(serviciosConcretados);
 
       } catch (error) {
@@ -191,9 +189,12 @@ export const ConfirmedServicesProvider = ({ children }) => {
       confirmedServices, 
       pendingServices,
       pendingServicesCount,
+      oldServices,
       deleteService, 
       authorizeService,
-      setPendingServices
+      setPendingServices,
+      setOldServices,
+      getConfirmedServices
     }}>
       {children}
     </ConfirmedServicesContext.Provider>

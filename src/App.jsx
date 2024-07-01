@@ -28,6 +28,8 @@ import { UserProvider, useUser } from './contexts/UserLogContext';
 import Notifications from './components/Notifications';
 import ClientDetails from './pages/clients/ClientDetails';
 import ClientsList from './pages/clients/ClientList';
+import ServiceHistory from './pages/services/ServiceHistory';
+import AddReviewForm from './pages/reviews/AddReview';
 
 
 function App() {
@@ -79,6 +81,8 @@ function App() {
                   <Route path={`/walker-service-request/${userLog?.id}`} element={<WalkerServiceRequest walkerId={userLog?.id} />} />                 
                   <Route path={`/agregar-turno`} element={<AddTurnForm userLog={userLog} />} />
                   <Route path={`/services`} element={<ServicesList />} />
+                  <Route path={`/service-history`} element={<ServiceHistory />} />
+                  <Route path={`/add-review/:receiverId`} element={<AddReviewForm />} />
 
                   {/* <Route path={'/service-details'} element={<SelectedServiceCard />} />                  
                   <Route path='/service-modify' element={<ModifyService />} />  */} 
