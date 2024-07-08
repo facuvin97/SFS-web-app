@@ -37,7 +37,7 @@ const WalkerCard = ({ walker }) => {
   };
 
   const handleClick = () => {
-    navigate('/walker-details', { state: { walker: { ...walker, imageSrc: imageUrl }, turns } })
+    navigate(`/profile/${walker.id}`)
   };
 
   const calificacion = walker.User.calificacion || 0;

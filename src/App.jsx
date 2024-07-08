@@ -84,7 +84,7 @@ function App() {
                   <Route path={`/services`} element={<ServicesList />} />
                   <Route path={`/service-history`} element={<ServiceHistory />} />
                   <Route path={`/add-review/:receiverId`} element={<AddReviewForm />} />
-                  <Route path={`/profile`} element={<WalkerProfile />} />
+                  <Route path={`/profile/:walkerId`} element={<WalkerProfile />} />
                   <Route path={`/add-service`} element={<AddServiceForm userLog={userLog}/>}/>
                   <Route path="*" element={<div>404</div> } />
                 </Routes>

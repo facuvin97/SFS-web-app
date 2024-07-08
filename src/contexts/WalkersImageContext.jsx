@@ -16,7 +16,7 @@ export const WalkersImageContextProvider = ({ children }) => {
           const walkers = await response.json();
           const images = await Promise.all(walkers.map(async (walker) => {
             const imageResponse = await fetch(`http://localhost:3001/api/v1/image/single/${walker.nombre_usuario}`);
-            if (imageResponse.ok) {
+            if (imageResponse.status == 200) {
               const blob = await imageResponse.blob();
               const objectURL = URL.createObjectURL(blob);
               return { ...walker, imageSrc: objectURL };
