@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Card, CardContent, CardMedia, Typography, Avatar, Grid, Box, Button, IconButton, Tooltip } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography, Avatar, Grid, Box, Button, IconButton, Tooltip, Rating } from '@mui/material';
 import { useWalkersImageContext } from '../../contexts/WalkersImageContext';
 import { useUser } from '../../contexts/UserLogContext'; 
 import EditIcon from '@mui/icons-material/Edit';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import StarIcon from '@mui/icons-material/Star';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
 const WalkerProfile = () => {
   const { walkerId } = useParams();
@@ -77,11 +79,36 @@ const WalkerProfile = () => {
     event.stopPropagation();
     navigate('/profile-edit');
   }
+
+  const handleModifyPhotoClick = (event) =>{
+    
+  }
   
   const handleUploadPhoto = (event) => {
     event.stopPropagation();
     navigate('/upload-photo');
   }
+  const handleEditTurnClick = (turn) => {
+
+    navigate('/turn-modify', { state: { turn } });
+   }
+   const getStarIcons = (calificacion) => {
+    const fullStars = Math.floor(calificacion);
+    const hasHalfStar = calificacion % 1 !== 0;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+    return (
+      <>
+        {[...Array(fullStars)].map((_, index) => (
+          <StarIcon key={`full-${index}`} />
+        ))}
+        {hasHalfStar && <StarIcon />}
+        {[...Array(emptyStars)].map((_, index) => (
+          <StarOutlineIcon key={`empty-${index}`} />
+        ))}
+      </>
+    );
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -99,22 +126,35 @@ const WalkerProfile = () => {
             <Tooltip title='Editar Perfil'>
               <IconButton aria-label="editar" onClick={handleModifyClick}>
                 <EditIcon />
-            </IconButton>
-          </Tooltip>
+              </IconButton>
+            </Tooltip>
           </Grid>
         </Grid>}
         <Grid container spacing={2} alignItems="center">
           <Grid item>
             <Avatar alt={walker.User.nombre_usuario} src={imageUrl} sx={{ width: 100, height: 100 }} />
           </Grid>
+            <Grid item>
+              <Grid container justifyContent="center" alignItems="center">
+              <Typography align="center">
+              <Tooltip title='Editar Foto Perfil'>
+                <IconButton aria-label="editar" onClick={handleModifyPhotoClick}>
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              </Typography>
+              </Grid>
+            </Grid>
           <Grid item xs>
+            
             <Typography variant="h5" component="div">
               {walker.User.nombre_usuario}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               {walker.User.direccion}
             </Typography>
-          </Grid>
+                {getStarIcons(walker.User.calificacion || 0)}
+           </Grid>
         </Grid>
         <Box mt={2}>
           <Typography variant="body1"><strong>Fecha de Nacimiento:</strong> {formatFechaNacimiento(walker.User.fecha_nacimiento)}</Typography>
@@ -166,9 +206,14 @@ const WalkerProfile = () => {
               <Typography variant="body1" color="text.primary">
                 <strong>Hora de fin:</strong> {turn.hora_fin}
               </Typography>
-              <Button variant="contained" color="primary" onClick={() => handleAddService(turn)}>
-                Solicitar Servicio
-              </Button>
+              { userLog.id == walker.id ? (
+              <Button variant="contained" color="primary" onClick={() => handleEditTurnClick(turn)}>
+                Modificar Turno
+              </Button>) : (
+                 <Button variant="contained" color="primary" onClick={() => handleAddService(turn)}>
+                 Solicitar Servicio 
+               </Button>)
+              }
             </Box>
           ))
         ) : (
