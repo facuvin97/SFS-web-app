@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import { useUserImageContext } from '../../contexts/UserImageContext';
 
 const WalkerProfile = () => {
   const { walkerId } = useParams();
@@ -18,6 +19,7 @@ const WalkerProfile = () => {
   const [turns, setTurns] = useState([]);
   const { walkerImages } = useWalkersImageContext();
   const { userLog } = useUser();
+  const { imageSrc} = useUserImageContext();
 
   useEffect(() => {
     const fetchWalker = async () => {
@@ -77,11 +79,12 @@ const WalkerProfile = () => {
 
   const handleModifyClick = (event) => {
     event.stopPropagation();
-    navigate('/profile-edit');
+    navigate(`/modify-user`);
   }
 
   const handleModifyPhotoClick = (event) =>{
-    
+    event.stopPropagation();
+    navigate(`/image/single/${userLog.id}`);
   }
   
   const handleUploadPhoto = (event) => {
@@ -116,7 +119,7 @@ const WalkerProfile = () => {
 
   //manejo de la imagen de perfils
   const walkerImage = walkerImages.find(img => img.nombre_usuario === walker.User.nombre_usuario);
-  const imageUrl = walkerImage ? walkerImage.imageSrc : 'url_de_no_profile_image'; // URL de imagen por defecto
+  const imageUrl = walkerImage ? imageSrc : 'url_de_no_profile_image'; // URL de imagen por defecto
 
   return (
     <Card sx={{ maxWidth: 600, margin: '0 auto', p: 2 }}>
@@ -134,19 +137,17 @@ const WalkerProfile = () => {
           <Grid item>
             <Avatar alt={walker.User.nombre_usuario} src={imageUrl} sx={{ width: 100, height: 100 }} />
           </Grid>
-            <Grid item>
-              <Grid container justifyContent="center" alignItems="center">
-              <Typography align="center">
-              <Tooltip title='Editar Foto Perfil'>
-                <IconButton aria-label="editar" onClick={handleModifyPhotoClick}>
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-              </Typography>
-              </Grid>
-            </Grid>
+          { userLog.id == walker.id && 
+          <Grid item>
+            <Typography align="center">
+            <Tooltip title='Editar Foto Perfil'>
+              <IconButton aria-label="editar" onClick={handleModifyPhotoClick}>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            </Typography>
+          </Grid>}
           <Grid item xs>
-            
             <Typography variant="h5" component="div">
               {walker.User.nombre_usuario}
             </Typography>

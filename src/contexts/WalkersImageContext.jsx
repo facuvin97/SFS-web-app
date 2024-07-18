@@ -64,7 +64,7 @@ export const WalkersImageContextProvider = ({ children }) => {
   };
 
   return (
-    <WalkersImageContext.Provider value={{ walkerImages, getWalkerTurns }}>
+    <WalkersImageContext.Provider value={{ walkerImages, getWalkerTurns, setWalkerImages }}>
       {children}
     </WalkersImageContext.Provider>
   );

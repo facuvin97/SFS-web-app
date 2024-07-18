@@ -31,6 +31,7 @@ import ClientsList from './pages/clients/ClientList';
 import ServiceHistory from './pages/services/ServiceHistory';
 import AddReviewForm from './pages/reviews/AddReview';
 import WalkerProfile from './pages/walkers/WalkerProfile';
+import WalkerImageUploader from './pages/walkers/WalkerImageUploader';
 
 
 function App() {
@@ -69,8 +70,8 @@ function App() {
                   <Route path='/' element={userLog ? (userLog.tipo === 'walker' ? <TurnsList walkerId={userLog?.id} /> : <WalkersList clientId={userLog?.id} />) : <Contact />} /> {/* modificar service usuario */}
                   <Route path='/login' element={<LoginPage />} />
                   <Route path='/register/:typeUser' element={<Register />} />
-                  <Route path={`/user/${userLog?.id}`} element={<AccountInfo user={userLog} />} />
-                  <Route path={`/modify-user/${userLog?.id}`} element={<ModifyUser userLog={userLog} />} />
+                  <Route path={`/account-info`} element={<AccountInfo user={userLog} />} />
+                  <Route path={`/modify-user`} element={<ModifyUser />} />
                   <Route path={`/image/single/${userLog?.id}`} element={<ProfileImageUploader userLog={userLog} />}/>
                   <Route path={`/walker-details/`} element={<WalkerDetails />}/>
                   <Route path={`/client-details/`} element={<ClientDetails />}/>
@@ -86,6 +87,7 @@ function App() {
                   <Route path={`/add-review/:receiverId`} element={<AddReviewForm />} />
                   <Route path={`/profile/:walkerId`} element={<WalkerProfile />} />
                   <Route path={`/add-service`} element={<AddServiceForm userLog={userLog}/>}/>
+                  <Route path={`/upload-photo`} element={<WalkerImageUploader/>}/>
                   <Route path="*" element={<div>404</div> } />
                 </Routes>
               </header>

@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '../styles/Account.css';
+import '../../styles/Account.css';
 import { useNavigate } from 'react-router-dom';
-import { useUserImageContext } from '../contexts/UserImageContext'; // Importa el contexto
+import { useWalkersImageContext } from '../../contexts/WalkersImageContext'; // Importa el contexto
 import { Save } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
-import { useUser } from '../contexts/UserLogContext';
+import { useUser } from '../../contexts/UserLogContext';
 
-function ProfileImageUploader() { 
+function WalkerImageUploader() { 
   const [image, setImage] = useState(null);
-  const { setImageSrc } = useUserImageContext(); // Obtiene setImageSrc del contexto
+  const { walkerImages, setWalkerImages } = useWalkersImageContext(); // Obtiene setImageSrc del contexto
   const navigate = useNavigate()
   const fileInputRef = useRef(null)
   const { userLog } = useUser()
@@ -24,43 +24,28 @@ function ProfileImageUploader() {
 
   const uploadImage = async () => {
     const formData = new FormData()
-    formData.append('imagenPerfil', image)
+    formData.append('imagenPaseador', image)
     
   
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/image/single/${userLog.nombre_usuario}`, {
+      const response = await fetch(`http://localhost:3001/api/v1/image/walker/single/${userLog.id}`, {
         method: 'POST',
         body: formData,
       });
   
       if (response.ok) { //si se cargo bien
-        console.log('Imagen subida con éxito');
+        const data = await response.json();
+        console.log('Imagen subida con éxito:', data);
 
-        //traigo la imagen que recien subi
-          try {
-            const userData = localStorage.getItem('userData');
-            if (userData) {
-              const user = JSON.parse(userData);
-              const response = await fetch(`http://localhost:3001/api/v1/image/single/${user.nombre_usuario}`);
-              if (response.ok) {
-                const blob = await response.blob();
-                const objectURL = URL.createObjectURL(blob);
-                setImageSrc(objectURL);
-              } else {
-                console.error('Error al obtener la imagen del usuario:', response.statusText);
-              }
-            }
-          } catch (error) {
-            console.error('Error al obtener la imagen del usuario:', error);
-          }
+        // Asumiendo que la respuesta del servidor contiene la URL de la nueva imagen
+        const newImage = data.newImage;
+        setWalkerImages((prevImages) => [...prevImages, newImage]);
 
-          if (userLog.tipo === 'client') {
-            navigate(`/user/${userLog.id}`)
-          } else {
-            navigate(`/profile/${userLog.id}`)
-          }
-
-
+        if (userLog.tipo === 'client') {
+          navigate(`/user/${userLog.id}`)
+        } else {
+          navigate(`/profile/${userLog.id}`)
+        }
         
       } else {
         console.error('Error al subir la imagen:', response.statusText);
@@ -72,7 +57,7 @@ function ProfileImageUploader() {
 
   return (
     <div className="account-container">
-      <h2>Subir imagen de perfil</h2>
+      <h2>Subir imagen</h2>
       <input type="file" accept="image/*" ref={fileInputRef} // Asigna la referencia al input de tipo file
         onChange={handleImageChange}
         style={{ display: 'none' }} // Oculta visualmente el input de tipo file
@@ -94,4 +79,4 @@ function ProfileImageUploader() {
   );
 }
 
-export default ProfileImageUploader;
+export default WalkerImageUploader;

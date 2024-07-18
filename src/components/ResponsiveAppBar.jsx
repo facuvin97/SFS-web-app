@@ -138,7 +138,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
                 onClose={handleCloseUserMenu}
               >
                 <Link
-                  to={loggedInUser.tipo === 'walker' ? `/profile/${loggedInUser.id}` : `/user/${loggedInUser.id}`}
+                  to={loggedInUser.tipo === 'walker' ? `/profile/${loggedInUser.id}` : `/account-info`}
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   <MenuItem onClick={handleCloseUserMenu}>

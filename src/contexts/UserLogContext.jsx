@@ -1,9 +1,10 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [userLog, setUserLog] = useState(JSON.parse(localStorage.getItem('userData')));
+
 
   return (
     <UserContext.Provider value={{ userLog, setUserLog }}>

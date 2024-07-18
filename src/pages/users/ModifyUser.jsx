@@ -1,8 +1,11 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../contexts/UserLogContext'; 
 
-function ModifyUser({ userLog }) {
+function ModifyUser() {
+  const { userLog, setUserLog } = useUser();
+
   // Estado para almacenar los datos del formulario
   const [userData, setUserData] = useState(userLog);
 
@@ -25,8 +28,9 @@ function ModifyUser({ userLog }) {
     // Aquí puedes enviar los datos a un servidor, almacenarlos en localStorage, etc.
     // console.log(JSON.stringify(userData))
     try {
+      let response;
       if (userLog.tipo == 'client') {
-        const response = await fetch(`http://localhost:3001/api/v1/clients/${userData.id}`, {
+        response = await fetch(`http://localhost:3001/api/v1/clients/${userData.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -34,7 +38,7 @@ function ModifyUser({ userLog }) {
           body: JSON.stringify(userData)
         });
       } else {
-        const response = await fetch(`http://localhost:3001/api/v1/walkers/${userData.id}`, {
+        response = await fetch(`http://localhost:3001/api/v1/walkers/${userData.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
@@ -48,8 +52,14 @@ function ModifyUser({ userLog }) {
         const responseData = await response.json()
         console.log('Cliente modificado correctamente');
         setMensaje(responseData.message)
+        localStorage.setItem('userData', JSON.stringify(userData))
+        setUserLog(userData)
         alert('Cuenta modificada correctamente')
-        navigate('/')
+        if (userLog.tipo === 'client') {
+          navigate(`/user/${userLog.id}`)
+        } else {
+          navigate(`/profile/${userLog.id}`)
+        }
       } else {
         console.error('Error al modificar cliente:', response.statusText);
         // Aquí puedes manejar el error de alguna manera, como mostrar un mensaje de error al usuario
