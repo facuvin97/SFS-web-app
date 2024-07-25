@@ -45,7 +45,19 @@ export const ConfirmedServicesProvider = ({ children }) => {
       // filtro la lista de servicios pendientes 
         const serviciosPendientes = data.body.filter(service => {
         const serviceDate = new Date(service.fecha); // Convierte service.fecha a un objeto Date
-        return !service.aceptado && serviceDate >= today; // Verifica si aceptado es false y la fecha es igual o mayor a hoy
+        console.log("servicio: ", service.id)
+        console.log("servicio fecha: ", service.fecha)
+        console.log("servicio comapracion: ", serviceDate >= today)
+        console.log("servicio serviceDate: ", serviceDate)
+        console.log("servicio today: ", today)
+
+        return (
+          !service.aceptado &&
+          serviceDate.getUTCFullYear() >= today.getUTCFullYear() &&
+          serviceDate.getUTCMonth() >= today.getUTCMonth() &&
+          serviceDate.getUTCDate() >= today.getUTCDate()
+        );     
+
       });
 
       // cargo la lista de servicios pendientes
@@ -72,7 +84,8 @@ export const ConfirmedServicesProvider = ({ children }) => {
     if (service.aceptado && serviceDate <= today) {
       // Si la fecha es hoy, verifica si service.Turn.hora_fin es menor a la hora actual
       if (isSameDay(serviceDate, today) && service.Turn.hora_fin) {
-        const horaActual = new Date(); // Hora actual
+ 
+        const horaActual = new Date(); // Hora actual 
         const horaFinString = `1970-01-01T${service.Turn.hora_fin}`;
         const horaFin = new Date(horaFinString);
         horaFin.setFullYear(horaActual.getFullYear());

@@ -20,6 +20,7 @@ function WalkerServicesRequests({ walkerId }) {
     }
   });
 
+  console.log("servicios pendientes en WalkerServiceRequest: ", pendingServices)
 
   const handleRejectService = async (service) => {
     try {

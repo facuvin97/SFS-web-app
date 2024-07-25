@@ -49,6 +49,9 @@ function TurnCard({ turn, onDelete }) {
           {turn.zona}
         </Typography>
         <Typography variant="body2" color="text.secondary">
+          <strong>Tarifa:</strong> {turn.tarifa}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           <strong>Días:</strong> {turn.dias.join(', ')}
         </Typography>
         <Typography variant="body2" color="text.secondary">

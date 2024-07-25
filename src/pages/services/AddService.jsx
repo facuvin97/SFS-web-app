@@ -67,8 +67,9 @@ function AddServiceForm({ userLog }) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(serviceData)
+        
       });
-
+      console.log("fecha service: ", serviceData.fecha)
       if (response.ok) {
         const responseData = await response.json();
 
@@ -113,16 +114,6 @@ function AddServiceForm({ userLog }) {
               shouldDisableDate={disableDates}
             />
           </LocalizationProvider>
-            {/* <TextField
-              fullWidth
-              label="Fecha"
-              type="date"
-              value={fecha}
-              onChange={(e) => setFecha(e.target.value)}
-              variant="outlined"
-              InputLabelProps={{ shrink: true }}
-            /> */}
-
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -153,6 +144,11 @@ function AddServiceForm({ userLog }) {
             />
           </Grid>
           <Grid item xs={12}>
+          <Typography variant="body1" color="text.primary">
+              <strong>Tarifa:</strong> ${turn.tarifa}
+          </Typography>
+          </Grid>
+          <Grid item xs={12}>
             <Typography variant="body1" color="text.primary">
               <strong>Días:</strong> {turn ? turn.dias.join(', ') : ''}
             </Typography>
@@ -166,6 +162,11 @@ function AddServiceForm({ userLog }) {
             <Typography variant="body1" color="text.primary">
               <strong>Hora de fin:</strong> {turn ? turn.hora_fin : ''}
             </Typography>
+          </Grid>
+          <Grid item xs={12}>
+          <Typography variant="body1" color="text.primary">
+              <strong>Total:</strong> ${turn.tarifa * cantidadMascotas}
+          </Typography>
           </Grid>
           <Grid item xs={12}>
             <Button variant="contained" color="primary" onClick={handleAddService}>

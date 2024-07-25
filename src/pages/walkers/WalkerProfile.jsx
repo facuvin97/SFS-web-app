@@ -198,6 +198,9 @@ const WalkerProfile = () => {
               <Typography variant="body1" color="text.primary">
                 <strong>Zona:</strong> {turn.zona}
               </Typography>
+               <Typography variant="body1" color="text.primary">
+                  <strong>Tarifa:</strong> {turn.tarifa}
+                </Typography>
               <Typography variant="body1" color="text.primary">
                 <strong>Días:</strong> {turn.dias.join(', ')}
               </Typography>
