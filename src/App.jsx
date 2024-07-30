@@ -32,12 +32,22 @@ import ServiceHistory from './pages/services/ServiceHistory';
 import AddReviewForm from './pages/reviews/AddReview';
 import WalkerProfile from './pages/walkers/WalkerProfile';
 import WalkerImageUploader from './pages/walkers/WalkerImageUploader';
+import BillCard from './components/BillCard';
 
 
 function App() {
   // const [userLog, setUserLog] = useState(null);
   const { userLog, setUserLog } = useUser();
   const [selectedTurn, setSelectedTurn] = useState(null); 
+  const [bill, setBill] = useState({
+    "id": 3,
+    "fecha": "2024-07-25T05:06:09.000Z",
+    "monto": "1650.00",
+    "pagado": false,
+    "createdAt": "2024-07-25T05:06:09.000Z",
+    "updatedAt": "2024-07-25T05:06:09.000Z",
+    "ServiceId": 65
+  }); 
 
 
   //Verificar si hay datos de inicio de sesión en localStorage al cargar la aplicación
@@ -88,6 +98,9 @@ function App() {
                   <Route path={`/profile/:walkerId`} element={<WalkerProfile />} />
                   <Route path={`/add-service`} element={<AddServiceForm userLog={userLog}/>}/>
                   <Route path={`/upload-photo`} element={<WalkerImageUploader/>}/>
+
+                  <Route path={`/payment`} element={<BillCard bill={bill}/>}/>
+
                   <Route path="*" element={<div>404</div> } />
                 </Routes>
               </header>
