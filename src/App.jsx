@@ -33,6 +33,7 @@ import AddReviewForm from './pages/reviews/AddReview';
 import WalkerProfile from './pages/walkers/WalkerProfile';
 import WalkerImageUploader from './pages/walkers/WalkerImageUploader';
 import BillCard from './components/BillCard';
+import Success from './components/Success';
 
 
 function App() {
@@ -98,6 +99,8 @@ function App() {
                   <Route path={`/profile/:walkerId`} element={<WalkerProfile />} />
                   <Route path={`/add-service`} element={<AddServiceForm userLog={userLog}/>}/>
                   <Route path={`/upload-photo`} element={<WalkerImageUploader/>}/>
+
+                  <Route path='/success' element={<Success/>} />
 
                   <Route path={`/payment`} element={<BillCard bill={bill}/>}/>
 
