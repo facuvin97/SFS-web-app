@@ -55,9 +55,6 @@ const WalkerProfile = () => {
 
           setImages(images);
         }
-        
-        
-
       } catch (err) {
         setError(err.message);
       } finally {
@@ -91,10 +88,15 @@ const WalkerProfile = () => {
     event.stopPropagation();
     navigate('/upload-photo');
   }
-  const handleEditTurnClick = (turn) => {
+  const handleMPAsociationClick = (event) => {
+    event.stopPropagation();
+    window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=3411891523551897&response_type=code&platform_id=mp&state=${walker.User.nombre_usuario}&redirect_uri=https://www.youtube.com/`;
+  }
 
+  const handleEditTurnClick = (turn) => {
     navigate('/turn-modify', { state: { turn } });
-   }
+  }
+  
    const getStarIcons = (calificacion) => {
     const fullStars = Math.floor(calificacion);
     const hasHalfStar = calificacion % 1 !== 0;
@@ -166,9 +168,7 @@ const WalkerProfile = () => {
           {walker.fotos && <Typography variant="h6">Fotos</Typography>}
           <Grid container spacing={2} alignItems="center" justifyContent="center">
             { walker.fotos && walker.fotos.map((foto, index) => {
-              console.log('foto: ', foto)
               const imageUrl = images[index] ? images[index].imageSrc : 'url_de_no_profile_image'; // URL de imagen por defecto
-              console.log('images: ', images)
               return (
                 <Grid item key={index}>
                   <CardMedia
@@ -182,6 +182,13 @@ const WalkerProfile = () => {
             })}
             { userLog.id == walker.id && 
             <Grid container spacing={2} alignItems="center" justifyContent="center">
+              <Grid item sx={{ marginTop: 2, marginBottom: 4 }}>
+                <Tooltip title='Asociar MercadoPago' arrow>
+                <Button variant="contained" color="primary" onClick={handleMPAsociationClick}>
+                  Asociar MercadoPago
+                </Button>
+                </Tooltip>
+              </Grid>
               <Grid item sx={{ marginTop: 2, marginBottom: 4 }}>
                 <Tooltip title='Subir Imagen' arrow>
                   <IconButton className="edit-icon" onClick={handleUploadPhoto}>
@@ -214,9 +221,9 @@ const WalkerProfile = () => {
               <Button variant="contained" color="primary" onClick={() => handleEditTurnClick(turn)}>
                 Modificar Turno
               </Button>) : (
-                 <Button variant="contained" color="primary" onClick={() => handleAddService(turn)}>
-                 Solicitar Servicio 
-               </Button>)
+              <Button variant="contained" color="primary" onClick={() => handleAddService(turn)}>
+                Solicitar Servicio 
+              </Button>)
               }
             </Box>
           ))
