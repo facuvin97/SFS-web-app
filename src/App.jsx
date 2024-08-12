@@ -34,6 +34,7 @@ import WalkerProfile from './pages/walkers/WalkerProfile';
 import WalkerImageUploader from './pages/walkers/WalkerImageUploader';
 import BillCard from './components/BillCard';
 import Success from './components/Success';
+import SuccessAsociationMP from './components/SuccessAsociationMP';
 
 
 function App() {
@@ -99,6 +100,7 @@ function App() {
                   <Route path={`/profile/:walkerId`} element={<WalkerProfile />} />
                   <Route path={`/add-service`} element={<AddServiceForm userLog={userLog}/>}/>
                   <Route path={`/upload-photo`} element={<WalkerImageUploader/>}/>
+                  <Route path={`/success-association`} element={<SuccessAsociationMP />}/>
 
                   <Route path='/success' element={<Success/>} />
 

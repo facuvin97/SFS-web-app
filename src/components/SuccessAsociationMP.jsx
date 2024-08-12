@@ -10,13 +10,12 @@ const SuccessAsociationMP = () => {
 
   const successAsociation = async (code) => {
     try {
-      const response = await fetch('aca iria la url de modificar walker', {
+      const response = await fetch(`http://localhost:3001/api/v1/walkers/mercadopago/${userLog.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: userLog.id,
           mercadopago: code,
         }),
       });
@@ -43,8 +42,11 @@ const SuccessAsociationMP = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
 
+    console.log('code:', code)
+
     if (code === null) {
-      navigate('/'); // No hay parámetro `code`, redirige al inicio
+      // navigate('/'); // No hay parámetro `code`, redirige al inicio
+      console.log('no hay code en la url')
     } else {
       successAsociation(code); // Hay parámetro `code`, realiza la asociación
     }

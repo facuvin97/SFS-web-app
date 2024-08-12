@@ -90,7 +90,7 @@ const WalkerProfile = () => {
   }
   const handleMPAsociationClick = (event) => {
     event.stopPropagation();
-    window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=3411891523551897&response_type=code&platform_id=mp&state=${walker.User.nombre_usuario}&redirect_uri=https://www.youtube.com/`;
+    window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=3411891523551897&response_type=code&platform_id=mp&state=${walker.User.nombre_usuario}&redirect_uri=https://happy-symbols-brake.loca.lt/success-association`;
   }
 
   const handleEditTurnClick = (turn) => {
