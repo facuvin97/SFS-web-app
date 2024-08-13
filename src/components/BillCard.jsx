@@ -18,14 +18,16 @@ function BillCard({ bill }) {
   const [preferenceId, setPreferenceId] = useState(null)
   
   //INICIALIZA MERCADOPAGO
-  initMercadoPago('APP_USR-b825c5eb-eb20-4b0b-83ca-788fdbc39c24', {locale: "es-UY"})
-  console.log('bill: ', bill)
+  useEffect(() => {
+    initMercadoPago('APP_USR-f19648fa-7bf4-4904-a041-0c9abafeb0c7', {locale: "es-UY"});//public key paseador
+  }, []);
 
   //creo la preferencia cuando se monta el componente
   useEffect(() => {
     const fetchPreferenceId = async () => {
       try {
         const id = await createPreference();
+        console.log('Preference ID:', id);  // Añadir este log para verificar el ID
         setPreferenceId(id);
       } catch (error) {
         console.error('Failed to fetch preference ID:', error);
@@ -33,6 +35,7 @@ function BillCard({ bill }) {
     };
     fetchPreferenceId();
   }, []);
+  
 
 
   //funcion para crear la preferencia

@@ -10,21 +10,24 @@ const SuccessAsociationMP = () => {
 
   const successAsociation = async (code) => {
     try {
+      console.log("Llama a successasociation")
       const response = await fetch(`http://localhost:3001/api/v1/walkers/mercadopago/${userLog.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          mercadopago: code,
+          code: code,
         }),
       });
+      console.log('response:', response.json())
 
       if (response.ok) {
+        console.log('entrando al if response.ok, resoponse data:', response)
         // Actualiza campo mercadopago en userLog
         setUserLog((prevUserLog) => ({
           ...prevUserLog,
-          mercadopago: code,
+          code: code,
         }));
 
         setLoading(false);

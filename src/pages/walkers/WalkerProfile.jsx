@@ -90,7 +90,7 @@ const WalkerProfile = () => {
   }
   const handleMPAsociationClick = (event) => {
     event.stopPropagation();
-    window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=3411891523551897&response_type=code&platform_id=mp&state=${walker.User.nombre_usuario}&redirect_uri=https://happy-symbols-brake.loca.lt/success-association`;
+    window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=2635371829801721&response_type=code&platform_id=mp&state=${walker.User.nombre_usuario}&redirect_uri=https://strong-llamas-own.loca.lt/success-association`;
   }
 
   const handleEditTurnClick = (turn) => {
@@ -165,9 +165,9 @@ const WalkerProfile = () => {
           <Typography variant="body1"><strong>Teléfono:</strong> {walker.User.telefono}</Typography>
         </Box>
         <Box mt={2}>
-          {walker.fotos && <Typography variant="h6">Fotos</Typography>}
+          {walker.fotos?.length > 0 && <Typography variant="h6">Fotos</Typography>}
           <Grid container spacing={2} alignItems="center" justifyContent="center">
-            { walker.fotos && walker.fotos.map((foto, index) => {
+            { walker.fotos?.length > 0 && walker.fotos?.map((foto, index) => {
               const imageUrl = images[index] ? images[index].imageSrc : 'url_de_no_profile_image'; // URL de imagen por defecto
               return (
                 <Grid item key={index}>
