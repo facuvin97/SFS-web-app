@@ -90,7 +90,7 @@ const WalkerProfile = () => {
   }
   const handleMPAsociationClick = (event) => {
     event.stopPropagation();
-    window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=2635371829801721&response_type=code&platform_id=mp&state=${walker.User.nombre_usuario}&redirect_uri=https://strong-llamas-own.loca.lt/success-association`;
+    window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=8409884849533418&response_type=code&platform_id=mp&state=${walker.User.nombre_usuario}&redirect_uri=https://eleven-worlds-camp.loca.lt/success-association`;
   }
 
   const handleEditTurnClick = (turn) => {

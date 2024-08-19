@@ -45,11 +45,11 @@ export const ConfirmedServicesProvider = ({ children }) => {
       // filtro la lista de servicios pendientes 
         const serviciosPendientes = data.body.filter(service => {
         const serviceDate = new Date(service.fecha); // Convierte service.fecha a un objeto Date
-        console.log("servicio: ", service.id)
-        console.log("servicio fecha: ", service.fecha)
-        console.log("servicio comapracion: ", serviceDate >= today)
-        console.log("servicio serviceDate: ", serviceDate)
-        console.log("servicio today: ", today)
+        // console.log("servicio: ", service.id)
+        // console.log("servicio fecha: ", service.fecha)
+        // console.log("servicio comapracion: ", serviceDate >= today)
+        // console.log("servicio serviceDate: ", serviceDate)
+        // console.log("servicio today: ", today)
 
         return (
           !service.aceptado &&
@@ -131,7 +131,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
       } else if (userLog?.tipo === 'client') {
         const turnResponse = await fetch(`http://localhost:3001/api/v1/turn/${service.TurnId}`)
         const turn = await turnResponse.json();
-        console.log('Turn en service context:', turn)
+        // console.log('Turn en service context:', turn)
 
         data = {
           execUserType: userLog.tipo,

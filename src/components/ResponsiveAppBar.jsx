@@ -21,7 +21,7 @@ import { useConfirmedServicesContext } from '../contexts/ServicesContext';
 import Notifications from './Notifications';
 
 const pagesWalker = ['Turno', 'Solicitudes', 'Servicios', 'Historial'];
-const pagesClient = ['Servicios', 'Historial', 'Blog'];
+const pagesClient = ['Servicios', 'Historial', 'Facturas'];
 
 function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -40,7 +40,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const routesClient = {
     Servicios: '/services',
     Historial: '/service-history',
-    Blog: '/client/blog',
+    Facturas: '/payment-list',
   };
 
   const handleOpenNavMenu = (event) => {

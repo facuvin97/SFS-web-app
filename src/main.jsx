@@ -12,6 +12,7 @@ import { WalkersImageContextProvider } from './contexts/WalkersImageContext.jsx'
 import { UserProvider, useUser } from './contexts/UserLogContext';
 import { NotificationsProvider } from './contexts/NotificationsContext.jsx';
 import { ConfirmedServicesProvider } from './contexts/ServicesContext.jsx';
+import { UnpaidBillsProvider } from './contexts/BillContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -21,7 +22,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <UserProvider>
         <NotificationsProvider>
         <ConfirmedServicesProvider>
-          <App />
+          <UnpaidBillsProvider>
+            <App />
+          </UnpaidBillsProvider>
         </ConfirmedServicesProvider>
         </NotificationsProvider>
         </UserProvider>

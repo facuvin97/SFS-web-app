@@ -35,21 +35,15 @@ import WalkerImageUploader from './pages/walkers/WalkerImageUploader';
 import BillCard from './components/BillCard';
 import Success from './components/Success';
 import SuccessAsociationMP from './components/SuccessAsociationMP';
+import UnpaidBillsList from './components/UnpaidBillsList';
+import SuccessPayment from './pages/payment/successPayment';
 
 
 function App() {
   // const [userLog, setUserLog] = useState(null);
   const { userLog, setUserLog } = useUser();
   const [selectedTurn, setSelectedTurn] = useState(null); 
-  const [bill, setBill] = useState({
-    "id": 3,
-    "fecha": "2024-07-25T05:06:09.000Z",
-    "monto": "1650.00",
-    "pagado": false,
-    "createdAt": "2024-07-25T05:06:09.000Z",
-    "updatedAt": "2024-07-25T05:06:09.000Z",
-    "ServiceId": 65
-  }); 
+
 
 
   //Verificar si hay datos de inicio de sesión en localStorage al cargar la aplicación
@@ -104,7 +98,10 @@ function App() {
 
                   <Route path='/success' element={<Success/>} />
 
-                  <Route path={`/payment`} element={<BillCard bill={bill}/>}/>
+                  <Route path={`/success-payment`} element={<SuccessPayment/>}/>
+
+                  <Route path={`/payment`} element={<BillCard/>}/>
+                  <Route path={`/payment-list`} element={<UnpaidBillsList/>}/>
 
                   <Route path="*" element={<div>404</div> } />
                 </Routes>
