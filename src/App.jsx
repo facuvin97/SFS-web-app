@@ -40,6 +40,7 @@ import SuccessPayment from './pages/payment/successPayment';
 import PaymentMethodsConfig from './pages/walkers/PaymentMethodsConfig';
 import Failure from './pages/payment/PaymentFailure';
 import Pending from './pages/payment/PaymentsPending'
+import TodayTurns from './pages/walkers/TodayTurns';
 
 
 function App() {
@@ -98,6 +99,7 @@ function App() {
                   <Route path={`/add-service`} element={<AddServiceForm userLog={userLog}/>}/>
                   <Route path={`/upload-photo`} element={<WalkerImageUploader/>}/>
                   <Route path={`/success-association`} element={<SuccessAsociationMP />}/>
+                  <Route path={`/today-turn`} element={<TodayTurns />}/>
 
                   <Route path='/success' element={<Success/>} />
                   <Route path='/failure' element={<Failure/>} />
