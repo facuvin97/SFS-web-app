@@ -90,7 +90,8 @@ const WalkerProfile = () => {
   }
   const handleMPAsociationClick = (event) => {
     event.stopPropagation();
-    window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=8409884849533418&response_type=code&platform_id=mp&state=${walker.User.nombre_usuario}&redirect_uri=https://eleven-worlds-camp.loca.lt/success-association`;
+    navigate('/payment-methods-config')
+    //window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=8409884849533418&response_type=code&platform_id=mp&state=${walker.User.nombre_usuario}&redirect_uri=https://eleven-worlds-camp.loca.lt/success-association`;
   }
 
   const handleEditTurnClick = (turn) => {
@@ -185,7 +186,7 @@ const WalkerProfile = () => {
               <Grid item sx={{ marginTop: 2, marginBottom: 4 }}>
                 <Tooltip title='Asociar MercadoPago' arrow>
                 <Button variant="contained" color="primary" onClick={handleMPAsociationClick}>
-                  Asociar MercadoPago
+                  Metodos de Pago
                 </Button>
                 </Tooltip>
               </Grid>

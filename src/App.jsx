@@ -37,6 +37,9 @@ import Success from './components/Success';
 import SuccessAsociationMP from './components/SuccessAsociationMP';
 import UnpaidBillsList from './components/UnpaidBillsList';
 import SuccessPayment from './pages/payment/successPayment';
+import PaymentMethodsConfig from './pages/walkers/PaymentMethodsConfig';
+import Failure from './pages/payment/PaymentFailure';
+import Pending from './pages/payment/PaymentsPending'
 
 
 function App() {
@@ -97,11 +100,15 @@ function App() {
                   <Route path={`/success-association`} element={<SuccessAsociationMP />}/>
 
                   <Route path='/success' element={<Success/>} />
+                  <Route path='/failure' element={<Failure/>} />
+                  <Route path='/pending' element={<Pending/>} />
 
                   <Route path={`/success-payment`} element={<SuccessPayment/>}/>
 
                   <Route path={`/payment`} element={<BillCard/>}/>
                   <Route path={`/payment-list`} element={<UnpaidBillsList/>}/>
+
+                  <Route path={`/payment-methods-config`} element={<PaymentMethodsConfig/>}/>
 
                   <Route path="*" element={<div>404</div> } />
                 </Routes>

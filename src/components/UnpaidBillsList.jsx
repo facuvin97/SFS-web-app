@@ -25,7 +25,7 @@ function UnpaidBillsList() {
   return (
     <div style={{ backgroundColor: '#f0f0f0', padding: '20px', borderRadius: '8px' }}>
       <Typography variant="h5" gutterBottom>
-        Facturas Impagas
+        Facturas
       </Typography>
       <List>
         {unpaidBills.map((bill) => (
@@ -35,8 +35,13 @@ function UnpaidBillsList() {
               <ListItemText
                 primary={`Factura ID: ${bill.id}`}
                 secondary={`Fecha: ${new Date(bill.fecha).toLocaleDateString()} - Monto: $${bill.monto}`}
-              />
+              />              
             </ButtonBase>
+            {bill.pendiente ? (<ListItemText
+                primary={`Pago Pendiente`}
+              />): <ListItemText
+              primary={`Impaga`}
+            />}
             <Divider /> {/* Separador entre elementos de la lista */}
           </React.Fragment>
         ))}

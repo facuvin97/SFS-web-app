@@ -11,20 +11,20 @@ const SuccessPayment = () => {
 
   const successPay = async () => {
     try {
-      console.log('bill antes de hacer el fetch: ', billToPay)
       const response = await fetch(`http://localhost:3001/api/v1/bills/${billToPay.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          pagado: true,
+          pendiente: false
+        })
       });
-      console.log("response: ", response)
       if (response.ok) {
         setUnpaidBills((prevBills) => prevBills.filter(bill => bill.id !== billToPay.id)); // Saco la factura pagada de la lista de no pagas
         localStorage.removeItem('selectedBill');
         setLoading(false);
         setTimeout(() => {
-          navigate('/success'); // Redirige a una página de éxito
+          navigate('/payment-list'); // Redirige a una página de éxito
         }, 4000); // 4000 milisegundos = 4 segundos
       } else {
         console.error('Error al pagar');
@@ -36,7 +36,6 @@ const SuccessPayment = () => {
   };
 
   useEffect(() => {
-    console.log('entrando al use effect')
     successPay()
   }, []);
 
