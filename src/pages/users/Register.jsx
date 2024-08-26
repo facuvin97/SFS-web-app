@@ -87,45 +87,45 @@ function Register() {
       <h2>{typeUser === 'client' ? 'Registro de Cliente' : 'Registro de Paseador'}</h2>
       <form className="account-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Nombre de Usuario:</label>
           <input
             type="text"
             name="nombre_usuario"
+            placeholder='Nombre de Usuario'
             value={userData.nombre_usuario}
             onChange={handleInputChange}
           />
         </div>
         <div className="form-group">
-          <label>Contraseña:</label>
           <input
             type="password"
+            placeholder='Contraseña'
             name="contraseña"
             value={userData.contraseña}
             onChange={handleInputChange}
           />
         </div>
         <div className="form-group">
-          <label>Dirección:</label>
           <input
             type="text"
+            placeholder='Dirección'
             name="direccion"
             value={userData.direccion}
             onChange={handleInputChange}
           />
         </div>
         <div className="form-group">
-          <label>Email:</label>
           <input
             type="email"
+            placeholder='Email (xxxxx@xxx.xx)'
             name="email"
             value={userData.email}
             onChange={handleInputChange}
           />
         </div>
         <div className="form-group">
-          <label>Teléfono:</label>
           <input
             type="tel"
+            placeholder='Telefono'
             name="telefono"
             value={userData.telefono}
             onChange={handleInputChange}
@@ -135,6 +135,8 @@ function Register() {
           <label>Fecha de Nacimiento:</label>
           <input
             type="date"
+            pattern='\d{4}-\d{2}-\d{2}'
+            placeholder='Fecha de Nacimiento (YYYY-MM-DD)'
             name="fecha_nacimiento"
             value={userData.fecha_nacimiento}
             onChange={handleInputChange}

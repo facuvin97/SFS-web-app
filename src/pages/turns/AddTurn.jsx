@@ -23,7 +23,7 @@ function AddTurnForm({ userLog }) {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/api/v1/turn', {
+      const response = await fetch('http://localhost:3001/api/v1/turns', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

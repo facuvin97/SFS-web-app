@@ -40,7 +40,7 @@ function ModifyTurn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/turn/${turn.id}`, {
+      const response = await fetch(`http://localhost:3001/api/v1/turns/${turn.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

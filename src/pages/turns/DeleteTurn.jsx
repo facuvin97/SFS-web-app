@@ -7,7 +7,7 @@ function DeleteTurn({ turnId }) {
 
   const onDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/turn/${turnId}`, {
+      const response = await fetch(`http://localhost:3001/api/v1/turns/${turnId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

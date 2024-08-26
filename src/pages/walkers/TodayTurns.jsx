@@ -9,6 +9,7 @@ const TodayTurns = () => {
   // Obtener el día de hoy en español
   const diasSemana = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
   const diaHoy = diasSemana[new Date().getDay()];
+  console.log("new date:", new Date())
 
   // Filtrar los turnos para el día de hoy
   const turnosHoy = turns.filter(turn => turn.dias.includes(diaHoy));

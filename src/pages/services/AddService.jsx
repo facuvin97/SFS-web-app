@@ -61,7 +61,7 @@ function AddServiceForm({ userLog }) {
       ClientId: userLog.id // El ID del usuario logeado se utiliza como el ClientId del servicio
     };
     try {
-      const response = await fetch('http://localhost:3001/api/v1/service', {
+      const response = await fetch('http://localhost:3001/api/v1/services', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -40,7 +40,7 @@ function Account () {
       <div className="user-info">
         <p><strong>Nombre de Usuario:</strong> {userLog.nombre_usuario}</p>
         <p><strong>Telefono:</strong> {userLog.telefono}</p>
-        <p><strong>Fecha de Nacimiento:</strong>{new Date(userLog.fecha_nacimiento).toLocaleDateString()}</p>
+        <p><strong>Fecha de Nacimiento:</strong>{userLog.fecha_nacimiento}</p>
         <p><strong>Email:</strong> {userLog.email}</p>
         <p><strong>Direccion:</strong> {userLog.direccion}</p>
         {/* Añade más campos de información del usuario según sea necesario */}

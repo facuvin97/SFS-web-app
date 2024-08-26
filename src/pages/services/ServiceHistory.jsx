@@ -25,7 +25,7 @@ function ServiceHistory({}) {
     if (userLog.tipo === 'walker') { //si la reseña la escribe un paseador
       navigate(`/add-review/${service.ClientId}`, { state: { serviceId } }) //el receiver es el cliente del servicio
     } else { //si la reseña la escribe un cliente
-      const response = await fetch(`http://localhost:3001/api/v1/turn/${service.TurnId}`); //voy a buscar el turno para obtener el id del paseador
+      const response = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`); //voy a buscar el turno para obtener el id del paseador
       const turnData = await response.json();
 
       navigate(`/add-review/${turnData.body.WalkerId}`, { state: { serviceId }}) //el receiver es el paseador que esta en el turno

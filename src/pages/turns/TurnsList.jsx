@@ -43,7 +43,7 @@ function TurnsList({ walkerId }) {
   const handleDeleteTurn = async (turnId) => {
     // Lógica para eliminar el turno con el ID proporcionado
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/turn/${turnId}`, {
+      const response = await fetch(`http://localhost:3001/api/v1/turns/${turnId}`, {
         method: 'DELETE',
       });
       if (!response.ok) {

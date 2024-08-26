@@ -40,7 +40,7 @@ function ServicesList({ clientId }) {
 
   const handleDeleteService = async (serviceId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/service/${serviceId}`, {
+      const response = await fetch(`http://localhost:3001/api/v1/services/${serviceId}`, {
         method: 'DELETE',
       });
       if (!response.ok) {

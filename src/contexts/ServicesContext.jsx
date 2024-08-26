@@ -129,7 +129,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
           fecha: service.fecha
         }
       } else if (userLog?.tipo === 'client') {
-        const turnResponse = await fetch(`http://localhost:3001/api/v1/turn/${service.TurnId}`)
+        const turnResponse = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`)
         const turn = await turnResponse.json();
         // console.log('Turn en service context:', turn)
 
@@ -146,7 +146,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
 
       
       // Intenta eliminar el servicio
-      const deleteResponse = await fetch(`http://localhost:3001/api/v1/service/${service.id}`, {
+      const deleteResponse = await fetch(`http://localhost:3001/api/v1/services/${service.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -176,7 +176,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
 
       service.aceptado = true;
 
-      const response = await fetch(`http://localhost:3001/api/v1/service/${service.id}`, {
+      const response = await fetch(`http://localhost:3001/api/v1/services/${service.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
