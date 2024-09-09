@@ -43,7 +43,7 @@ function AddServiceForm({ userLog }) {
     const dayNames = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
 
 
-    if(!selectedDay){
+    if(selectedDay <0 && selectedDay >6){
       setMensaje(`Debe seleccionar un dìa valido`);
       return
     }

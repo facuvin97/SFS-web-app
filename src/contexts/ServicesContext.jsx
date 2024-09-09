@@ -45,17 +45,13 @@ export const ConfirmedServicesProvider = ({ children }) => {
       // filtro la lista de servicios pendientes 
         const serviciosPendientes = data.body.filter(service => {
         const serviceDate = new Date(service.fecha); // Convierte service.fecha a un objeto Date
-        // console.log("servicio: ", service.id)
-        // console.log("servicio fecha: ", service.fecha)
-        // console.log("servicio comapracion: ", serviceDate >= today)
-        // console.log("servicio serviceDate: ", serviceDate)
-        // console.log("servicio today: ", today)
+        serviceDate.setHours(serviceDate.getHours() + 3);
 
         return (
           !service.aceptado &&
-          serviceDate.getUTCFullYear() >= today.getUTCFullYear() &&
-          serviceDate.getUTCMonth() >= today.getUTCMonth() &&
-          serviceDate.getUTCDate() >= today.getUTCDate()
+          serviceDate.getFullYear() >= today.getFullYear() &&
+          serviceDate.getMonth() >= today.getMonth() &&
+          serviceDate.getDate() >= today.getDate()
         );     
 
       });
