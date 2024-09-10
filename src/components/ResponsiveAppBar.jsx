@@ -20,7 +20,7 @@ import { useUserImageContext } from '../contexts/UserImageContext';
 import { useConfirmedServicesContext } from '../contexts/ServicesContext';
 import Notifications from './Notifications';
 
-const pagesWalker = ['Turno', 'Solicitudes', 'Servicios', 'Historial'];
+const pagesWalker = ['Turnos', 'Solicitudes', 'Servicios', 'Historial'];
 const pagesClient = ['Servicios', 'Historial', 'Facturas'];
 
 function ResponsiveAppBar({ loggedInUser, onLogout }) {
@@ -30,7 +30,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
 
   // Rutas para los paseadores
   const routesWalker = {
-    Turno: '/agregar-turno',
+    Turnos: '/turns',
     Servicios: `/services`,
     Solicitudes: `/walker-service-request/${loggedInUser?.id}`,
     Historial: `/service-history`

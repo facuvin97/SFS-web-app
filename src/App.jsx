@@ -49,9 +49,6 @@ function App() {
   const { userLog, setUserLog } = useUser();
   const [selectedTurn, setSelectedTurn] = useState(null); 
 
-  const turn = {
-    id: 10
-  }
 
   //Verificar si hay datos de inicio de sesión en localStorage al cargar la aplicación
   useEffect(() => {
@@ -80,7 +77,7 @@ function App() {
               <header className='App-header'>
                 <ResponsiveAppBar loggedInUser={userLog} onLogout={handleLogout} />
                 <Routes>
-                  <Route path='/' element={userLog ? (userLog.tipo === 'walker' ? <TurnsList walkerId={userLog?.id} /> : <WalkersList clientId={userLog?.id} />) : <Contact />} /> {/* modificar service usuario */}
+                  <Route path='/' element={userLog ? (userLog.tipo === 'walker' ? <TodayTurns /> : <WalkersList clientId={userLog?.id} />) : <Contact />} /> {/* modificar service usuario */}
                   <Route path='/login' element={<LoginPage />} />
                   <Route path='/register/:typeUser' element={<Register />} />
                   <Route path={`/account-info`} element={<AccountInfo user={userLog} />} />
@@ -102,7 +99,7 @@ function App() {
                   <Route path={`/add-service`} element={<AddServiceForm userLog={userLog}/>}/>
                   <Route path={`/upload-photo`} element={<WalkerImageUploader/>}/>
                   <Route path={`/success-association`} element={<SuccessAsociationMP />}/>
-                  <Route path={`/today-turn`} element={<TodayTurns />}/>
+                  {/* <Route path={`/today-turn`} element={<TodayTurns />}/> */}
 
                   <Route path='/success' element={<Success/>} />
                   <Route path='/failure' element={<Failure/>} />
@@ -114,7 +111,7 @@ function App() {
                   <Route path={`/payment-list`} element={<UnpaidBillsList/>}/>
 
                   <Route path={`/payment-methods-config`} element={<PaymentMethodsConfig/>}/>
-                  <Route path={`/current-turn-clients`} element={<CurrentTurnClientsList turn={turn}/>}/>
+                  <Route path={`/current-turn-clients`} element={<CurrentTurnClientsList />}/>
 
                   <Route path="*" element={<div>404</div> } />
                 </Routes>

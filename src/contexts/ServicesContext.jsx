@@ -13,6 +13,8 @@ export const ConfirmedServicesProvider = ({ children }) => {
   const [pendingServicesCount, setPendingServicesCount] = useState(0);
   const { userLog } = useUser();
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
 
   // Función auxiliar para verificar si dos fechas son del mismo día
   function isSameDay(date1, date2) {
@@ -46,6 +48,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
         const serviciosPendientes = data.body.filter(service => {
         const serviceDate = new Date(service.fecha); // Convierte service.fecha a un objeto Date
         serviceDate.setHours(serviceDate.getHours() + 3);
+        
 
         return (
           !service.aceptado &&
@@ -65,16 +68,19 @@ export const ConfirmedServicesProvider = ({ children }) => {
       // obtengo solo los servicios confirmados en el futuro
       const serviciosConfirmados = data.body.filter(service => {
         const serviceDate = new Date(service.fecha); // Convierte service.fecha a un objeto Date
+        serviceDate.setHours(serviceDate.getHours() + 3);
         return service.aceptado && serviceDate >= today; // Verifica si aceptado es true y la fecha es igual o mayor a hoy
       });
 
       //cargo la lista de servicios confirmados
       setConfirmedServices(serviciosConfirmados);
+      
 
 
   // Obtengo solo los servicios concretados
   const serviciosConcretados = data.body.filter(service => {
     const serviceDate = new Date(service.fecha); // Convierte service.fecha a un objeto Date
+    serviceDate.setHours(serviceDate.getHours() + 3);
 
     // Verifica si el servicio está aceptado y si la fecha es igual o menor a hoy
     if (service.aceptado && serviceDate <= today) {
@@ -84,6 +90,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
         const horaActual = new Date(); // Hora actual 
         const horaFinString = `1970-01-01T${service.Turn.hora_fin}`;
         const horaFin = new Date(horaFinString);
+        horaFin.setHours(horaFin.getHours() + 3);
         horaFin.setFullYear(horaActual.getFullYear());
         horaFin.setMonth(horaActual.getMonth());
         horaFin.setDate(horaActual.getDate());
@@ -127,7 +134,6 @@ export const ConfirmedServicesProvider = ({ children }) => {
       } else if (userLog?.tipo === 'client') {
         const turnResponse = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`)
         const turn = await turnResponse.json();
-        // console.log('Turn en service context:', turn)
 
         data = {
           execUserType: userLog.tipo,

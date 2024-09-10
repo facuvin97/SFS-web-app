@@ -14,15 +14,15 @@ function TodayTurnCard({ turn }) {
   const todayTurnServices = turn.Services.filter(service => {
     const today = new Date().toISOString().split('T')[0]; // Obtiene la fecha de hoy en formato 'YYYY-MM-DD'
     const fechaServicio = service.fecha.split('T')[0];
-    console.log('today:', today)
-    console.log('service.fecha:', service.fecha)
-    return fechaServicio === today;
+    // console.log('today:', today)
+    // console.log('new date:', new Date())
+    // console.log('service.fecha:', service.fecha)
+    return fechaServicio === today && !service.finalizado;
   });
- 
-  console.log('today turn services: ', todayTurnServices)
+
 
   const handleClick = () => {
-    navigate('/turn-today', { state: { turn} });
+    navigate('/current-turn-clients', { state: { turn } });
   };
 
   return (
@@ -40,9 +40,9 @@ function TodayTurnCard({ turn }) {
         <Typography variant="body2" color="text.secondary">
           <strong>Días:</strong> {turn.dias.join(', ')}
         </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Servicios agendados: {todayTurnServices.length}
-          </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Servicios agendados pendientes: {todayTurnServices.length}
+        </Typography>
       </CardContent>
     </Card>
   );

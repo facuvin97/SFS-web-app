@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Table,TableBody,TableCell,TableContainer, TableHead,TableRow, Paper, Button, IconButton } from '@mui/material'
 import { CheckCircle, RadioButtonUnchecked } from '@mui/icons-material'
+import { useLocation } from 'react-router-dom';
 
-export default function CurrentTurnClientsList({ turn }) {
+export default function CurrentTurnClientsList() {
   const [services, setServices] = useState([])
+  const [loading, setLoading] = useState(true);
+  const location = useLocation()
+  const turn = location.state.turn;
 
   const toggleServiceStatus = async (id, comenzado) => {
     if (!comenzado) { // cambiar el estado a comenzado
@@ -59,6 +63,7 @@ export default function CurrentTurnClientsList({ turn }) {
         const filteredServices = services.filter((service) => !service.finalizado);
         
         setServices(filteredServices);
+        setLoading(false)
       } catch (error) {
         console.log(error);
       }
@@ -66,15 +71,19 @@ export default function CurrentTurnClientsList({ turn }) {
     fetchData();
   }, [turn]);
 
+  if (loading) return <p>Loading...</p>;
+
   return (
     <div style={{ maxWidth: 800, margin: '0 auto', padding: '20px' }}>
       <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Lista de Clientes</h1>
-      <TableContainer component={Paper}>
+      {services.length > 0 ? (<TableContainer component={Paper}>
         <Table aria-label="lista de clientes">
           <TableHead>
             <TableRow>
               <TableCell>Iniciado</TableCell>
               <TableCell>Dirección</TableCell>
+              <TableCell>Mascotas</TableCell>
+              <TableCell>Nota</TableCell>
               <TableCell align="right">Acción</TableCell>
             </TableRow>
           </TableHead>
@@ -91,6 +100,8 @@ export default function CurrentTurnClientsList({ turn }) {
                   </IconButton>
                 </TableCell>
                 <TableCell>{service.direccionPickUp}</TableCell>
+                <TableCell>{service.cantidad_mascotas}</TableCell>
+                <TableCell>{service.nota}</TableCell>
                 <TableCell align="right">
                   <Button
                     variant={service.comenzado ? "outlined" : "contained"}
@@ -105,7 +116,8 @@ export default function CurrentTurnClientsList({ turn }) {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer>) :
+      (<p>No hay servicios para este turno</p>)}
     </div>
   )
 }

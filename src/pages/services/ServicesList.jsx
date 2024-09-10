@@ -23,10 +23,15 @@ function ServicesList({}) {
     if (selectedDate) {
       setFilteredServices(confirmedServices.filter(service => {
         const serviceDate = new Date(service.fecha);
+        serviceDate.setHours(serviceDate.getHours() + 3);
+        
+        console.log('service.fecha: ', service.fecha);
+        console.log('serviceDate: ', serviceDate);
+        
         return (
-          serviceDate.getUTCFullYear() === selectedDate.getFullYear() &&
-          serviceDate.getUTCMonth() === selectedDate.getMonth() &&
-          serviceDate.getUTCDate() === selectedDate.getDate()
+          serviceDate.getFullYear() === selectedDate.getFullYear() &&
+          serviceDate.getMonth() === selectedDate.getMonth() &&
+          serviceDate.getDate() === selectedDate.getDate()
         );
       }));
     } else {
