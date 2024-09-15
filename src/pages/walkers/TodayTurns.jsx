@@ -1,30 +1,83 @@
 import React, { useContext } from 'react';
 import { useWalkerTurnsContext } from '../../contexts/TurnContext'; 
 import TodayTurnCard from '../../components/TodayTurnCard';
+import { Container } from '@mui/material';
 
 const TodayTurns = () => {
-
   const { turns } = useWalkerTurnsContext();
 
   // Obtener el día de hoy en español
   const diasSemana = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
-  const diaHoy = diasSemana[new Date().getDay()];
-  // console.log("new date:", new Date())
+  const hoy = new Date();
+  const diaHoy = diasSemana[hoy.getDay()];
+  const fechaHoy = hoy.toISOString().split('T')[0];
+  const horaActual = hoy.getHours() * 60 + hoy.getMinutes(); // Convertir la hora actual a minutos desde las 00:00
 
-  // Filtrar los turnos para el día de hoy
-  const turnosHoy = turns.filter(turn => turn.dias.includes(diaHoy));
+  // Filtrar los turnos que aún están en curso o no han comenzado
+  const turnosHoy = turns.filter(turn => {
+    const [horaFin, minutoFin] = turn.hora_fin.split(':').map(Number);
+    const fin = horaFin * 60 + minutoFin;
+    const finTurno= fin + 60
+    
+    return turn.dias.includes(diaHoy) && (horaActual < finTurno);
+  });
+
+    // Ordenar los turnos de hoy por hora de inicio
+    turnosHoy.sort((a, b) => {
+      const [horaInicioA, minutoInicioA] = a.hora_inicio.split(':').map(Number);
+      const [horaInicioB, minutoInicioB] = b.hora_inicio.split(':').map(Number);
+      return (horaInicioA * 60 + minutoInicioA) - (horaInicioB * 60 + minutoInicioB);
+    });
+
+  // Si no quedan turnos hoy, buscar los próximos turnos en otros días
+  let turnosProximos = turnosHoy;
+  let diaProximo = diaHoy;
+  let fechaProxima = fechaHoy;
+
+  if (turnosHoy.length === 0) {
+    let i = 1;
+    while (turnosProximos.length === 0 && i <= 7) {
+      const siguienteFecha = new Date(hoy);
+      siguienteFecha.setDate(hoy.getDate() + i);
+      const siguienteDia = diasSemana[siguienteFecha.getDay()];
+      const fechaSiguiente = siguienteFecha.toISOString().split('T')[0];
+
+      turnosProximos = turns.filter(turn => turn.dias.includes(siguienteDia));
+      diaProximo = siguienteDia;
+      fechaProxima = fechaSiguiente;
+      i++;
+    }
+    turnosProximos.sort((a, b) => {
+      const [horaInicioA, minutoInicioA] = a.hora_inicio.split(':').map(Number);
+      const [horaInicioB, minutoInicioB] = b.hora_inicio.split(':').map(Number);
+      return (horaInicioA * 60 + minutoInicioA) - (horaInicioB * 60 + minutoInicioB);
+    });
+  }
+
+  const formatearFecha = (fecha) => {
+    const [año, mes, día] = fecha.split('-');
+    return `${día}/${mes}/${año}`;
+  };
 
 
   return (
     <div>
-      <h2>Turnos de Hoy ({diaHoy})</h2>
-        {turnosHoy.length > 0 ? (
-          turnosHoy.map(turn => (
-            <TodayTurnCard key={turn.id} turn={turn} />
-          ))
-        ) : (
-          <strong>No hay turnos para hoy.</strong>
-        )}
+      <Container className='card'>
+        <h2>
+        {turnosHoy.length > 0
+          ? `Turnos para hoy (${diaHoy}, ${formatearFecha(fechaHoy)})`
+          : <>No hay turnos para el día de hoy.<br />Próximos turnos ({diaProximo}, {formatearFecha(fechaProxima)})</>
+        }
+      </h2>
+      </Container>
+      {turnosProximos.length > 0 ? (
+        turnosProximos.map(turn => (
+          <TodayTurnCard key={turn.id} turn={turn} fecha={turnosHoy.length > 0 ? fechaHoy : fechaProxima}
+        />
+        ))
+      ) : (
+        <strong>No hay turnos disponibles.</strong>
+      )}
     </div>
   );
 };

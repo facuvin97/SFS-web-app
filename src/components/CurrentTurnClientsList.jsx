@@ -7,8 +7,27 @@ export default function CurrentTurnClientsList() {
   const [services, setServices] = useState([])
   const [loading, setLoading] = useState(true);
   const location = useLocation()
-  const turn = location.state.turn;
+  const { turn, fecha } = location.state || {};
+  const now = new Date();
+  const dateNow = now.toISOString().split('T')[0];
 
+  const getCurrentTime = (date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    return `${hours}:${minutes}:${seconds}`;
+  };
+
+  // Función para sumar minutos a una hora en formato HH:MM:SS
+const addMinutesToTime = (time, minutesToAdd) => {
+  const [hours, minutes] = time.split(':').map(Number);
+  const totalMinutes = hours * 60 + minutes + minutesToAdd;
+
+  const newHours = Math.floor(totalMinutes / 60) % 24; // Asegurar que no se pase de 24 horas
+  const newMinutes = totalMinutes % 60;
+
+  return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
+};
   const toggleServiceStatus = async (id, comenzado) => {
     if (!comenzado) { // cambiar el estado a comenzado
       try {
@@ -50,12 +69,17 @@ export default function CurrentTurnClientsList() {
       }
     }
   }
+  const isWithinTurnHours = () => {
+    const horaFinConMargen = addMinutesToTime(turn.hora_fin, 60);
+
+    return getCurrentTime(now) >= turn.hora_inicio && getCurrentTime(now) <= horaFinConMargen && dateNow == fecha
+  }
 
   useEffect(() => {
     async function fetchData() {
       try {
         // Cargo los servicios del turno actual
-        const response = await fetch(`http://localhost:3001/api/v1/services/turn/today/${turn.id}`);
+        const response = await fetch(`http://localhost:3001/api/v1/services/turn/today/${turn.id}/${fecha}`);
         const data = await response.json();
         const services = data.body;
   
@@ -70,6 +94,7 @@ export default function CurrentTurnClientsList() {
     }
     fetchData();
   }, [turn]);
+  
 
   if (loading) return <p>Loading...</p>;
 
@@ -103,15 +128,17 @@ export default function CurrentTurnClientsList() {
                 <TableCell>{service.cantidad_mascotas}</TableCell>
                 <TableCell>{service.nota}</TableCell>
                 <TableCell align="right">
-                  <Button
-                    variant={service.comenzado ? "outlined" : "contained"}
-                    color={service.comenzado ? "secondary" : "primary"}
-                    onClick={() => toggleServiceStatus(service.id, service.comenzado)}
-                    size="small"
-                  >
-                    {service.comenzado ? "Finalizar" : "Iniciar"}
-                  </Button>
-                </TableCell>
+                <Button
+                  variant={service.comenzado ? "outlined" : "contained"}
+                  color={service.comenzado ? "secondary" : "primary"}
+                  onClick={() => toggleServiceStatus(service.id, service.comenzado)}
+                  size="small"
+                  disabled={!isWithinTurnHours()}  // Si isWithinTurnHours() es falso, el botón estará deshabilitado
+                >
+                  {service.comenzado ? "Finalizar" : "Iniciar"}
+                </Button>
+                
+                </TableCell>              
               </TableRow>
             ))}
           </TableBody>
@@ -121,3 +148,5 @@ export default function CurrentTurnClientsList() {
     </div>
   )
 }
+//TODO:
+//mostrar y parar fecha de turno para ver botones si es hoy

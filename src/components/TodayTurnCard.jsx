@@ -3,26 +3,21 @@ import { useNavigate } from 'react-router-dom'; // Importamos useNavigate para l
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import {Tooltip } from '@mui/material';
 
 
-function TodayTurnCard({ turn }) {
+
+function TodayTurnCard({ turn, fecha}) {
   const navigate = useNavigate();
-  const todayTurnServices = turn.Services.filter(service => {
-    const today = new Date().toISOString().split('T')[0]; // Obtiene la fecha de hoy en formato 'YYYY-MM-DD'
-    const fechaServicio = service.fecha.split('T')[0];
-    // console.log('today:', today)
-    // console.log('new date:', new Date())
-    // console.log('service.fecha:', service.fecha)
-    return fechaServicio === today && !service.finalizado;
+  // Filtrar los servicios del turno que coincidan con el día especificado y estén aceptados
+  const filteredServices = turn.Services.filter(service => {
+    const fechaServicio = service.fecha.split('T')[0]; // Obtener solo la fecha (sin la hora)
+
+    // Filtrar por el día pasado y que el servicio esté aceptado
+    return fechaServicio === fecha && !service.finalizado && service.aceptado;
   });
 
-
   const handleClick = () => {
-    navigate('/current-turn-clients', { state: { turn } });
+    navigate('/current-turn-clients', { state: { turn, fecha } });
   };
 
   return (
@@ -41,7 +36,7 @@ function TodayTurnCard({ turn }) {
           <strong>Días:</strong> {turn.dias.join(', ')}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Servicios agendados pendientes: {todayTurnServices.length}
+          Servicios agendados pendientes: {filteredServices.length}
         </Typography>
       </CardContent>
     </Card>
