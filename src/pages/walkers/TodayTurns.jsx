@@ -9,8 +9,12 @@ const TodayTurns = () => {
   // Obtener el día de hoy en español
   const diasSemana = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
   const hoy = new Date();
+  const year = hoy.getFullYear();
+  const month = (hoy.getMonth() + 1).toString().padStart(2, '0'); // Meses comienzan desde 0, por lo que sumamos 1
+  const day = hoy.getDate().toString().padStart(2, '0');
+  const fechaHoy = `${year}-${month}-${day}`;
+  
   const diaHoy = diasSemana[hoy.getDay()];
-  const fechaHoy = hoy.toISOString().split('T')[0];
   const horaActual = hoy.getHours() * 60 + hoy.getMinutes(); // Convertir la hora actual a minutos desde las 00:00
 
   // Filtrar los turnos que aún están en curso o no han comenzado
@@ -40,7 +44,10 @@ const TodayTurns = () => {
       const siguienteFecha = new Date(hoy);
       siguienteFecha.setDate(hoy.getDate() + i);
       const siguienteDia = diasSemana[siguienteFecha.getDay()];
-      const fechaSiguiente = siguienteFecha.toISOString().split('T')[0];
+      const year = siguienteFecha.getFullYear();
+      const month = (siguienteFecha.getMonth() + 1).toString().padStart(2, '0'); // Meses comienzan desde 0, por lo que sumamos 1
+      const day = siguienteFecha.getDate().toString().padStart(2, '0');
+      const fechaSiguiente = `${year}-${month}-${day}`;
 
       turnosProximos = turns.filter(turn => turn.dias.includes(siguienteDia));
       diaProximo = siguienteDia;

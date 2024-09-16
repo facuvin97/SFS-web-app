@@ -212,7 +212,7 @@ function BillCard() {
         <Typography variant="body2" color="text.secondary">
           <strong>Monto: $</strong> {billToPay.monto}
         </Typography>
-        <Tooltip title='Pagar factura' arrow>
+        {billToPay.Service.comenzado ? <Tooltip>
           {preferenceId && mercadopagoDisponible && <Wallet initialization={{ preferenceId: preferenceId }} />}
           <Button
             variant="contained"
@@ -223,6 +223,19 @@ function BillCard() {
             Pagar en efectivo
           </Button>
         </Tooltip>
+        : <Tooltip title='El pago sera habilitado cuando el servicio este en curso.' arrow>
+            <span>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={null}
+                sx={{ marginTop: 2 }}
+                disabled={true}
+              >
+                Pagar
+              </Button>
+            </span>
+          </Tooltip>}
       </CardContent>
     </Card>
   );

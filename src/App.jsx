@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css'
+import 'leaflet/dist/leaflet.css';
+
 import { useState, useEffect } from 'react';
 import UserDetails from './pages/users/FindUser';
 import ResponsiveAppBar from './components/ResponsiveAppBar';
@@ -42,6 +44,7 @@ import Failure from './pages/payment/PaymentFailure';
 import Pending from './pages/payment/PaymentsPending'
 import TodayTurns from './pages/walkers/TodayTurns';
 import CurrentTurnClientsList from './components/CurrentTurnClientsList';
+import Map from './components/Map';
 
 
 function App() {
@@ -112,6 +115,8 @@ function App() {
 
                   <Route path={`/payment-methods-config`} element={<PaymentMethodsConfig/>}/>
                   <Route path={`/current-turn-clients`} element={<CurrentTurnClientsList />}/>
+                  <Route path={`/map`} element={<Map />}/>
+                  
 
                   <Route path="*" element={<div>404</div> } />
                 </Routes>
