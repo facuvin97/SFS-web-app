@@ -12,6 +12,9 @@ function AddTurnForm({ userLog }) {
   const [mensaje, setMensaje] = useState('');
   const navigate = useNavigate();
 
+  const diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+
+
   const handleAddTurn = async () => {
     const turnoData = {
       dias,
@@ -53,7 +56,22 @@ function AddTurnForm({ userLog }) {
       setMensaje('Error al conectar con el servidor');
       alert(mensaje)
     }
-  };
+  }
+  const handleDiaChange = (dia, checked) => {
+    let nuevosDias;
+
+    if (checked) {
+      // Si se selecciona el día, se agrega a la lista
+      nuevosDias = [...dias, dia];
+    } else {
+      // Si se deselecciona el día, se elimina de la lista
+      nuevosDias = dias.filter(d => d !== dia);
+    }
+
+    // Ordenamos los días según el orden en 'diasSemana'
+    nuevosDias.sort((a, b) => diasSemana.indexOf(a) - diasSemana.indexOf(b));
+    setDias(nuevosDias);
+  }
 
   return (
     <div className='account-container'>
@@ -63,16 +81,13 @@ function AddTurnForm({ userLog }) {
             <div>
               <label>Días:</label>
               <br/>
-              {['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sábado', 'domingo'].map((dia) => (
+              {diasSemana.map((dia) => (
                 <FormControlLabel
                   key={dia}
                   control={
                     <Checkbox
                       checked={dias.includes(dia)}
-                      onChange={(e) => {
-                        const checked = e.target.checked;
-                        setDias(prevDias => checked ? [...prevDias, dia] : prevDias.filter(d => d !== dia));
-                      }}
+                      onChange={(e) => handleDiaChange(dia, e.target.checked)}
                       name={dia}
                     />
                   }

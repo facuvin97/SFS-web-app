@@ -18,6 +18,9 @@ function ModifyTurn() {
 
   const [mensaje, setMensaje] = useState(null);
 
+  const diasOrdenados = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+
+
   // Función para manejar cambios en los inputs del formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -28,14 +31,21 @@ function ModifyTurn() {
   };
 
   // Función para manejar cambios en los checkboxes de días
-  const handleDayChange = (e) => {
-    const { name, checked } = e.target;
-    setTurnData((prevData) => ({
-      ...prevData,
-      dias: checked ? [...prevData.dias, name] : prevData.dias.filter((d) => d !== name)
-    }));
-  };
-
+    // Función para manejar cambios en los checkboxes de días
+    const handleDayChange = (e) => {
+      const { name, checked } = e.target;
+      let updatedDias = checked
+        ? [...turnData.dias, name]
+        : turnData.dias.filter((d) => d !== name);
+      
+      // Ordenar los días según el array de referencia
+      updatedDias = updatedDias.sort((a, b) => diasOrdenados.indexOf(a) - diasOrdenados.indexOf(b));
+  
+      setTurnData((prevData) => ({
+        ...prevData,
+        dias: updatedDias
+      }));
+    };
   // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +60,6 @@ function ModifyTurn() {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log('Turno modificado correctamente');
         setMensaje(responseData.message);
         navigate('/turns');
       } else {
@@ -70,7 +79,7 @@ function ModifyTurn() {
             <div>
               <label>Días:</label>
               <br />
-              {['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sábado', 'domingo'].map((dia) => (
+              {diasOrdenados.map((dia) => (
                 <FormControlLabel
                   key={dia}
                   control={
