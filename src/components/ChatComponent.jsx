@@ -17,22 +17,23 @@ const ChatComponent = () => {
   // useEffect que se ejecuta cada vez que se recibe un mensaje
   useEffect(() => {
     try {
-      // verificar si el socket está conectado
-      if (!socket) throw new Error('Error de conexion del socket');
-
-      // Escuchar el evento 'receiveMessage' del servidor
-      socket.on('receiveMessage', (newMessage) => {
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-      });
-
-      // Limpiar el evento cuando el componente se desmonte
-      return () => {
-        socket.off('receiveMessage');
-      };
-    } catch (error) {
-      console.error('Error al conectar al socket:', error);
-    }
+      //verificar si el socket está conectado
+    if (!socket) throw new Error('Error de conexion del socket');
+  
+    //agregar un listener para el evento 'receiveMessage'
+    socket.on('receiveMessage', (newMessage) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+  
+    // Limpiar el evento cuando el componente se desmonte
+    return () => {
+      socket.off('receiveMessage');
+    };
+  } catch (error) {
+    console.error('Error al conectar al socket:', error);
+  }
   }, [socket]);
+  
 
   // useEffect que se ejecuta solo la primera vez que cargue la página
   useEffect(() => {
@@ -40,7 +41,6 @@ const ChatComponent = () => {
     if (!receiverId) {
       navigate('/');
     }
-
     // setear el receiverId en el estado
     setReceiverId(receiverId);
 
@@ -74,17 +74,19 @@ const ChatComponent = () => {
   // Función para enviar un mensaje al servidor
   const sendMessage = () => {
     if (socket && message && userLog && receiverId) {
-      // Emitir el evento 'sendMessage' al servidor
-      socket.emit('sendMessage', {
+      const newMessage = {
         senderId: userLog.id, // El usuario logueado es el remitente
         receiverId: receiverId, // El usuario destinatario
-        message, // El mensaje a enviar
-      });
+        contenido: message, // El contenido del mensaje
+      };
+  
+      // Emitir el evento 'sendMessage' al servidor
+      socket.emit('sendMessage', newMessage);
 
       setMessage(''); // Limpiar el campo de mensaje después de enviarlo
     }
   };
-
+  
   console.log('messages: ', messages);
 
   return (
