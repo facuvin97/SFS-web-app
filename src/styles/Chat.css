@@ -1,0 +1,64 @@
+/* Estilos del contenedor de mensajes */
+.message-Container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espacio entre los mensajes */
+  padding: 10px; /* Espacio dentro del contenedor */
+  background-color: #e5ddd5; /* Fondo similar a WhatsApp */
+  overflow-y: auto; /* Habilita el scroll vertical */
+  height: calc(100% - 100px); /* Altura flexible para ajustarse a la pantalla */
+  max-height: 60vh; /* Altura máxima del contenedor */
+  list-style-type: none; /* Elimina los puntos de la lista */
+  margin: 0;
+}
+
+/* Estilos para los elementos li */
+.message-Container li {
+  display: flex;
+  flex-direction: column; /* Asegura que el nombre esté arriba del mensaje */
+  padding: 10px; /* Espacio interno para los mensajes */
+  border-radius: 10px;
+  max-width: 70%; /* Ancho máximo de los mensajes */
+  word-wrap: break-word; /* Permite que el texto se ajuste */
+  margin-bottom: 10px; /* Espacio entre mensajes */
+}
+
+/* Clase para el nombre del usuario en los mensajes */
+.message-username {
+  font-weight: bold; /* Negrita para el nombre */
+  margin-bottom: 5px; /* Espacio entre el nombre y el mensaje */
+  font-size: 0.9rem;
+  color: #333;
+  text-align: left; /* Siempre alineado a la izquierda */
+}
+
+.my-messages {
+  background-color: #dcf8c6; /* Verde claro para tus mensajes */
+  align-self: flex-end; /* Alinea tus mensajes a la derecha */
+  text-align: right;
+}
+
+.their-messages {
+  background-color: #ffffff; /* Blanco para los mensajes de otros */
+  align-self: flex-start; /* Alinea los mensajes de otros a la izquierda */
+  text-align: left;
+}
+
+.message-Container p {
+  margin: 0;
+}
+
+.message-Container small {
+  font-size: 0.75rem;
+  color: #555;
+}
+
+/* Input & Button */
+input[type="text"] {
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+button {
+  font-size: 1rem;
+}

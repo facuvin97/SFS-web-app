@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import ChatIcon from '@mui/icons-material/Chat';
 import { useUserImageContext } from '../../contexts/UserImageContext';
 
 const WalkerProfile = () => {
@@ -30,7 +31,6 @@ const WalkerProfile = () => {
         }
         const data = await response.json();
         setWalker(data.body);
-        console.log('data: ', data)
 
         const turnsResponse = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`);
         if (!turnsResponse.ok) {
@@ -96,6 +96,11 @@ const WalkerProfile = () => {
   const handleEditTurnClick = (turn) => {
     navigate('/turn-modify', { state: { turn } });
   }
+
+  const handleChatClick = (event) => {
+    event.stopPropagation();
+    navigate('/chat', { state: { receiverId: walker.id } });
+  }
   
    const getStarIcons = (calificacion) => {
     const fullStars = Math.floor(calificacion);
@@ -139,6 +144,7 @@ const WalkerProfile = () => {
           <Grid item>
             <Avatar alt={walker.User.nombre_usuario} src={imageUrl} sx={{ width: 100, height: 100 }} />
           </Grid>
+          {/* si el usuario logueado es el propietario del perfil, muestra el botón de editar la foto del perfil */}
           { userLog.id == walker.id && 
           <Grid item>
             <Typography align="center">
@@ -148,7 +154,20 @@ const WalkerProfile = () => {
               </IconButton>
             </Tooltip>
             </Typography>
-          </Grid>}
+          </Grid>
+          }
+          {/* si el usuario logueado no es el propietario del perfil, muestra el botón de chatear */}
+          { userLog.id != walker.id && 
+            <Grid item>
+              <Typography align="center">
+              <Tooltip title='Chatear'>
+                <IconButton aria-label="chatear" onClick={handleChatClick}>
+                  <ChatIcon />
+                </IconButton>
+              </Tooltip>
+              </Typography>
+            </Grid>
+          }
           <Grid item xs>
             <Typography variant="h5" component="div">
               {walker.User.nombre_usuario}

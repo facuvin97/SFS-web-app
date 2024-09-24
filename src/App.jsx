@@ -45,6 +45,7 @@ import Pending from './pages/payment/PaymentsPending'
 import TodayTurns from './pages/walkers/TodayTurns';
 import CurrentTurnClientsList from './components/CurrentTurnClientsList';
 import Map from './components/Map';
+import ChatComponent from './components/ChatComponent';
 
 
 function App() {
@@ -116,6 +117,9 @@ function App() {
                   <Route path={`/payment-methods-config`} element={<PaymentMethodsConfig/>}/>
                   <Route path={`/current-turn-clients`} element={<CurrentTurnClientsList />}/>
                   <Route path={`/map`} element={<Map />}/>
+
+                  <Route path='/chat' element={<ChatComponent/>} />
+
                   
 
                   <Route path="*" element={<div>404</div> } />
