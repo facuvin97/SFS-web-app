@@ -1,13 +1,13 @@
 /* Estilos del contenedor de mensajes */
 .message-Container {
-  display: flex;
-  flex-direction: column;
+  display: flex;/* Para que los elementos se muestren en filas */
+  flex-direction: column;/* Para que los elementos se muestren en columnas */
   gap: 10px;
   border-radius: 15px;
   padding: 15px;
   background-color: #e0d6ce; /* Fondo más oscuro */
   overflow-y: auto; /* Habilita el scroll vertical */
-  height: calc(100% - 100px);
+  height: calc(100% - 100px);/* Ajusta el alto del contenedor al 100% menos el alto del header */
   max-height: 60vh;
   list-style-type: none;
   margin: 0;

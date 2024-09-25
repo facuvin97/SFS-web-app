@@ -117,7 +117,9 @@ const ChatComponent = () => {
         elevation={3}
         sx={{
           backgroundColor: '#cac5b3',
-          borderRadius: 4 // Asegúrate de establecer el color de fondo aquí
+          borderRadius: 4, // Asegúrate de establecer el color de fondo aquí
+          minHeight: '200px', // Establecer un alto mínimo
+          overflowY: 'auto', // Permitir desplazamiento vertical
         }}
       >
         {messages.map((msg, index) => (

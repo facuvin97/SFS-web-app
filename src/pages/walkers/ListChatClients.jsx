@@ -37,8 +37,8 @@ const ListChatClients = () => {
       <Box sx={{ flexGrow: 1, p: 2 }}>
         <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
           {clients.map((client) => (
-            <Grid item key={client.id} onClick={() => handleChatClientClick(client)}>
-              <ClientCard client={client} />
+            <Grid item key={client.User.id} onClick={() => handleChatClientClick(client.User)}>
+              <ClientCard client={client.User} />
             </Grid>
           ))}
         </Grid>
