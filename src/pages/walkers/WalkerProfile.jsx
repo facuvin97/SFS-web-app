@@ -99,7 +99,7 @@ const WalkerProfile = () => {
 
   const handleChatClick = (event) => {
     event.stopPropagation();
-    navigate('/chat', { state: { receiverId: walker.id } });
+    navigate('/chat', { state: {receiver: walker.User } });
   }
   
    const getStarIcons = (calificacion) => {

@@ -15,26 +15,29 @@ import { ConfirmedServicesProvider } from './contexts/ServicesContext.jsx';
 import { UnpaidBillsProvider } from './contexts/BillContext.jsx';
 import { WalkerTurnsProvider } from './contexts/TurnContext.jsx';
 import { WebSocketProvider } from './contexts/WebSocketContext.jsx';
+import { ClientImageContextProvider } from './contexts/ClientImageContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <WalkersImageContextProvider>
-      <BrowserRouter>
-        <CssBaseline />
-        <UserProvider>
-          <WebSocketProvider>
-            <NotificationsProvider>
-              <ConfirmedServicesProvider>
-                <UnpaidBillsProvider>
-                  <WalkerTurnsProvider>
-                    <App />
-                  </WalkerTurnsProvider>
-                </UnpaidBillsProvider>
-              </ConfirmedServicesProvider>
-            </NotificationsProvider>
-          </WebSocketProvider>
-        </UserProvider>
-      </BrowserRouter>
+      <ClientImageContextProvider>
+        <BrowserRouter>
+          <CssBaseline />
+          <UserProvider>
+            <WebSocketProvider>
+              <NotificationsProvider>
+                <ConfirmedServicesProvider>
+                  <UnpaidBillsProvider>
+                    <WalkerTurnsProvider>
+                      <App />
+                    </WalkerTurnsProvider>
+                  </UnpaidBillsProvider>
+                </ConfirmedServicesProvider>
+              </NotificationsProvider>
+            </WebSocketProvider>
+          </UserProvider>
+        </BrowserRouter>
+      </ClientImageContextProvider>
     </WalkersImageContextProvider>
   </React.StrictMode>,
 );

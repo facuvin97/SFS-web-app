@@ -14,21 +14,26 @@ const ClientCard = ({ client }) => {
   const navigate = useNavigate();
   const { clientImages } = useClientImageContext();
 
+  // Función para manejar la expansión de la tarjeta al pasar el mouse
   const handleMouseEnter = () => {
     setIsExpanded(true);
   };
 
+  // Función para colapsar la tarjeta al retirar el mouse
   const handleMouseLeave = () => {
     setIsExpanded(false);
   };
 
+  // Función para navegar a la página de detalles del cliente
   const handleClick = () => {
     navigate('/client-details', { state: { client: { ...client, imageSrc: imageUrl } } });
   };
 
+  // Cálculo de la calificación del cliente en porcentaje
   const calificacion = client.calificacion || 0;
   const percentage = (calificacion / 5) * 100;
 
+  // Obtener la imagen del cliente desde el contexto
   const clientImage = clientImages.find(img => img.nombre_usuario === client.nombre_usuario);
   const imageUrl = clientImage ? clientImage.imageSrc : '';
 
@@ -41,24 +46,33 @@ const ClientCard = ({ client }) => {
         minWidth: '250px',
         maxHeight: 'none',
         height: '100%',
+        cursor: 'pointer', // Para mostrar que es clicable
       }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={handleClick}
+      onMouseEnter={handleMouseEnter} // Expandir al pasar el mouse
+      onMouseLeave={handleMouseLeave} // Colapsar al retirar el mouse
+      onClick={handleClick} // Navegar al hacer clic
     >
+      {/* Imagen del cliente */}
       <Avatar alt={client.nombre_usuario} src={imageUrl} sx={{ width: 56, height: 56, m: 2 }} />
+      
+      {/* Contenido de la tarjeta */}
       <CardContent sx={{ flex: '1 0 auto', paddingLeft: 0 }}>
+        {/* Nombre del cliente */}
         <Typography gutterBottom variant="h6" component="div">
           {client.nombre_usuario}
         </Typography>
+
+        {/* Calificación del cliente en estrellas */}
         <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center' }}>
-          Calificación: {' '}
+          Calificación:{' '}
           {[...Array(5)].map((_, index) => (
             <span key={index}>
               {index < (percentage / 20) ? <StarIcon /> : <StarOutlineIcon />}
             </span>
           ))}
         </Typography>
+
+        {/* Información adicional que se muestra al expandir */}
         <Collapse in={isExpanded} timeout="auto" unmountOnExit>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
             <strong>Cantidad de mascotas:</strong> {client.cantidad_mascotas}

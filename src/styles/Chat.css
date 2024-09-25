@@ -2,45 +2,59 @@
 .message-Container {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Espacio entre los mensajes */
-  padding: 10px; /* Espacio dentro del contenedor */
-  background-color: #e5ddd5; /* Fondo similar a WhatsApp */
+  gap: 10px;
+  border-radius: 15px;
+  padding: 15px;
+  background-color: #e0d6ce; /* Fondo más oscuro */
   overflow-y: auto; /* Habilita el scroll vertical */
-  height: calc(100% - 100px); /* Altura flexible para ajustarse a la pantalla */
-  max-height: 60vh; /* Altura máxima del contenedor */
-  list-style-type: none; /* Elimina los puntos de la lista */
+  height: calc(100% - 100px);
+  max-height: 60vh;
+  list-style-type: none;
   margin: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra más profunda */
+}
+
+/* Barra de desplazamiento */
+.message-Container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.message-Container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.message-Container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* Fondo del scrollbar */
+  border-radius: 4px;
 }
 
 /* Estilos para los elementos li */
 .message-Container li {
   display: flex;
-  flex-direction: column; /* Asegura que el nombre esté arriba del mensaje */
-  padding: 10px; /* Espacio interno para los mensajes */
+  flex-direction: column;
+  padding: 10px;
   border-radius: 10px;
-  max-width: 70%; /* Ancho máximo de los mensajes */
-  word-wrap: break-word; /* Permite que el texto se ajuste */
-  margin-bottom: 10px; /* Espacio entre mensajes */
+  max-width: 70%;
+  word-wrap: break-word;
+  margin-bottom: 10px;
 }
 
-/* Clase para el nombre del usuario en los mensajes */
 .message-username {
-  font-weight: bold; /* Negrita para el nombre */
-  margin-bottom: 5px; /* Espacio entre el nombre y el mensaje */
+  font-weight: bold;
+  margin-bottom: 5px;
   font-size: 0.9rem;
-  color: #333;
-  text-align: left; /* Siempre alineado a la izquierda */
+  color: #ccc; /* Letra más clara para contrastar con el fondo oscuro */
 }
 
 .my-messages {
-  background-color: #dcf8c6; /* Verde claro para tus mensajes */
-  align-self: flex-end; /* Alinea tus mensajes a la derecha */
+  background-color: #dcf8c6;
+  align-self: flex-end;
   text-align: right;
 }
 
 .their-messages {
-  background-color: #ffffff; /* Blanco para los mensajes de otros */
-  align-self: flex-start; /* Alinea los mensajes de otros a la izquierda */
+  background-color: #ffffff;
+  align-self: flex-start;
   text-align: left;
 }
 
@@ -53,12 +67,55 @@
   color: #555;
 }
 
-/* Input & Button */
-input[type="text"] {
-  border: 1px solid #ccc;
-  font-size: 1rem;
+.status-container {
+  display: inline-block;
+  margin-left: 5px;
 }
 
-button {
-  font-size: 1rem;
+.status-icon {
+  font-size: 0.8em;
+  color: #007bff; /* Azul para leído */
+}
+
+.status-icon-gray {
+  color: #4d5561; /* Gris para enviado */
+}
+
+/* Estilo para el contenedor del input y el botón */
+.input-container {
+  display: flex;
+  gap: 10px; /* Espacio mayor entre el input y el botón */
+  align-items: center;
+  padding: 10px; /* Añadido padding extra para dar más espacio */
+  background-color: #efebe500;
+  border-radius: 15px; /* Bordes redondeados */
+}
+
+/* Barra de desplazamiento transparente */
+.input-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.input-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.input-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* Fondo del scrollbar */
+  border-radius: 4px;
+}
+
+.chat-card {
+  padding: 1.5em;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(9, 109, 140, 0.5);
+  min-height: 5vh;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
 }
