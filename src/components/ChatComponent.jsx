@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useWebSocket } from '../contexts/WebSocketContext';
 import { useUser } from '../contexts/UserLogContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/Chat.css';
 import { Box, IconButton, InputAdornment, Paper, TextField } from '@mui/material';
 import { AttachFile, Send } from '@mui/icons-material';
+import '../styles/Chat.css';
+import { useChatsContext } from '../contexts/ChatsContext';
+
 
 const ChatComponent = () => {
   const socket = useWebSocket();
@@ -12,11 +14,14 @@ const ChatComponent = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const location = useLocation();
-  const [receiver, setReceiver] = useState(location.state?.receiver || null);
+  const [receiver, setReceiver] = useState(location.state?.receiver || null); // se llama receiver, pero es el "otro" usuario
   const navigate = useNavigate();
   const messageContainerRef = useRef(null);
   let usuario = userLog.tipo === 'client' ? 'Paseador' : 'Cliente';
   const nombreUsuario = receiver?.nombre_usuario || 'Usuario desconocido';
+  const receiverFromState = location.state?.receiver;
+  const { unreadChats, setUnreadChats } = useChatsContext();
+
 
   // Función para hacer scroll hasta el final
   const scrollToBottom = () => {
@@ -29,6 +34,11 @@ const ChatComponent = () => {
   const emitSocketEvent = (eventName, data) => {
     if (socket) socket.emit(eventName, data);
   };
+
+  // Si el receiver viene en el estado, lo establezco y redibujo
+  useEffect(() => {
+    if (receiverFromState) setReceiver(receiverFromState);
+  }, [receiverFromState]);
 
   // Cargar mensajes desde la API al cargar el componente
   useEffect(() => {
@@ -49,7 +59,7 @@ const ChatComponent = () => {
   // Solicitar mensajes no leídos
   useEffect(() => {
     if (!socket || !receiver) return;
-    emitSocketEvent('getUnreadMessages', { receiverId: userLog.id });
+    emitSocketEvent('getUnreadMessages', { receiverId: userLog.id, senderId: receiver.id });
 
     socket.on('unreadMessages', (unreadMessages) => {
       setMessages((prevMessages) => [
@@ -57,6 +67,12 @@ const ChatComponent = () => {
         ...unreadMessages.filter((msg) => !prevMessages.some((m) => m.id === msg.id)),
       ]);
       unreadMessages.forEach((msg) => emitSocketEvent('messageRead', { messageId: msg.id }));
+
+
+      if (unreadChats.length > 0) {
+      // actualizo el estado unreadChats para quitar el chat con id = msg.senderId
+      setUnreadChats((prevUnreadChats) => prevUnreadChats.filter((c) => c.id !== msg.senderId));}
+      
     });
 
     return () => socket.off('unreadMessages');
@@ -65,7 +81,7 @@ const ChatComponent = () => {
   // Manejo de recepción de mensajes
   const handleNewMessage = (newMessage) => {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    if (newMessage.receiverId === userLog.id) {
+    if (newMessage.receiverId === userLog.id ) {
       emitSocketEvent('messageRead', { messageId: newMessage.id });
     }
   };
@@ -117,8 +133,8 @@ const ChatComponent = () => {
         elevation={3}
         sx={{
           backgroundColor: '#cac5b3',
-          borderRadius: 4, // Asegúrate de establecer el color de fondo aquí
-          minHeight: '200px', // Establecer un alto mínimo
+          borderRadius: 4, // Establece el color de fondo
+          minHeight: '200px', // Establece un alto mínimo
           overflowY: 'auto', // Permitir desplazamiento vertical
         }}
       >

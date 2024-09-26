@@ -8,6 +8,8 @@ import Collapse from '@mui/material/Collapse';
 import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import { useClientImageContext } from '../contexts/ClientImageContext';
+import { Button, IconButton, Tooltip } from '@mui/material';
+import ChatIcon from '@mui/icons-material/Chat';
 
 const ClientCard = ({ client }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -29,6 +31,11 @@ const ClientCard = ({ client }) => {
     navigate('/client-details', { state: { client: { ...client, imageSrc: imageUrl } } });
   };
 
+  const handleChatClientClick = (e) => {
+    e.stopPropagation();
+    navigate('/chat', { state: { receiver: client } });
+  };
+
   // Cálculo de la calificación del cliente en porcentaje
   const calificacion = client.calificacion || 0;
   const percentage = (calificacion / 5) * 100;
@@ -48,9 +55,9 @@ const ClientCard = ({ client }) => {
         height: '100%',
         cursor: 'pointer', // Para mostrar que es clicable
       }}
+      onClick={handleClick} // Navegar a detalles al hacer clic en toda la tarjeta
       onMouseEnter={handleMouseEnter} // Expandir al pasar el mouse
       onMouseLeave={handleMouseLeave} // Colapsar al retirar el mouse
-      onClick={handleClick} // Navegar al hacer clic
     >
       {/* Imagen del cliente */}
       <Avatar alt={client.nombre_usuario} src={imageUrl} sx={{ width: 56, height: 56, m: 2 }} />
@@ -71,6 +78,13 @@ const ClientCard = ({ client }) => {
             </span>
           ))}
         </Typography>
+
+        {/* Botón para chatear */}
+        <Tooltip title='Chatear'>
+          <IconButton aria-label="chatear" onClick={handleChatClientClick}>
+            <ChatIcon />
+          </IconButton>
+        </Tooltip>
 
         {/* Información adicional que se muestra al expandir */}
         <Collapse in={isExpanded} timeout="auto" unmountOnExit>

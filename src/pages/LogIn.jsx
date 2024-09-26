@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { json, useNavigate } from 'react-router-dom';
 import '../styles/LoginPage.css';
 import { useUser } from '../contexts/UserLogContext';
+import { useEffect } from 'react';
 
 
 function LoginPage() {
@@ -11,6 +12,15 @@ function LoginPage() {
   const { userLog, setUserLog } = useUser();
 
   const navigate = useNavigate();
+
+ 
+
+  useEffect(() => {
+    if (userLog) {
+      navigate('/');
+    } 
+  }, []);
+
 
   const handleLogin = async () => {
     try {
@@ -48,21 +58,31 @@ function LoginPage() {
   };
 
   return (
-    <div className="account-container">
-      <h2>Iniciar Sesión</h2>
-      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
-      <div>
-        <label>Nombre de Usuario:</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+      <div className="account-container">
+        <h2>Iniciar Sesión</h2>
+        {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
+        <div>
+          <label>Nombre de Usuario:</label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Contraseña:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div>
+          <button className="login-button" onClick={handleLogin}>
+            Iniciar Sesión
+          </button>
+        </div>
       </div>
-      <div>
-        <label>Contraseña:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </div>
-      <div>
-        <button className="login-button" onClick={handleLogin}>Iniciar Sesión</button>
-      </div>
-    </div>
   );
 }
 
