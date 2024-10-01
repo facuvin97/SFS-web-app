@@ -20,8 +20,8 @@ import { useUserImageContext } from '../contexts/UserImageContext';
 import { useConfirmedServicesContext } from '../contexts/ServicesContext';
 import { useChatsContext } from '../contexts/ChatsContext';
 import Notifications from './Notifications';
-import ChatIcon from '@mui/icons-material/Chat'; 
 import { useNavigate } from 'react-router-dom';
+import ChatList from './ChatList';
 
 
 const pagesWalker = ['Turnos', 'Solicitudes', 'Servicios', 'Historial', 'Chats'];
@@ -34,8 +34,6 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
   const {pendingServicesCount} = useConfirmedServicesContext();
   const navigate = useNavigate();
   const { chats, unreadChats, setUnreadChats } = useChatsContext();
-
-  console.log('chats:', chats);
 
   
    // Rutas para los paseadores
@@ -57,15 +55,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
   useEffect(() => {
   }, [unreadChats]);
 
-  // Abre el menú de chats
-  const handleOpenChatMenu = (event) => {
-    setAnchorElChat(event.currentTarget);
-  };
 
-  // Cierra el menú de chats
-  const handleCloseChatMenu = () => {
-    setAnchorElChat(null);
-  };
 
   const handleChatClick = (event) => {
     setAnchorElChat(null);
@@ -160,42 +150,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
 
               {/* Botón de Chat */}
               <Box sx={{ flexGrow: 0, margin: '10px' }}>
-                <Tooltip title="Abrir Chats">
-                  <IconButton onClick={handleOpenChatMenu} sx={{ p: 0 }}>
-                    <Badge badgeContent={unreadChats} color="error">
-                      <ChatIcon sx={{ color: 'white' }} />
-                    </Badge>
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{ mt: '45px' }}
-                  id="menu-appbar-chats"
-                  anchorEl={anchorElChat}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElChat)}
-                  onClose={handleCloseChatMenu}
-                >
-                  {chats.length > 0 ? (
-                    chats.map((chat) => (
-                      <MenuItem key={chat.id} id={chat.id} onClick={handleChatClick}>
-                        {/* Puedes ajustar el contenido según los datos que tenga cada chat */}
-                        <Typography textAlign="center">{chat.User.nombre_usuario}</Typography>
-                      </MenuItem>
-                    ))
-                  ) : (
-                    <MenuItem>
-                      <Typography textAlign="center">No hay chats disponibles</Typography>
-                    </MenuItem>
-                  )}
-                </Menu>
+                <ChatList />
               </Box>
 
               <Box sx={{ flexGrow: 0 }}>

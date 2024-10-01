@@ -59,6 +59,7 @@ const ChatComponent = () => {
   // Solicitar mensajes no leídos
   useEffect(() => {
     if (!socket || !receiver) return;
+
     emitSocketEvent('getUnreadMessages', { receiverId: userLog.id, senderId: receiver.id });
 
     socket.on('unreadMessages', (unreadMessages) => {
@@ -71,7 +72,7 @@ const ChatComponent = () => {
 
       if (unreadChats.length > 0) {
       // actualizo el estado unreadChats para quitar el chat con id = msg.senderId
-      setUnreadChats((prevUnreadChats) => prevUnreadChats.filter((c) => c.id !== msg.senderId));}
+      setUnreadChats((prevUnreadChats) => prevUnreadChats.filter((c) => c.id !== receiver.id));}
       
     });
 
@@ -80,9 +81,14 @@ const ChatComponent = () => {
 
   // Manejo de recepción de mensajes
   const handleNewMessage = (newMessage) => {
+    
+    console.log('newMessage:', newMessage);
     setMessages((prevMessages) => [...prevMessages, newMessage]);
+    
     if (newMessage.receiverId === userLog.id ) {
+      console.log('receiverId', receiver.id);
       emitSocketEvent('messageRead', { messageId: newMessage.id });
+     
     }
   };
 
