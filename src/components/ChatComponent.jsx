@@ -19,8 +19,9 @@ const ChatComponent = () => {
   const messageContainerRef = useRef(null);
   let usuario = userLog.tipo === 'client' ? 'Paseador' : 'Cliente';
   const nombreUsuario = receiver?.nombre_usuario || 'Usuario desconocido';
-  const receiverFromState = location.state?.receiver;
   const { unreadChats, setUnreadChats } = useChatsContext();
+  
+  
 
 
   // Función para hacer scroll hasta el final
@@ -36,13 +37,24 @@ const ChatComponent = () => {
   };
 
   // Si el receiver viene en el estado, lo establezco y redibujo
+  // useEffect(() => {
+  //   if (location.state?.receiver) {
+  //     console.log('entrando el if, location.state?.receiver: ', location.state?.receiver);
+  //     setReceiver(location.state?.receiver)
+      
+  //   };
+  // }, [location.state?.receiver]);
+
   useEffect(() => {
-    if (receiverFromState) setReceiver(receiverFromState);
-  }, [receiverFromState]);
+    if (location.state?.receiver) {
+      setReceiver({ ...location.state.receiver }); // Forzar una nueva referencia
+    }
+  }, [location.state?.receiver]);
 
   // Cargar mensajes desde la API al cargar el componente
   useEffect(() => {
     if (!receiver) navigate('/');
+
     const cargarMensajes = async () => {
       try {
         const response = await fetch(`http://localhost:3001/api/v1/messages/${userLog.id}/${receiver.id}`);
@@ -53,6 +65,7 @@ const ChatComponent = () => {
         console.error('Error al obtener los mensajes.', error);
       }
     };
+    
     cargarMensajes();
   }, [receiver, navigate, userLog.id]);
 
@@ -79,24 +92,31 @@ const ChatComponent = () => {
     return () => socket.off('unreadMessages');
   }, [socket, receiver, userLog.id]);
 
-  // Manejo de recepción de mensajes
-  const handleNewMessage = (newMessage) => {
-    
-    console.log('newMessage:', newMessage);
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-    
-    if (newMessage.receiverId === userLog.id ) {
-      console.log('receiverId', receiver.id);
-      emitSocketEvent('messageRead', { messageId: newMessage.id });
-     
-    }
-  };
-
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !receiver) return;
+  
+    const handleNewMessage = (newMessage) => {
+  
+      // guardo el mensaje en el estado, solo si es un mensaje entre los dos usuarios de este chat
+      if ((newMessage.receiverId === userLog.id && newMessage.senderId === receiver.id) || 
+          (newMessage.receiverId === receiver.id && newMessage.senderId === userLog.id)) {
+        setMessages((prevMessages) => {
+          return [...prevMessages, newMessage];
+        });
+      }
+      
+      if (newMessage.receiverId === userLog.id ) {
+        emitSocketEvent('messageRead', { messageId: newMessage.id });
+      }
+    };
+  
     socket.on('receiveMessage', handleNewMessage);
-    return () => socket.off('receiveMessage', handleNewMessage);
-  }, [socket]);
+  
+    return () => {
+      socket.off('receiveMessage', handleNewMessage);
+    };
+  }, [socket, receiver, userLog.id]); // Agrega receiver como dependencia
+  
 
   // Actualizar mensajes como leídos
   useEffect(() => {

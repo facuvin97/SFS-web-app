@@ -12,8 +12,11 @@ const ChatList = () => {
   const { userLog } = useUser();
 
   useEffect(() => {
-    // redibujo el componente cuando cambia alguno de los estados
-  }, [usersChats, unreadChats]);
+    // Redibujo el componente cuando cambia alguno de los estados
+    console.log('usersChats actualizado:', usersChats);
+    console.log('unreadChats actualizado:', unreadChats); // Convierte Set a Array para visualizar
+    console.log('unreadChatsCount actualizado:', unreadChatsCount);
+  }, [usersChats, unreadChats, unreadChatsCount]);
  
   const handleClick = (event) => {
     setAnchorElChat(null);
@@ -65,7 +68,6 @@ const ChatList = () => {
         onClose={handleCloseChatMenu}
       >
         {usersChats.length > 0 ? (
-          console.log('usersChats:', usersChats),
            usersChats.map((userChat) => (
             <MenuItem key={userChat.User.id} id={userChat.User.id} onClick={handleClick}>
               {/* Puedes ajustar el contenido según los datos que tenga cada chat */}
