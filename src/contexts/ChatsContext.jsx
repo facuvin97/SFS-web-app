@@ -15,7 +15,12 @@ export const ChatsProvider = ({ children }) => {
 
   const fetchUsersChats = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/contacts/${userLog.id}`);
+      let response;
+      if (userLog.tipo === 'walker') {
+         response = await fetch(`http://localhost:3001/api/v1/contacts/clients/${userLog.id}`);
+      } else {
+         response = await fetch(`http://localhost:3001/api/v1/contacts/walkers/${userLog.id}`);
+      }
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -136,12 +141,12 @@ useEffect(() => {
   const handleNewMessage = async (newMessage) => {
     if (newMessage.senderId === userLog.id) return; // No se procesa el mensaje de mi mismo
 
-    console.log('usersChats al inicio del handleNewMessage:', usersChats);
+   // console.log('usersChats al inicio del handleNewMessage:', usersChats);
     
     // chequeo si el senderId que viene en el mensaje, ya existe en el estado
     const existingChat = usersChats.find((chat) => {
-      console.log('chat.id:', chat.id);
-      console.log('newMessage.senderId:', newMessage.senderId);
+      // console.log('chat.id:', chat.id);
+      // console.log('newMessage.senderId:', newMessage.senderId);
       return chat.id === newMessage.senderId;
     });
 
@@ -180,7 +185,7 @@ useEffect(() => {
       addChat(user.body);
       addUnreadChat(user.body.id);
     } else if (existingChat && !existingUnreadChat) { // si existe el chat, pero no está en el estado de unreadChats, lo agrego
-      console.log('Agregando a unreadChats el senderId:', newMessage.senderId);
+      //console.log('Agregando a unreadChats el senderId:', newMessage.senderId);
       addUnreadChat(newMessage.senderId);
     }
   };

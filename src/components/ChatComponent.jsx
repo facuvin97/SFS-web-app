@@ -92,6 +92,7 @@ const ChatComponent = () => {
     return () => socket.off('unreadMessages');
   }, [socket, receiver, userLog.id]);
 
+  //nuevo useEffect para actualizar el estado de messages cuando recibe un mensaje
   useEffect(() => {
     if (!socket || !receiver) return;
   
@@ -105,8 +106,8 @@ const ChatComponent = () => {
         });
       }
       
-      if (newMessage.receiverId === userLog.id ) {
-        emitSocketEvent('messageRead', { messageId: newMessage.id });
+      if (newMessage.receiverId === userLog.id && newMessage.senderId === receiver.id){
+          emitSocketEvent('messageRead', { messageId: newMessage.id });
       }
     };
   
@@ -125,12 +126,22 @@ const ChatComponent = () => {
       setMessages((prevMessages) =>
         prevMessages.map((msg) => (msg.id === messageId ? { ...msg, read } : msg))
       );
+
+      console.log('ejecutando el useEffect para marcar como leido:');
+
+      // Actualizar el estado unreadChats para quitar el chat con id = msg.senderId
+      setUnreadChats((prevUnreadChats) => {
+        const newUnreadChats = new Set(prevUnreadChats); // Crea una copia del Set
+        newUnreadChats.delete(receiver.id); // Elimina el id del receptor
+        return newUnreadChats; // Retorna el nuevo Set
+      });
+
     });
     return () => socket.off('messageRead');
-  }, [socket]);
+  }, [socket, receiver]);
 
   // Desplazar scroll al final de los mensajes cuando cambian
-  useEffect(scrollToBottom, [messages]);
+  useEffect(scrollToBottom, [messages, receiver]);
 
   // Enviar un mensaje
   const sendMessage = () => {
@@ -168,7 +179,7 @@ const ChatComponent = () => {
           <li key={index} className={msg.senderId === userLog.id ? 'my-messages' : 'their-messages'}>
             <small className="message-username">{msg.senderId === userLog.id ? 'Tú' : `${nombreUsuario}`}</small>
             <p>{msg.contenido}</p>
-            <div className="status-container">{renderStatusIcon(msg)}</div>
+            {msg.senderId === userLog.id && <div className="status-container">{renderStatusIcon(msg)}</div>}
           </li>
         ))}
       </Paper>
