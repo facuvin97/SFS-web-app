@@ -13,9 +13,6 @@ const ChatList = () => {
 
   useEffect(() => {
     // Redibujo el componente cuando cambia alguno de los estados
-    console.log('usersChats actualizado en ChatList:', usersChats);
-    console.log('unreadChats actualizado en ChatList:', unreadChats); // Convierte Set a Array para visualizar
-    console.log('unreadChatsCount actualizado en ChatList:', unreadChatsCount);
   }, [usersChats, unreadChats, unreadChatsCount]);
  
   const handleClick = (event) => {
@@ -68,12 +65,26 @@ const ChatList = () => {
         onClose={handleCloseChatMenu}
       >
         {usersChats.length > 0 ? (
-           usersChats.map((userChat) => (
-            <MenuItem key={userChat.User.id} id={userChat.User.id} onClick={handleClick}>
-              {/* Puedes ajustar el contenido según los datos que tenga cada chat */}
-              <Typography textAlign="center">{userChat.User.nombre_usuario}</Typography>
-            </MenuItem>
-          ))
+          usersChats.map((userChat) => {
+
+            const isUnread = unreadChats.has(userChat.User.id);
+
+            return (
+              <MenuItem
+                key={userChat.User.id}
+                id={userChat.User.id}
+                onClick={handleClick}
+                sx={{
+                  backgroundColor: isUnread ? '#BBE7FB' : 'inherit', // Celeste claro si no leído
+                  '&:hover': {
+                    backgroundColor: isUnread ? '#BBDEFB' : 'rgba(0, 0, 0, 0.08)', // Hover distinto
+                  },
+                }}
+              >
+                <Typography textAlign="center">{userChat.User.nombre_usuario}</Typography>
+              </MenuItem>
+            );
+          })
         ) : (
           <MenuItem>
             <Typography textAlign="center">No hay chats disponibles</Typography>

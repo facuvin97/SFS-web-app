@@ -26,7 +26,7 @@ export const ChatsProvider = ({ children }) => {
       }
       const data = await response.json();
       setUsersChats(data.body);
-     // console.log('data.body', data.body);
+      console.log('data.body', data.body);
       //console.log('usersChats despues de body', usersChats);
     } catch (error) {
       console.error('Error al obtener los clientes:', error);
@@ -59,8 +59,6 @@ export const ChatsProvider = ({ children }) => {
 
   //useEffect que actualiza el contador cada vez que cambia el estado de unreadChats
   useEffect(() => {
-    console.log('useEffect para actualizar el count en el context: ', unreadChats.size);
-    console.log('unreadChats en el useEffect de la cuenta: ', unreadChats);
     setUnreadChatsCount(unreadChats.size);
   }, [unreadChats]);
   
@@ -71,14 +69,14 @@ export const ChatsProvider = ({ children }) => {
       fetchUnreadChats();
     } else { // si no hay usuario logueado, limpia el estado de chats
       setUsersChats([]);
-      setUnreadChats([]);
+      setUnreadChats(new Set());
       setUnreadChatsCount(0);
     }
   }, [userLog]);
 
   const addChat = async (userChat) => {
     // agrego el chat recibido al estado
-    setUsersChats((prevChats) => [...prevChats, userChat]);
+    setUsersChats((prevChats) => [userChat, ...prevChats]);
   }
 
   const addUnreadChat = (userId) => {
@@ -90,63 +88,14 @@ export const ChatsProvider = ({ children }) => {
   };
 
 
-//   const handleNewMessage = async (newMessage) => {
-
-//     // ACA CUANDO HACE EL FIND USERScHATS ESTA VACIO, CHEQUEAR ESO
-//     // chequeo si el senderId que viene en el mensaje, ya existe en el estado
-//     console.log('usersChats al inicio del handlenewmessage: ', usersChats)
-//     const existingChat = usersChats.find((chat) => {
-//         // console.log('chat.id:', chat.id);
-//         // console.log('newMessage.senderId:', newMessage.senderId);
-//         return chat.id === newMessage.senderId.toString();
-//     });
-
-
-
-//     const existingUnreadChat = unreadChats.find((chat) => {
-//         // console.log('chat:', chat);
-//         // console.log('newMessage.senderId:', newMessage.senderId);
-//         return chat === newMessage.senderId.toString();
-//     });
-
-//     console.log('existingUnreadChat:', existingUnreadChat);
-//     console.log('existingChat:', existingChat);
-//     // console.log('newMessage:', newMessage);
-
-//     // si no existe el chat, busco el cliente con el senderId que me llega con el mensaje y lo agrego al estado
-//     if (!existingChat) {
-//       console.log('entrando al if !existingChat');
-//       let response;
-//       let user;
-
-//       // hago un fetch para obtener el usuario que envia con el senderId
-//       response = await fetch(`http://localhost:3001/api/v1/clients/body/${newMessage.senderId}`);
-//       user = await response.json();
-//       //console.log('user si es cliente: ', user);
-//       if (!user.body) {
-//         response = await fetch(`http://localhost:3001/api/v1/walkers/${newMessage.senderId}`);
-//         user = await response.json();
-//         //console.log('user si es paseador: ', user);
-//       }
-//       // agrego el usuario a los estados
-//       addChat(user.body);
-//       addUnreadChat(user.body.id);
-//     } else if (existingChat && !existingUnreadChat) { // si existe el chat, pero no está en el estado de unreadChats, lo agrego
-//       addUnreadChat(newMessage.senderId);
-//     }
-// }
 
 useEffect(() => {
   // Definimos `handleNewMessage` dentro del useEffect para que siempre acceda a los valores más recientes de usersChats y unreadChats
   const handleNewMessage = async (newMessage) => {
     if (newMessage.senderId === userLog.id) return; // No se procesa el mensaje de mi mismo
 
-   // console.log('usersChats al inicio del handleNewMessage:', usersChats);
-    
     // chequeo si el senderId que viene en el mensaje, ya existe en el estado
     const existingChat = usersChats.find((chat) => {
-      // console.log('chat.id:', chat.id);
-      // console.log('newMessage.senderId:', newMessage.senderId);
       return chat.id === newMessage.senderId;
     });
 
@@ -157,32 +106,46 @@ useEffect(() => {
        existingUnreadChat = unreadChats.has(newMessage.senderId);
     }
 
+    // ACTUALIZAR EL ESTADO DE USERSCHATS
+    if (existingChat) {
+      // traigo el mensaje de la bdd con un fetch
+      const response = await fetch(`http://localhost:3001/api/v1/messages/single/${newMessage.id}`);
+      const message = await response.json();    
 
-    // console.log('existingUnreadChat:', existingUnreadChat);
-    // console.log('existingChat:', existingChat);
-    // console.log('newMessage:', newMessage);
+      // actualizo el estado de usersChats 
+      existingChat.lastMessage = message.body;
+      setUsersChats((prevChats) => {
+        const index = prevChats.findIndex((chat) => chat.id === existingChat.id);
+        prevChats[index] = existingChat;
+        return [...prevChats];
+      });
 
+      //ordeno los chats por fecha
+      const orderedChats = usersChats.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
+      setUsersChats(orderedChats); 
+    } 
+
+
+    // ACTUALIZAR EL ESTADO DE UNREADCHATS
     // si no existe el chat, busco el cliente con el senderId que me llega con el mensaje y lo agrego al estado
     if (!existingChat) {
-      console.log('entrando al if !existingChat');
       let response;
       let user;
 
       // hago un fetch para obtener el usuario que envia con el senderId
       response = await fetch(`http://localhost:3001/api/v1/clients/body/${newMessage.senderId}`);
       user = await response.json();
-      console.log('user si es cliente:', user);
       
       // si no es cliente, busco si es paseador
       if (!user.body) {
         response = await fetch(`http://localhost:3001/api/v1/walkers/${newMessage.senderId}`);
         user = await response.json();
-        console.log('user si es paseador:', user);
       }
       
 
       // agrego el usuario a los estados
       addChat(user.body);
+
       addUnreadChat(user.body.id);
     } else if (existingChat && !existingUnreadChat) { // si existe el chat, pero no está en el estado de unreadChats, lo agrego
       //console.log('Agregando a unreadChats el senderId:', newMessage.senderId);
