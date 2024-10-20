@@ -26,7 +26,6 @@ export const ChatsProvider = ({ children }) => {
       }
       const data = await response.json();
       setUsersChats(data.body);
-      console.log('data.body', data.body);
       //console.log('usersChats despues de body', usersChats);
     } catch (error) {
       console.error('Error al obtener los clientes:', error);

@@ -17,30 +17,33 @@ import { WalkerTurnsProvider } from './contexts/TurnContext.jsx';
 import { WebSocketProvider } from './contexts/WebSocketContext.jsx';
 import { ClientImageContextProvider } from './contexts/ClientImageContext.jsx';
 import { ChatsProvider } from './contexts/ChatsContext.jsx';
+import { WalkerLocationProvider } from './contexts/WalkerLocationContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <WalkersImageContextProvider>
-      <ClientImageContextProvider>
-        <BrowserRouter>
-          <CssBaseline />
-          <UserProvider>
-            <WebSocketProvider>
-              <NotificationsProvider>
-                <ChatsProvider>
-                  <ConfirmedServicesProvider>
-                    <UnpaidBillsProvider>
-                      <WalkerTurnsProvider>
-                        <App />
-                      </WalkerTurnsProvider>
-                    </UnpaidBillsProvider>
-                  </ConfirmedServicesProvider>
-                </ChatsProvider>
-              </NotificationsProvider>
-            </WebSocketProvider>
-          </UserProvider>
-        </BrowserRouter>
-      </ClientImageContextProvider>
-    </WalkersImageContextProvider>
+    <UserProvider>
+      <WalkersImageContextProvider>
+        <ClientImageContextProvider>
+          <BrowserRouter>
+            <CssBaseline />
+            <ConfirmedServicesProvider>
+              <WalkerTurnsProvider>
+                <NotificationsProvider>
+                  <UnpaidBillsProvider>
+                    <WebSocketProvider>
+                      <ChatsProvider>
+                        <WalkerLocationProvider>
+                          <App/>
+                        </WalkerLocationProvider>
+                      </ChatsProvider>
+                    </WebSocketProvider>
+                  </UnpaidBillsProvider>
+                </NotificationsProvider>
+              </WalkerTurnsProvider>
+            </ConfirmedServicesProvider>
+          </BrowserRouter>
+        </ClientImageContextProvider>
+      </WalkersImageContextProvider>
+    </UserProvider>
   </React.StrictMode>,
 );
