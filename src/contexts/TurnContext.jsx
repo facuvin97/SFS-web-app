@@ -1,6 +1,8 @@
 // contexts/ServicesContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useUser } from './UserLogContext';
+import{useWebSocket} from './WebSocketContext';
+
 
 const WalkerTurnsContext = createContext();
 
@@ -9,10 +11,12 @@ export const useWalkerTurnsContext = () => useContext(WalkerTurnsContext);
 export const WalkerTurnsProvider = ({ children }) => {
   const [turns, setTurns] = useState([]);
   const { userLog } = useUser();
+  const socket = useWebSocket();
 
 
   const getWalkerTurns = async () => {
     try {
+      console.log('entrando a getWalkerTurns')
       const turnsResponse = await fetch(`http://localhost:3001/api/v1/turns/walker/${userLog.id}`);
       if (!turnsResponse.ok) {
         throw new Error('Network response was not ok');
@@ -24,6 +28,14 @@ export const WalkerTurnsProvider = ({ children }) => {
       console.error('Error fetching turns:', error);
     }};
 
+  // useEffect que actualiza el estado de turns cada vez que se inicia o finaliza un turno
+  useEffect(() => {
+    if (userLog?.tipo === 'walker' && socket) {
+      socket.on('startOrFinishTurn', getWalkerTurns);    
+      // Cleanup para eliminar el evento cuando se desmonte el componente o cambie socket
+      return () => socket.off('startOrFinishTurn', getWalkerTurns);
+    }
+  }, [socket]);
 
   useEffect(() => {
     if (userLog?.tipo === 'walker') {

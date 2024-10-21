@@ -9,6 +9,8 @@ export default function CurrentTurnClientsList() {
   const location = useLocation()
   const { turn, fecha } = location.state || {};
   const now = new Date();
+  //restar 3 horas a new Date()
+  now.setHours(now.getHours() - 3);
   const dateNow = now.toISOString().split('T')[0];
 
   const getCurrentTime = (date) => {

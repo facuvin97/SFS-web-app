@@ -22,7 +22,8 @@ import { WalkerLocationProvider } from './contexts/WalkerLocationContext.jsx';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <UserProvider>
-      <WalkersImageContextProvider>
+      <WebSocketProvider>
+       <WalkersImageContextProvider>
         <ClientImageContextProvider>
           <BrowserRouter>
             <CssBaseline />
@@ -30,20 +31,19 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <WalkerTurnsProvider>
                 <NotificationsProvider>
                   <UnpaidBillsProvider>
-                    <WebSocketProvider>
                       <ChatsProvider>
                         <WalkerLocationProvider>
                           <App/>
                         </WalkerLocationProvider>
                       </ChatsProvider>
-                    </WebSocketProvider>
-                  </UnpaidBillsProvider>
-                </NotificationsProvider>
-              </WalkerTurnsProvider>
-            </ConfirmedServicesProvider>
-          </BrowserRouter>
-        </ClientImageContextProvider>
-      </WalkersImageContextProvider>
+                    </UnpaidBillsProvider>
+                  </NotificationsProvider>
+                </WalkerTurnsProvider>
+              </ConfirmedServicesProvider>
+            </BrowserRouter>
+          </ClientImageContextProvider>
+        </WalkersImageContextProvider>
+      </WebSocketProvider>
     </UserProvider>
   </React.StrictMode>,
 );
