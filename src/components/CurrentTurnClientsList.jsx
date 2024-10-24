@@ -10,7 +10,7 @@ export default function CurrentTurnClientsList() {
   const { turn, fecha } = location.state || {};
   const now = new Date();
   //restar 3 horas a new Date()
-  now.setHours(now.getHours() - 3);
+  //now.setHours(now.getHours() - 3);
   const dateNow = now.toISOString().split('T')[0];
 
   const getCurrentTime = (date) => {
@@ -21,15 +21,21 @@ export default function CurrentTurnClientsList() {
   };
 
   // Función para sumar minutos a una hora en formato HH:MM:SS
-const addMinutesToTime = (time, minutesToAdd) => {
-  const [hours, minutes] = time.split(':').map(Number);
-  const totalMinutes = hours * 60 + minutes + minutesToAdd;
-
-  const newHours = Math.floor(totalMinutes / 60) % 24; // Asegurar que no se pase de 24 horas
-  const newMinutes = totalMinutes % 60;
-
-  return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
-};
+  const addMinutesToTime = (time, minutesToAdd) => {
+    const [hours, minutes] = time.split(':').map(Number);
+    const totalMinutes = hours * 60 + minutes + minutesToAdd;
+  
+    // Convertimos 23:59 a minutos (1439 minutos)
+    const maxMinutesInDay = 23 * 60 + 59;
+  
+    // Si el total de minutos supera los 23:59, limitamos a 23:59
+    const finalMinutes = Math.min(totalMinutes, maxMinutesInDay);
+  
+    const newHours = Math.floor(finalMinutes / 60); // Sin usar el módulo % 24 para evitar volver a 00:00
+    const newMinutes = finalMinutes % 60;
+  
+    return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
+  };
   const toggleServiceStatus = async (id, comenzado) => {
     if (!comenzado) { // cambiar el estado a comenzado
       try {
@@ -72,8 +78,11 @@ const addMinutesToTime = (time, minutesToAdd) => {
     }
   }
   const isWithinTurnHours = () => {
+    
     const horaFinConMargen = addMinutesToTime(turn.hora_fin, 60);
-
+    console.log(turn.hora_inicio, turn.hora_fin, horaFinConMargen)
+    console.log(getCurrentTime(now), dateNow)   
+    console.log( getCurrentTime(now) >= turn.hora_inicio && getCurrentTime(now) <= horaFinConMargen && dateNow === fecha)
     return getCurrentTime(now) >= turn.hora_inicio && getCurrentTime(now) <= horaFinConMargen && dateNow == fecha
   }
 

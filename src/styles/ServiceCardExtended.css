@@ -1,0 +1,23 @@
+.service-card-extended {
+    max-width: 300px;
+    min-width: 250px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    height: 100%;
+  }
+  
+  .service-card-extended:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 10px;
+  }
+  

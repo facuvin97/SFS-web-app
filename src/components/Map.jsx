@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useWebSocket } from '../contexts/WebSocketContext'; 
 import { useUser } from '../contexts/UserLogContext'; 
@@ -6,10 +6,13 @@ import { useConfirmedServicesContext } from '../contexts/ServicesContext';
 
 function Map() {
   const [walkerLocation, setWalkerLocation] = useState(null); // Ubicación inicial
+  const [joinedRoom, setJoinedRoom] = useState(false); // Estado para saber si ya está en la sala
   const socket = useWebSocket(); 
   const { userLog } = useUser(); 
   const { confirmedServices } = useConfirmedServicesContext(); 
   const [loading, setLoading] = useState(true); // Estado para controlar la carga
+  const activeServiceRef = useRef(null); // Ref para mantener el servicio activo
+
 
   // Efecto para manejar la carga de servicios confirmados
   useEffect(() => {
@@ -19,38 +22,52 @@ function Map() {
   }, [confirmedServices]);
 
   // Unir a la sala del paseador si hay un servicio activo
+  const joinWalkerRoom = (service) => {
+    const roomName = `turn_service_${service.TurnId}`;
+    
+    if (!joinedRoom) {
+      console.log('Unirse a la sala:', roomName);
+      setJoinedRoom(true);
+      socket.emit('joinRoom', { roomName, userId: userLog.id });
+
+      // Solicitar ubicación inicial del paseador
+      socket.emit('requestLocation', { roomName });
+
+      // Escuchar actualizaciones de ubicación
+      socket.on('receiveLocation', (location) => {
+        console.log('Recibida nueva ubicación:', location);
+        setWalkerLocation([location.lat, location.long]);
+      });
+
+      // Escuchar cuando se finalice el servicio
+      socket.on('serviceFinished', () => {
+        console.log('Servicio finalizado');
+        setWalkerLocation(null);
+        setJoinedRoom(false); // Resetear el estado de la sala
+        socket.emit('leaveRoom', { roomName , userId: userLog.id });
+      });
+
+      // Limpiar cuando el componente se desmonte o el servicio termine
+      return () => {
+        socket.off('receiveLocation');
+        socket.off('serviceFinished');
+        socket.emit('leaveRoom', { roomName, userId: userLog.id });
+      };
+    }
+  };
+
+  // Efecto para gestionar la unión a la sala del paseador y la ubicación inicial
   useEffect(() => {
     if (userLog.tipo === 'client' && confirmedServices.length > 0) {
-      console.log('userLog.tipo === cliente', userLog.tipo);
-      console.log('confirmedServices', confirmedServices);
-      
       const service = confirmedServices.find(service => service.comenzado === true && service.finalizado === false);
       
-      if (service) {
-        const roomName = `turn_service_${service.TurnId}`;
-        console.log('Unirse a la sala:', roomName);
-  
-        // Emitir el evento para unirse a la sala
-        socket.emit('joinRoom', { roomName, userId: userLog.id });
-  
-        // Escuchar actualizaciones de ubicación
-        socket.on('receiveLocation', (location) => {
-          console.log('Recibida nueva ubicación:', location);
-          setWalkerLocation([location.lat, location.long]); // Actualiza la ubicación del paseador en el mapa
-        });
-        socket.on('serviceFinished', () => {
-          console.log('Servicio finalizado');
-          setWalkerLocation(null);
-        });
-  
-        // Limpiar cuando el componente se desmonte o el servicio termine
-        return () => {
-          socket.emit('leaveRoom', { roomName });
-          socket.off('location'); // Eliminar el listener de 'location'
-        };
+      if (service && (!activeServiceRef.current || activeServiceRef.current.TurnId !== service.TurnId)) {
+        activeServiceRef.current = service; // Guardamos el servicio activo en la referencia
+        joinWalkerRoom(service);
       }
     }
-  }, [userLog, socket, confirmedServices]);
+  }, [userLog, confirmedServices, socket]);
+
   
 
   // Componente para centrar el mapa en la ubicación del paseador

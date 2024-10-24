@@ -16,6 +16,7 @@ function ServicesList({}) {
   const [mensaje, setMensaje] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
   const [filteredServices, setFilteredServices] = useState([]);
+  const [inProgressServices, setInProgressServices] = useState([]); // Nuevo estado para servicios en ejecución
   const { userLog } = useUser();
   const navigate = useNavigate();
 
@@ -37,6 +38,11 @@ function ServicesList({}) {
     } else {
       setFilteredServices(confirmedServices);
     }
+
+    // Filtrar servicios en ejecución (comenzado: true, finalizado: false)
+    const inProgress = confirmedServices.filter(service => service.comenzado && !service.finalizado);
+    setInProgressServices(inProgress);
+
     setLoading(false);
   }, [confirmedServices, selectedDate]);
 
@@ -90,6 +96,20 @@ function ServicesList({}) {
         <Typography variant="body1" color="text.secondary">
           Usted no tiene ningún servicio confirmado próximamente.
         </Typography>
+      )}
+            {inProgressServices.length > 0 && (
+        <>
+          <Typography variant="h2" sx={{ mt: 4 }}>
+            Servicios en ejecución
+          </Typography>
+          <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+            {inProgressServices.map((service) => (
+              <Grid item key={service.id}>
+                <ServiceCard service={service} />
+              </Grid>
+            ))}
+          </Grid>
+        </>
       )}
       {userLog.tipo === 'client' && (
         pendingServices[0] ? (

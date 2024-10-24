@@ -96,7 +96,9 @@ export const WalkerLocationProvider = ({ children }) => {
           // console.log('Cambio de turno detectado. Turno actual:', activeTurnId, 'Nuevo turno:', activeTurn.id);
 
           if (activeTurnId) {
-            emitSocketEvent('leaveRoom', `turn_service_${activeTurnId}`);
+            const roomName = `turn_service_${activeTurnId}`;
+            emitSocketEvent('leaveRoom', {roomName, userId: userLog.id});
+            console.log('Saliendo de la sala:', `turn_service_${activeTurnId}`);
           }
 
           const newRoomName = `turn_service_${activeTurn.id}`;
@@ -112,7 +114,8 @@ export const WalkerLocationProvider = ({ children }) => {
       } else {
         // Si no hay un turno activo, dejar la sala y detener la observación de la ubicación
         if (activeTurnId) {
-          emitSocketEvent('leaveRoom', [`turn_service_${activeTurnId}`, userLog.id]);
+          const roomName = `turn_service_${activeTurnId}`;
+          emitSocketEvent('leaveRoom', {roomName, userId: userLog.id});
           setActiveTurnId(null);
           stopWatchingLocation();
         }

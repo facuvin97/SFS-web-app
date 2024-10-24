@@ -25,7 +25,8 @@ function ServiceCard({ service, onDelete, onReview }) {
   };
 
   const handleClick = () => {
-    navigate('/service-details', { state: { service } });
+    console.log('service: ', service);
+    navigate('/service-details', { state: { service} });
   };
 
   const handleDeleteClick = (event) => {
@@ -47,7 +48,7 @@ function ServiceCard({ service, onDelete, onReview }) {
     >
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">
-          {service.direccionPickUp}
+        <strong>Dirección: </strong> {service.direccionPickUp}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           <strong>Fecha:</strong> {fechaFormateada}
