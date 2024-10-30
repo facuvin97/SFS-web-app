@@ -81,15 +81,12 @@ export const WalkerLocationProvider = ({ children }) => {
 
   useEffect(() => {
     if (userLog && userLog.tipo === 'walker') {
-       console.log('El usuario es un paseador. Verificando turnos...');
-       console.log('socket', socket);
 
       const activeTurn = turns.find(turn =>
         turn.Services.some(service => service.comenzado && !service.finalizado)
       );
       
       if (activeTurn) {
-         console.log('Turno activo encontrado:', activeTurn);
 
         // Si el turno activo ha cambiado, únete a una nueva sala
         if (activeTurn.id !== activeTurnId) {
@@ -124,7 +121,7 @@ export const WalkerLocationProvider = ({ children }) => {
 
     // El return solo detiene la observación al desmontar el componente
     return () => {
-       console.log('Desmontando componente. Deteniendo observación de ubicación.');
+      //  console.log('Desmontando componente. Deteniendo observación de ubicación.');
       stopWatchingLocation();
     };
   }, [turns, userLog]);  // Solo se ejecuta cuando cambian los turnos o el tipo de usuario

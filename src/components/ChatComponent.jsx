@@ -19,7 +19,7 @@ const ChatComponent = () => {
   const messageContainerRef = useRef(null);
   let usuario = userLog.tipo === 'client' ? 'Paseador' : 'Cliente';
   const nombreUsuario = receiver?.nombre_usuario || 'Usuario desconocido';
-  const { unreadChats, setUnreadChats } = useChatsContext();
+  const { unreadChats, setUnreadChats, usersChats, setUsersChats } = useChatsContext();
   
   
 
@@ -147,6 +147,26 @@ const ChatComponent = () => {
   const sendMessage = () => {
     if (socket && message && userLog?.id && receiver?.id) {
       const newMessage = { senderId: userLog.id, receiverId: receiver.id, contenido: message };
+
+      // cambio el orden del estado de usersChats, para que el chat con id receiver.id se muestre al principio
+      setUsersChats((prevUsersChats) => {
+        const updatedUserChats = [...prevUsersChats]; // Crear una copia de los chats existentes
+        
+        // Busco el chat con id receiver.id
+        const chat = updatedUserChats.find((chat) => chat.id === receiver.id);
+
+        // busco el index del chat
+        const chatIndex = updatedUserChats.findIndex((chat) => chat.id === receiver.id);
+        
+        // Si el chat existe, muevo el chat a la posición 0 y lo añado al principio
+        if (chatIndex > -1) {
+          updatedUserChats.splice(chatIndex, 1); // Borra el chat
+          updatedUserChats.unshift(chat); // Inserta el chat en la posición 0
+        }
+
+        return updatedUserChats;
+      });
+
       emitSocketEvent('sendMessage', newMessage);
       setMessage('');
     }

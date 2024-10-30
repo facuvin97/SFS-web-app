@@ -69,7 +69,7 @@ export const ChatsProvider = ({ children }) => {
       fetchUnreadChats();
     } else { // si no hay usuario logueado, limpia el estado de chats
       setUsersChats([]);
-      setUnreadChats([]);
+      setUnreadChats(new Set());
       setUnreadChatsCount(0);
     }
   }, [userLog]);
@@ -92,17 +92,25 @@ useEffect(() => {
   const handleNewMessage = async (newMessage) => {
     if (newMessage.senderId === userLog.id) return; // No se procesa el mensaje de mi mismo
 
+    // me traigo la info del mensaje nuevo desde la api para tener los datos completos
+    const response = await fetch(`http://localhost:3001/api/v1/messages/single/${newMessage.id}`);
+    const data = await response.json();
+    const fullMessage = data.body;
+    
+
     // chequeo si el senderId que viene en el mensaje, ya existe en el estado
     const existingChat = usersChats.find((chat) => {
       return chat.id === newMessage.senderId;
     });
 
     let existingUnreadChat;
+    let existingChatList = usersChats;
 
     if (unreadChats.size > 0) {
       // chequeo si el senderId ya está en el estado de unreadChats
        existingUnreadChat = unreadChats.has(newMessage.senderId);
     }
+
     // si no existe el chat, busco el cliente con el senderId que me llega con el mensaje y lo agrego al estado
     if (!existingChat) {
       console.log('entrando al if !existingChat');
@@ -126,12 +134,34 @@ useEffect(() => {
       addUnreadChat(user.body.id);
       // si existe el chat, pero no está en el estado de unreadChats, lo agrego
     } else if (existingChat && !existingUnreadChat) { 
+      // modifico el estado usersChats para asignarle el ultimo mensaje al chat en el atributo lastMessage
+      setUsersChats((prevUsersChats) => {
+
+        const updatedUsersChats = [...prevUsersChats]; // Crear una copia de los chats existentes
+        const chatIndex = updatedUsersChats.findIndex((chat) => chat.id === newMessage.senderId);
+        updatedUsersChats[chatIndex].lastMessage = fullMessage;
+        return updatedUsersChats;
+      });
+
+      // // modificamos el la lista de chats para asignarle el ultimo mensaje al chat en el atributo lastMessage
+      // existingChatList[existingChatList.findIndex((chat) => chat.id === newMessage.senderId)].lastMessage = newMessage;
+      // console.log('existingChatList', existingChatList);
+
       addUnreadChat(newMessage.senderId);
+    } else {
+      setUsersChats((prevUsersChats) => {
+        const updatedUsersChats = [...prevUsersChats]; // Crear una copia de los chats existentes
+        const chatIndex = updatedUsersChats.findIndex((chat) => chat.id === newMessage.senderId);
+        updatedUsersChats[chatIndex].lastMessage = fullMessage;
+        return updatedUsersChats;
+      });
     }
   
-    setUsersChats((prevChats) => {
-      const updatedChats = [...prevChats]; // Crear una copia de los chats existentes
-      const orderedChats = updatedChats.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
+    setUsersChats((prevUsersChats) => {
+      const updatedChats = [...prevUsersChats]; // Crear una copia de los chats existentes
+      const orderedChats = updatedChats.sort((b, a) => new Date(a.lastMessage.createdAt) - new Date(b.lastMessage.createdAt));
+      console.log('updatedChats', updatedChats);
+      console.log('orderedChats', orderedChats);
       return orderedChats; // Actualiza el estado con los chats ordenados
     });
   };
@@ -149,7 +179,7 @@ useEffect(() => {
 
   return (
     <ChatsContext.Provider
-      value={{  usersChats, addChat, unreadChats, setUnreadChats, unreadChatsCount, setUnreadChatsCount }}
+      value={{  usersChats, addChat, unreadChats, setUnreadChats, unreadChatsCount, setUnreadChatsCount, setUsersChats }}
     >
       {children}
     </ChatsContext.Provider>

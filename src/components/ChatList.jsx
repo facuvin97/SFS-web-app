@@ -13,6 +13,9 @@ const ChatList = () => {
 
   useEffect(() => {
     // Redibujo el componente cuando cambia alguno de los estados
+    console.log('usersChats', usersChats);
+    console.log('unreadChats', unreadChats);
+    console.log('unreadChatsCount', unreadChatsCount);
   }, [usersChats, unreadChats, unreadChatsCount]);
  
   const handleClick = (event) => {

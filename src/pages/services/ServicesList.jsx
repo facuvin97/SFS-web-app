@@ -16,13 +16,14 @@ function ServicesList({}) {
   const [mensaje, setMensaje] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
   const [filteredServices, setFilteredServices] = useState([]);
-  const [inProgressServices, setInProgressServices] = useState([]); // Nuevo estado para servicios en ejecución
+  const [inProgressServices, setInProgressServices] = useState([]); // Nuevo estado para servicios confirmados en ejecución
+  const [notInProgressServices, setNotInProgressServices] = useState([]); // Nuevo estado para servicios confirmados no en ejecución
   const { userLog } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (selectedDate) {
-      setFilteredServices(confirmedServices.filter(service => {
+      setFilteredServices(notInProgressServices.filter(service => {
         const serviceDate = new Date(service.fecha);
         serviceDate.setHours(serviceDate.getHours() + 3);
         
@@ -36,20 +37,26 @@ function ServicesList({}) {
         );
       }));
     } else {
-      setFilteredServices(confirmedServices);
+      setFilteredServices(notInProgressServices);
     }
 
     // Filtrar servicios en ejecución (comenzado: true, finalizado: false)
     const inProgress = confirmedServices.filter(service => service.comenzado && !service.finalizado);
     setInProgressServices(inProgress);
 
+    // Filtrar servicios no en ejecución (comenzado: false, finalizado: false)
+    const notInProgress = confirmedServices.filter(service => !service.comenzado);
+    setNotInProgressServices(notInProgress);
+
     setLoading(false);
-  }, [confirmedServices, selectedDate]);
+  }, [confirmedServices, selectedDate, inProgressServices, notInProgressServices]);
 
   const handleDeleteService = async (service) => {
     const msg = await deleteService(service);
     setMensaje(msg);
   };
+
+  
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -85,6 +92,10 @@ function ServicesList({}) {
         </>
       )}
       {filteredServices.length > 0 ? (
+        <>
+        <Typography variant="h2" sx={{ mt: 4 }}>
+        Proximos servicios confirmados
+        </Typography>
         <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
           {filteredServices.map((service) => (
             <Grid item key={service.id}>
@@ -92,6 +103,7 @@ function ServicesList({}) {
             </Grid>
           ))}
         </Grid>
+        </>
       ) : (
         <Typography variant="body1" color="text.secondary">
           Usted no tiene ningún servicio confirmado próximamente.
@@ -105,7 +117,7 @@ function ServicesList({}) {
           <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
             {inProgressServices.map((service) => (
               <Grid item key={service.id}>
-                <ServiceCard service={service} />
+                <ServiceCard service={service} viewLocation={true} />
               </Grid>
             ))}
           </Grid>

@@ -45,7 +45,10 @@ function ServiceRequestCard({ service, onAccept, onReject }) {
     >
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">
-          {service.direccionPickUp}
+          {service.Client.User.nombre_usuario}
+        </Typography>
+        <Typography gutterBottom variant="body1" component="div">
+          <strong>Direccion:</strong> {service.direccionPickUp}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           <strong>Fecha:</strong> {fechaFormateada}

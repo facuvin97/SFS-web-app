@@ -8,8 +8,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Tooltip } from '@mui/material';
 import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
 import { useUser } from '../contexts/UserLogContext';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
-function ServiceCard({ service, onDelete, onReview }) {
+function ServiceCard({ service, onDelete, onReview, viewLocation }) {
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
   const fechaFormateada = new Date(service.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' });
@@ -38,6 +39,11 @@ function ServiceCard({ service, onDelete, onReview }) {
     event.stopPropagation();
     onReview();
   }
+
+  const handleLocationClick = (event) => {
+    event.stopPropagation();
+    navigate('/map', {state:{service}});
+  };
 
   return (
     <Card
@@ -75,6 +81,17 @@ function ServiceCard({ service, onDelete, onReview }) {
                   <RateReviewOutlinedIcon />
                 </IconButton>
               </Tooltip>
+            )}
+            {viewLocation && (
+              userLog.tipo === 'client'
+            ) && (
+              <div className="button-group">
+                <Tooltip title="Ver ubicación del paseador" arrow>
+                  <IconButton aria-label="ver ubicación" onClick={handleLocationClick}>
+                    <LocationOnIcon />
+                  </IconButton>
+                </Tooltip>
+              </div>
             )}
           </div>
         )}
