@@ -190,9 +190,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
         throw new Error('Error al autorizar el servicio');
       }
       await getConfirmedServices(); // Actualizar el conteo después de autorizar
-  
-        console.log("GetPending")
-        return "Servicio aceptado correctamente";
+      return "Servicio aceptado correctamente";
     } catch (error) {
       console.error('Error al autorizar el servicio:', error);
     }

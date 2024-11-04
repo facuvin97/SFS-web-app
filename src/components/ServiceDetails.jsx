@@ -38,7 +38,6 @@ function ServiceDetails() {
       } else {
         // Si la reseña la escribe un cliente
         const response = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`);
-        console.log(response)
   
         if (!response.ok) {
           throw new Error('Error al obtener el turno');

@@ -36,15 +36,6 @@ const ChatComponent = () => {
     if (socket) socket.emit(eventName, data);
   };
 
-  // Si el receiver viene en el estado, lo establezco y redibujo
-  // useEffect(() => {
-  //   if (location.state?.receiver) {
-  //     console.log('entrando el if, location.state?.receiver: ', location.state?.receiver);
-  //     setReceiver(location.state?.receiver)
-      
-  //   };
-  // }, [location.state?.receiver]);
-
   useEffect(() => {
     if (location.state?.receiver) {
       setReceiver({ ...location.state.receiver }); // Forzar una nueva referencia
@@ -126,8 +117,6 @@ const ChatComponent = () => {
       setMessages((prevMessages) =>
         prevMessages.map((msg) => (msg.id === messageId ? { ...msg, read } : msg))
       );
-
-      console.log('ejecutando el useEffect para marcar como leido:');
 
       // Actualizar el estado unreadChats para quitar el chat con id = msg.senderId
       setUnreadChats((prevUnreadChats) => {

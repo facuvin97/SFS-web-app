@@ -79,15 +79,6 @@ export default function CurrentTurnClientsList() {
   const isWithinTurnHours = () => {
     
     const horaFinConMargen = addMinutesToTime(turn.hora_fin, 60);
-/*     console.log('turno hora inicio',turn.hora_inicio,)
-    console.log('hora fin con margen', horaFinConMargen)
-    console.log('fecha actual', dateNow)
-    console.log('turno hora fin', turn.hora_fin)
-    console.log('fecha actual', fecha)
-    console.log('getCurrentTime(now)', getCurrentTime(now))
-    console.log( 'get y hora inicio',getCurrentTime(now) >= turn.hora_inicio) 
-    console.log('get y hora fin con margen',getCurrentTime(now) <= horaFinConMargen)
-    console.log('get datenaw y fecha',  dateNow === fecha) */
     
     return getCurrentTime(now) >= turn.hora_inicio && getCurrentTime(now) <= horaFinConMargen && dateNow == fecha
   }

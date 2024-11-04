@@ -2,12 +2,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserLogContext'; 
+import { IconButton, Tooltip } from '@mui/material';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DeleteUser from './DeleteUser';
 
 function ModifyUser() {
   const { userLog, setUserLog } = useUser();
 
   // Estado para almacenar los datos del formulario
   const [userData, setUserData] = useState(userLog);
+
 
   const [mensaje, setMensaje] = useState(null)
   const navigate = useNavigate();
@@ -20,6 +24,7 @@ function ModifyUser() {
       [name]: value
     });
   };
+
 
     
   // Función para manejar el envío del formulario
@@ -55,15 +60,11 @@ function ModifyUser() {
         localStorage.setItem('userData', JSON.stringify(userData))
         setUserLog(userData)
         alert('Cuenta modificada correctamente')
-        if (userLog.tipo === 'client') {
-          navigate(`/user/${userLog.id}`)
-        } else {
-          navigate(`/profile/${userLog.id}`)
-        }
+        navigate(-1)
       } else {
-        console.error('Error al modificar cliente:', response.statusText);
-        // Aquí puedes manejar el error de alguna manera, como mostrar un mensaje de error al usuario
-        alert('Error al modificar cliente:', response.statusText)
+        const responseData = await response.json();
+        console.error('Error al modificar cliente:', responseData);
+        setMensaje(responseData.error);
       }
     } catch (error) {
       console.error('Error:', error);

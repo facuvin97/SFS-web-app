@@ -16,8 +16,6 @@ export const WalkerLocationProvider = ({ children }) => {
   // Función para emitir eventos de WebSocket
   const emitSocketEvent = (eventName, data) => {
     if (socket && socket.connected) { // Asegurarse que el socket esté conectado
-       console.log('locationSocket.connected:', socket.connected);
-       console.log(`Emitido evento: ${eventName} con datos:`, data);
       socket.emit(eventName, data);
     } else {
       console.warn('Socket de ubicación no está conectado, no se puede emitir el evento:', eventName);
@@ -36,8 +34,6 @@ export const WalkerLocationProvider = ({ children }) => {
         (position) => {
           const coords = [position.coords.latitude, position.coords.longitude];
           setWalkerLocation(coords);
-           console.log('Nueva ubicación obtenida:', coords);
-           console.log('Emitiendo evento de nueva ubicación a la sala:', roomName);  
 
           // Emitir la ubicación al servidor
           emitSocketEvent('newLocation', {
@@ -65,7 +61,6 @@ export const WalkerLocationProvider = ({ children }) => {
         { enableHighAccuracy: false, timeout: 10000 }
       );
       setWatchId(id);
-       console.log('Observación de la ubicación iniciada con ID:', id);
     } else {
       console.error('Geolocalización no es soportada por este navegador.');
     }
@@ -74,7 +69,6 @@ export const WalkerLocationProvider = ({ children }) => {
   const stopWatchingLocation = () => {
     if (watchId !== null) {
       navigator.geolocation.clearWatch(watchId);
-      // console.log('Deteniendo la observación de la ubicación con ID:', watchId);
       setWatchId(null);
     }
   };
@@ -90,16 +84,13 @@ export const WalkerLocationProvider = ({ children }) => {
 
         // Si el turno activo ha cambiado, únete a una nueva sala
         if (activeTurn.id !== activeTurnId) {
-           console.log('Cambio de turno detectado. Turno actual:', activeTurnId, 'Nuevo turno:', activeTurn.id);
 
           if (activeTurnId) {
             const roomName = `turn_service_${activeTurnId}`;
             emitSocketEvent('leaveRoom', {roomName, userId: userLog.id});
-            console.log('Saliendo de la sala:', `turn_service_${activeTurnId}`);
           }
 
           const newRoomName = `turn_service_${activeTurn.id}`;
-           console.log('Uniéndose a la nueva sala:', newRoomName);
           emitSocketEvent('createRoom', {newRoomName, userId: userLog.Id} );
 
           setActiveTurnId(activeTurn.id);
@@ -121,7 +112,6 @@ export const WalkerLocationProvider = ({ children }) => {
 
     // El return solo detiene la observación al desmontar el componente
     return () => {
-      //  console.log('Desmontando componente. Deteniendo observación de ubicación.');
       stopWatchingLocation();
     };
   }, [turns, userLog]);  // Solo se ejecuta cuando cambian los turnos o el tipo de usuario

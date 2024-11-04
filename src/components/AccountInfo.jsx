@@ -26,6 +26,10 @@ function Account () {
 
   }, [userLog]);
 
+  const onCancel = () => {
+    setShowDeleteUser(false);
+  };
+
 
 
   return (
@@ -66,7 +70,7 @@ function Account () {
           </IconButton>
         </Tooltip>
       </div>
-      {showDeleteUser && <DeleteUser />}
+      {showDeleteUser && <DeleteUser onCancel={onCancel} />}
     </div>
   );
 };

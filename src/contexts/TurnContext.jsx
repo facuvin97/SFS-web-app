@@ -16,7 +16,6 @@ export const WalkerTurnsProvider = ({ children }) => {
 
   const getWalkerTurns = async () => {
     try {
-      console.log('entrando a getWalkerTurns')
       const turnsResponse = await fetch(`http://localhost:3001/api/v1/turns/walker/${userLog.id}`);
       if (!turnsResponse.ok) {
         throw new Error('Network response was not ok');

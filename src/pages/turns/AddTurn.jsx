@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { TextField, Button, Grid, Checkbox, FormControlLabel } from '@mui/material';
+import { TextField, Button, Grid, Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
 
 function AddTurnForm({ userLog }) {
   const [dias, setDias] = useState([]);
@@ -10,12 +9,60 @@ function AddTurnForm({ userLog }) {
   const [tarifa, setTarifa] = useState('');
   const [zona, setZona] = useState('');
   const [mensaje, setMensaje] = useState('');
+  const [errorHora, setErrorHora] = useState('');
+  const [errorFecha, setErrorFecha] = useState('');
+  const [errorTarifa, setErrorTarifa] = useState('');
+  const [errorZona, setErrorZona] = useState('');
   const navigate = useNavigate();
 
   const diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
 
-
   const handleAddTurn = async () => {
+    // Reiniciar mensajes de error
+    setErrorHora('');
+    setErrorTarifa('');
+    setErrorZona('');
+    setErrorFecha('');
+    let valid = true;
+
+    // Validar que haya seleccionado al menos un día
+    if (!dias.length) {
+      setErrorFecha('Debe seleccionar al menos un día');
+      valid = false;
+    }
+
+    // Validar que horaInicio no sea mayor que horaFin
+    if (horaInicio >= horaFin) {
+      setErrorHora('La hora de inicio no puede ser mayor o igual a la hora de fin');
+      valid = false; 
+    }
+
+    // Validar horaInicio y horaFin
+    if (!horaInicio || !horaFin) {
+      setErrorHora('La hora de inicio y la hora de fin son obligatorios');
+      valid = false;
+    }
+
+    // Validar tarifa
+    if (!tarifa || parseFloat(tarifa) <= 0) {
+      setErrorTarifa('La tarifa debe ser un número positivo');
+      valid = false; 
+    }
+
+    // Validar que zona no tenga espacios al principio o al final
+    if (!/^[^\s].*[^\s]$|^[^\s]$/.test(zona)) {
+      setErrorZona('La zona no debe tener espacios al principio ni al final');
+      valid = false; 
+    }
+
+    // validar que la zona no sea vacia o "" (vacía)
+    if (!zona || zona.trim() === '') {
+      setErrorZona('La zona es obligatoria');
+      valid = false; 
+    }
+
+    if (!valid) return; // Si hay errores, no continuar
+
     const turnoData = {
       dias,
       hora_inicio: horaInicio,
@@ -44,19 +91,20 @@ function AddTurnForm({ userLog }) {
         setHoraFin('');
         setTarifa('');
         setZona('');
-        alert('Turno agregado correctamente')
-        navigate('/turns')
+        alert('Turno agregado correctamente');
+        navigate('/turns');
       } else {
         console.error('Error al agregar el turno:', response.statusText);
         setMensaje('Error al agregar el turno');
-        alert(mensaje)
+        alert(mensaje);
       }
     } catch (error) {
       console.error('Error:', error);
       setMensaje('Error al conectar con el servidor');
-      alert(mensaje)
+      alert(mensaje);
     }
   }
+
   const handleDiaChange = (dia, checked) => {
     let nuevosDias;
 
@@ -80,7 +128,7 @@ function AddTurnForm({ userLog }) {
           <Grid item xs={12}>
             <div>
               <label>Días:</label>
-              <br/>
+              <br />
               {diasSemana.map((dia) => (
                 <FormControlLabel
                   key={dia}
@@ -94,29 +142,43 @@ function AddTurnForm({ userLog }) {
                   label={dia}
                 />
               ))}
+              {errorFecha && 
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <FormHelperText error>{errorFecha}</FormHelperText>
+                </div>
+              }
             </div>
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              fullWidth
-              label="Hora de inicio"
-              type="time"
-              value={horaInicio}
-              onChange={(e) => setHoraInicio(e.target.value)}
-              variant="outlined"
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              fullWidth
-              label="Hora de fin"
-              type="time"
-              value={horaFin}
-              onChange={(e) => setHoraFin(e.target.value)}
-              variant="outlined"
-              InputLabelProps={{ shrink: true }}
-            />
+          <Grid container spacing={2} padding={0} margin={0}>
+            <Grid item xs={6} marginBottom={0} paddingBottom={0}>
+              <TextField
+                fullWidth
+                label="Hora de inicio"
+                type="time"
+                value={horaInicio}
+                onChange={(e) => setHoraInicio(e.target.value)}
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={6} marginBottom={0} paddingBottom={0}>
+              <TextField
+                fullWidth
+                label="Hora de fin"
+                type="time"
+                value={horaFin}
+                onChange={(e) => setHoraFin(e.target.value)}
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={12} padding={0} margin={0}>
+              {errorHora && 
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2px' }}>
+                  <FormHelperText error style={{ margin: 0 }}>{errorHora}</FormHelperText>
+                </div>
+              }
+            </Grid>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -126,6 +188,9 @@ function AddTurnForm({ userLog }) {
               value={tarifa}
               onChange={(e) => setTarifa(e.target.value)}
               variant="outlined"
+              inputProps={{ min: 1 }}
+              error={!!errorTarifa} // Muestra error si existe
+              helperText={errorTarifa} // Muestra el mensaje de error
             />
           </Grid>
           <Grid item xs={12}>
@@ -135,6 +200,8 @@ function AddTurnForm({ userLog }) {
               value={zona}
               onChange={(e) => setZona(e.target.value)}
               variant="outlined"
+              error={!!errorZona} // Muestra error si existe
+              helperText={errorZona} // Muestra el mensaje de error
             />
           </Grid>
           <Grid item xs={12}>
@@ -149,4 +216,4 @@ function AddTurnForm({ userLog }) {
   );
 }
 
-export default AddTurnForm
+export default AddTurnForm;

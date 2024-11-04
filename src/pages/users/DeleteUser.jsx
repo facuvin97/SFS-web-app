@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserLogContext';
 
-function DeleteUser() {
+function DeleteUser({onCancel}) {
 
   const [mensaje, setMensaje] = useState(null)
   const { userLog, setUserLog } = useUser();
@@ -11,7 +11,7 @@ function DeleteUser() {
   const navigate = useNavigate();
 
   // Función para manejar cambios en los inputs del formulario
-  const onDelete = async () => {
+  const onDelete = async (onCancel) => {
     try {
       var response;
       if (userLog.tipo == 'client') {
@@ -50,16 +50,17 @@ function DeleteUser() {
     }
   };
 
-  const onCancel = () => {
-    console.log("Cancelar eliminar")
-  }
+  const handleCancel = () => {
+    onCancel(false);
+  };
+
 
 
   return (
     <div>
       <p>Esta seguro de que desea eliminar su cuenta</p>
       <button onClick={onDelete}>Eliminar</button>
-      <button onClick={onCancel}>Cancelar</button>
+      <button onClick={handleCancel}>Cancelar</button>
       <br />
         {mensaje && <p>{mensaje}</p>}
       <br />

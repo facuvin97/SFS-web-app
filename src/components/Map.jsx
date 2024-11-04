@@ -26,7 +26,6 @@ function Map() {
     const roomName = `turn_service_${service.TurnId}`;
     
     if (!joinedRoom) {
-      console.log('Unirse a la sala:', roomName);
       setJoinedRoom(true);
       socket.emit('joinRoom', { roomName, userId: userLog.id });
 
@@ -35,13 +34,11 @@ function Map() {
 
       // Escuchar actualizaciones de ubicación
       socket.on('receiveLocation', (location) => {
-        console.log('Recibida nueva ubicación:', location);
         setWalkerLocation([location.lat, location.long]);
       });
 
       // Escuchar cuando se finalice el servicio
       socket.on('serviceFinished', () => {
-        console.log('Servicio finalizado');
         setWalkerLocation(null);
         setJoinedRoom(false); // Resetear el estado de la sala
         socket.emit('leaveRoom', { roomName , userId: userLog.id });

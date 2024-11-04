@@ -26,7 +26,6 @@ function ServiceCard({ service, onDelete, onReview, viewLocation }) {
   };
 
   const handleClick = () => {
-    console.log('service: ', service);
     navigate('/service-details', { state: { service} });
   };
 

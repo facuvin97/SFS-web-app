@@ -9,6 +9,8 @@ import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import ChatIcon from '@mui/icons-material/Chat';
 import { useUserImageContext } from '../../contexts/UserImageContext';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DeleteUser from '../users/DeleteUser';
 
 const WalkerProfile = () => {
   const { walkerId } = useParams();
@@ -21,6 +23,7 @@ const WalkerProfile = () => {
   const { walkerImages } = useWalkersImageContext();
   const { userLog } = useUser();
   const { imageSrc} = useUserImageContext();
+  const [showDeleteUser, setShowDeleteUser] = useState(false);
 
   useEffect(() => {
     const fetchWalker = async () => {
@@ -93,6 +96,10 @@ const WalkerProfile = () => {
     navigate('/payment-methods-config')
   }
 
+  const handleDeleteUser = () => {
+    setShowDeleteUser(true);
+  };
+
   const handleEditTurnClick = (turn) => {
     navigate('/turn-modify', { state: { turn } });
   }
@@ -101,6 +108,10 @@ const WalkerProfile = () => {
     event.stopPropagation();
     navigate('/chat', { state: {receiver: walker.User } });
   }
+
+  const onCancel = () => {
+    setShowDeleteUser(false);
+  };
   
    const getStarIcons = (calificacion) => {
     const fullStars = Math.floor(calificacion);
@@ -129,6 +140,8 @@ const WalkerProfile = () => {
   const imageUrl = walkerImage ? imageSrc : 'url_de_no_profile_image'; // URL de imagen por defecto
 
   return (
+    <>
+    {showDeleteUser && <DeleteUser onCancel={onCancel} />}
     <Card sx={{ maxWidth: 600, margin: '0 auto', p: 2 }}>
       <CardContent>
         { userLog.id == walker.id &&  <Grid container spacing={2} alignItems="right">
@@ -138,6 +151,13 @@ const WalkerProfile = () => {
                 <EditIcon />
               </IconButton>
             </Tooltip>
+            {userLog.tipo == 'walker' ? (
+            <Tooltip title="Eliminar Usuario" arrow>
+              <IconButton className="edit-icon" onClick={handleDeleteUser}>
+                <DeleteForeverIcon />
+              </IconButton>
+            </Tooltip>): null}
+
           </Grid>
         </Grid>}
         <Grid container spacing={2} alignItems="center">
@@ -251,8 +271,10 @@ const WalkerProfile = () => {
             No hay turnos disponibles.
           </Typography>
         )}
+        
       </CardContent>
     </Card>
+    </>
   );
 };
 

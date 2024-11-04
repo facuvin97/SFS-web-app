@@ -26,8 +26,6 @@ export const ChatsProvider = ({ children }) => {
       }
       const data = await response.json();
       setUsersChats(data.body);
-     // console.log('data.body', data.body);
-      //console.log('usersChats despues de body', usersChats);
     } catch (error) {
       console.error('Error al obtener los clientes:', error);
     }
@@ -113,20 +111,17 @@ useEffect(() => {
 
     // si no existe el chat, busco el cliente con el senderId que me llega con el mensaje y lo agrego al estado
     if (!existingChat) {
-      console.log('entrando al if !existingChat');
       let response;
       let user;
 
       // hago un fetch para obtener el usuario que envia con el senderId
       response = await fetch(`http://localhost:3001/api/v1/clients/body/${newMessage.senderId}`);
       user = await response.json();
-      console.log('user si es cliente:', user);
       
       // si no es cliente, busco si es paseador
       if (!user.body) {
         response = await fetch(`http://localhost:3001/api/v1/walkers/${newMessage.senderId}`);
         user = await response.json();
-        console.log('user si es paseador:', user);
       }      
 
       // agrego el usuario a los estados
@@ -143,9 +138,6 @@ useEffect(() => {
         return updatedUsersChats;
       });
 
-      // // modificamos el la lista de chats para asignarle el ultimo mensaje al chat en el atributo lastMessage
-      // existingChatList[existingChatList.findIndex((chat) => chat.id === newMessage.senderId)].lastMessage = newMessage;
-      // console.log('existingChatList', existingChatList);
 
       addUnreadChat(newMessage.senderId);
     } else {
@@ -160,8 +152,6 @@ useEffect(() => {
     setUsersChats((prevUsersChats) => {
       const updatedChats = [...prevUsersChats]; // Crear una copia de los chats existentes
       const orderedChats = updatedChats.sort((b, a) => new Date(a.lastMessage.createdAt) - new Date(b.lastMessage.createdAt));
-      console.log('updatedChats', updatedChats);
-      console.log('orderedChats', orderedChats);
       return orderedChats; // Actualiza el estado con los chats ordenados
     });
   };

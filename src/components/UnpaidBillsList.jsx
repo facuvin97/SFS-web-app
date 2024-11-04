@@ -16,9 +16,6 @@ function UnpaidBillsList() {
   // Función para manejar el clic en una factura
   const handleBillClick = async (bill) => {
     localStorage.setItem('selectedBill', JSON.stringify(bill));
-    // const billGuardada = localStorage.getItem('selectedBill')
-    // console.log('bill guardada en localstorage', billGuardada)
-    // console.log('id de bill guardada en localstorage', billGuardada.id)
     navigate('/payment', { state: { bill } }); // Navegar a la página de pago pasando la factura seleccionada
   };
 
