@@ -48,6 +48,7 @@ import Map from './components/Map';
 import ChatComponent from './components/ChatComponent';
 import ListChatClients from './pages/walkers/ListChatClients';
 import ServiceDetails from './components/ServiceDetails';
+import ReviewList from './pages/reviews/ReviewList';
 
 
 function App() {
@@ -106,6 +107,7 @@ function App() {
                   <Route path={`/add-service`} element={<AddServiceForm userLog={userLog}/>}/>
                   <Route path={`/upload-photo`} element={<WalkerImageUploader/>}/>
                   <Route path={`/success-association`} element={<SuccessAsociationMP />}/>
+                  <Route path={`/reviews/:userId`} element={<ReviewList />}/>  
                   {/* <Route path={`/today-turn`} element={<TodayTurns />}/> */}
 
                   <Route path='/success' element={<Success/>} />

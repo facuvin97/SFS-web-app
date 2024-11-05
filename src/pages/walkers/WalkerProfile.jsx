@@ -11,6 +11,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { useUserImageContext } from '../../contexts/UserImageContext';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DeleteUser from '../users/DeleteUser';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const WalkerProfile = () => {
   const { walkerId } = useParams();
@@ -195,7 +196,12 @@ const WalkerProfile = () => {
             <Typography variant="body2" color="textSecondary">
               {walker.User.direccion}
             </Typography>
-                {getStarIcons(walker.User.calificacion || 0)}
+            {getStarIcons(walker.User.calificacion || 0)}
+            <IconButton aria-label="ver reseñas" onClick={() => navigate(`/reviews/${walker.id}`)}>
+              <Tooltip title='Ver Reseñas'>
+              <VisibilityIcon />
+              </Tooltip>
+            </IconButton>
            </Grid>
         </Grid>
         <Box mt={2}>

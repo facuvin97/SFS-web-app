@@ -61,6 +61,16 @@ function ServiceCard({ service, onDelete, onReview, viewLocation }) {
         <Typography variant="body2" color="text.secondary">
           <strong>Nota:</strong> {service.nota}
         </Typography>
+        {onReview && (
+          (userLog.tipo === 'client' && !service.calificado_x_cliente) ||
+          (userLog.tipo === 'walker' && !service.calificado_x_paseador)
+        ) && (
+          <Tooltip title="Ingresar Reseña" arrow>
+            <IconButton aria-label="ingresar" onClick={handleReviewClick}>
+              <RateReviewOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        )}
         {isActive && (
           <div>
             <Typography variant="body2" color="text.secondary">
@@ -71,16 +81,6 @@ function ServiceCard({ service, onDelete, onReview, viewLocation }) {
                 <DeleteIcon />
               </IconButton>
             </Tooltip>}
-            {onReview && (
-              (userLog.tipo === 'client' && !service.calificado_x_cliente) ||
-              (userLog.tipo === 'walker' && !service.calificado_x_paseador)
-            ) && (
-              <Tooltip title="Ingresar Reseña" arrow>
-                <IconButton aria-label="ingresar" onClick={handleReviewClick}>
-                  <RateReviewOutlinedIcon />
-                </IconButton>
-              </Tooltip>
-            )}
             {viewLocation && (
               userLog.tipo === 'client'
             ) && (

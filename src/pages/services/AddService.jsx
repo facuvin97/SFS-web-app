@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Grid, Typography } from '@mui/material';
+import { TextField, Button, Grid, Typography, FormHelperText } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { format, parseISO, getDay } from 'date-fns';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -22,6 +22,10 @@ function AddServiceForm({ userLog }) {
   const [mensaje, setMensaje] = useState(null);
   const navigate = useNavigate();
   const {setPendingServices} = useConfirmedServicesContext()
+  const [errorFecha, setErrorFecha] = useState('');
+  const [errorDireccion, setErrorDireccion] = useState('');
+  const [errorMascotas, setErrorMascotas] = useState('');
+  const [errorNota, setErrorNota] = useState('');
 
   //pasamos los dias del turno a numeros
   const turnDays = turn.dias.map(day => {
@@ -38,19 +42,61 @@ function AddServiceForm({ userLog }) {
   })
 
   const handleAddService = async () => {
+    // Reiniciar mensajes de error
+    setErrorDireccion('');
+    setErrorMascotas('');
+    setErrorNota('');
+    setErrorFecha('');
+    let valid = true;
+      
+    // Validar que direccion no tenga espacios al principio o al final
+    if (!/^[^\s].*[^\s]$|^[^\s]$/.test(direccionPickUp)) {
+      setErrorDireccion('La zona no debe tener espacios al principio ni al final');
+      valid = false; 
+    }
+
+    // validar que la direccion no sea vacia o "" (vacía)
+    if (!direccionPickUp || direccionPickUp.trim() === '') {
+      setErrorDireccion('La direccion es obligatoria');
+      valid = false; 
+    }
+
+
+    // Validar que la cantidad de mascotas sea positiva
+    if (!cantidadMascotas || parseFloat(cantidadMascotas) <= 0) {
+      setErrorMascotas('La cantidad de mascotas debe ser un número positivo');
+      valid = false; 
+    }
+
+    //validar que la nota no sea mayor a 255 caracteres
+    if(nota.length > 255){
+      setErrorNota('La nota no puede tener mas de 255 caracteres');
+      valid = false;
+    }
 
     const selectedDay = getDay(fecha);
     const dayNames = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
 
 
     if(selectedDay <0 && selectedDay >6){
-      setMensaje(`Debe seleccionar un dìa valido`);
-      return
+      setErrorFecha(`Debe seleccionar un dìa valido`);
+      valid = false;
     }
     else if (!turnDays.includes(selectedDay) & selectedDay) {
-      setMensaje(`El día seleccionado (${dayNames[selectedDay]}) no coincide con los días permitidos del turno (${turn.dias.join(', ')}).`);
-      return;
+      setErrorFecha(`El día seleccionado (${dayNames[selectedDay]}) no coincide con los días permitidos del turno (${turn.dias.join(', ')}).`);
+      valid = false;
     }
+
+    // valido que fecha no este vacia
+    if (!fecha) {
+      setErrorFecha('La fecha no puede estar vacia')
+    }
+
+
+
+    if (!valid) return; // Si hay errores, no continuar
+
+
 
     const serviceData = {
       fecha: format(fecha, 'yyyy-MM-dd'),
@@ -69,7 +115,7 @@ function AddServiceForm({ userLog }) {
         body: JSON.stringify(serviceData)
         
       });
-      console.log("fecha service: ", serviceData.fecha)
+
       if (response.ok) {
         const responseData = await response.json();
 
@@ -113,6 +159,11 @@ function AddServiceForm({ userLog }) {
               renderInput={(params) => <TextField {...params} fullWidth variant="outlined" />}
               shouldDisableDate={disableDates}
             />
+            {errorFecha && 
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <FormHelperText error>{errorFecha}</FormHelperText>
+                </div>
+              }
           </LocalizationProvider>
           </Grid>
           <Grid item xs={12}>
@@ -122,6 +173,8 @@ function AddServiceForm({ userLog }) {
               value={direccionPickUp}
               onChange={(e) => setDireccionPickUp(e.target.value)}
               variant="outlined"
+              error={!!errorDireccion} // Muestra error si existe
+              helperText={errorDireccion} // Muestra el mensaje de error
             />
           </Grid>
           <Grid item xs={12}>
@@ -132,6 +185,9 @@ function AddServiceForm({ userLog }) {
               value={cantidadMascotas}
               onChange={(e) => setCantidadMascotas(e.target.value)}
               variant="outlined"
+              inputProps={{ min: 1 }}
+              error={!!errorMascotas} // Muestra error si existe
+              helperText={errorMascotas} // Muestra el mensaje de error
             />
           </Grid>
           <Grid item xs={12}>
@@ -141,6 +197,8 @@ function AddServiceForm({ userLog }) {
               value={nota}
               onChange={(e) => setNota(e.target.value)}
               variant="outlined"
+              error={!!errorNota} // Muestra error si existe
+              helperText={errorNota} // Muestra el mensaje de error
             />
           </Grid>
           <Grid item xs={12}>

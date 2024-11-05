@@ -15,9 +15,37 @@ function AddReviewForm() {
   const location = useLocation();
   const { serviceId } = location.state || 15;
   const { getConfirmedServices } = useConfirmedServicesContext()
+  const [errorDescripcion, setErrorDescripcion] = useState('');
+  const [errorValoracion, setErrorValoracion] = useState('');
 
 
   const handleAddReview = async () => {
+
+    // reinicio el estado de error
+    setErrorDescripcion('')
+    setErrorValoracion('')
+
+    let valid = true;
+
+    // Validar tarifa
+    if (!valoracion || parseFloat(valoracion) <= 0) {
+      setErrorValoracion('La valoracion debe ser un número positivo');
+      valid = false; 
+    }
+    // Validar que descripcion no tenga espacios al principio o al final
+    if (!/^[^\s].*[^\s]$|^[^\s]$/.test(descripcion)) {
+      setErrorDescripcion('La descripcion no debe tener espacios al principio ni al final');
+      valid = false; 
+    }
+  
+    // validar que la descripcion no sea vacia o "" (vacía)
+    if (!descripcion || descripcion.trim() === '') {
+      setErrorDescripcion('La descripcion es obligatoria');
+      valid = false; 
+    }
+
+    if (!valid) return; // Si hay errores, no continuar
+
     const reviewData = {
       valoracion: valoracion,
       descripcion: descripcion,
@@ -26,7 +54,7 @@ function AddReviewForm() {
       serviceId: serviceId
     };
 
-    console.log('reviewData: ', reviewData)
+
     try {
       const response = await fetch('http://localhost:3001/api/v1/review', {
         method: 'POST',
@@ -38,7 +66,6 @@ function AddReviewForm() {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log('Reseña agregada correctamente');
         setMensaje('Reseña agregada correctamente');
         // Limpiar el formulario después de enviar los datos
         setValoracion('');
@@ -47,7 +74,6 @@ function AddReviewForm() {
         getConfirmedServices() //actualizo la lista de servicios en el context
         navigate('/service-history')
       } else {
-        console.error('Error al agregar la reseña:', response.statusText);
         setMensaje('Error al agregar la reseña');
         alert(mensaje)
       }
@@ -65,7 +91,7 @@ function AddReviewForm() {
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Valoracion"
+              label="Valoracion (entre 1 y 5)"
               type="number"
               value={valoracion}
               onChange={(e) => {
@@ -82,6 +108,8 @@ function AddReviewForm() {
                 max: 5,
                 step: 1,
               }}
+              error={!!errorValoracion} // Muestra error si existe
+              helperText={errorValoracion} // Muestra el mensaje de error
             />
           </Grid>
           <Grid item xs={12}>
@@ -91,11 +119,13 @@ function AddReviewForm() {
               value={descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
               variant="outlined"
+              error={!!errorDescripcion} // Muestra error si existe
+              helperText={errorDescripcion} // Muestra el mensaje de error
             />
           </Grid>
           <Grid item xs={12}>
             <Button variant="contained" color="primary" onClick={handleAddReview}>
-              EnviarReseña
+              Enviar Reseña
             </Button>
           </Grid>
         </Grid>
