@@ -10,7 +10,7 @@ function ModifyTurn() {
   const [errorFecha, setErrorFecha] = useState('');
   const [errorTarifa, setErrorTarifa] = useState('');
   const [errorZona, setErrorZona] = useState('');
-
+  const token = localStorage.getItem('userToken');
   
 
   // Estado para almacenar los datos del formulario
@@ -104,10 +104,14 @@ function ModifyTurn() {
     
 
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       const response = await fetch(`http://localhost:3001/api/v1/turns/${turn.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(turnData)
       });

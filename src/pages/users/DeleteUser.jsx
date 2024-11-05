@@ -7,25 +7,30 @@ function DeleteUser({onCancel}) {
 
   const [mensaje, setMensaje] = useState(null)
   const { userLog, setUserLog } = useUser();
-
   const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
 
   // Función para manejar cambios en los inputs del formulario
   const onDelete = async (onCancel) => {
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       var response;
       if (userLog.tipo == 'client') {
         response = await fetch(`http://localhost:3001/api/v1/clients/${userLog.id}`, {
           method: 'DELETE',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
         });
       } else {
         response = await fetch(`http://localhost:3001/api/v1/walkers/${userLog.id}`, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
       });
       }

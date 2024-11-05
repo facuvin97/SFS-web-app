@@ -4,13 +4,10 @@ import TurnCard from '../../components/TurnCard'; // Asegúrate de que la ruta e
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
-
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import {Tooltip } from '@mui/material';
 
 function TurnsList({ walkerId }) {
@@ -18,11 +15,19 @@ function TurnsList({ walkerId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate= useNavigate()
+  const token = localStorage.getItem('userToken');
 
   useEffect(() => {
     const fetchTurns = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`);
+        if(!token){
+          return alert('Usuario no autorizado')
+        }
+        const response = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -43,8 +48,15 @@ function TurnsList({ walkerId }) {
   const handleDeleteTurn = async (turnId) => {
     // Lógica para eliminar el turno con el ID proporcionado
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       const response = await fetch(`http://localhost:3001/api/v1/turns/${turnId}`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
       });
       if (!response.ok) {
         throw new Error('Error al eliminar el turno');
@@ -71,8 +83,6 @@ function TurnsList({ walkerId }) {
         <Grid item>
           <Card
             sx={{ maxWidth: 'none', minWidth: '250px', maxHeight: 'none', height: '100%' }}
-            // onMouseEnter={handleMouseEnter}
-            // onMouseLeave={handleMouseLeave}
             onClick={handleClick}
           >
             <CardContent>

@@ -2,19 +2,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserLogContext'; 
-import { IconButton, Tooltip } from '@mui/material';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import DeleteUser from './DeleteUser';
+
 
 function ModifyUser() {
   const { userLog, setUserLog } = useUser();
-
-  // Estado para almacenar los datos del formulario
   const [userData, setUserData] = useState(userLog);
-
-
   const [mensaje, setMensaje] = useState(null)
   const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
 
   // Función para manejar cambios en los inputs del formulario
   const handleInputChange = (e) => {
@@ -33,12 +28,16 @@ function ModifyUser() {
     // Aquí puedes enviar los datos a un servidor, almacenarlos en localStorage, etc.
     // console.log(JSON.stringify(userData))
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       let response;
       if (userLog.tipo == 'client') {
         response = await fetch(`http://localhost:3001/api/v1/clients/${userData.id}`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify(userData)
         });
@@ -46,7 +45,8 @@ function ModifyUser() {
         response = await fetch(`http://localhost:3001/api/v1/walkers/${userData.id}`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify(userData)
         });

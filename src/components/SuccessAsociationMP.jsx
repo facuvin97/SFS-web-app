@@ -7,13 +7,18 @@ const SuccessAsociationMP = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { userLog, setUserLog } = useUser();
+  const token = localStorage.getItem('userToken');
 
   const successAsociation = async (code) => {
     try {
+      if (!token) {
+        return alert('Usuario no autorizado');
+      }
       const response = await fetch(`http://localhost:3001/api/v1/walkers/mercadopago/${userLog.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           code: code,

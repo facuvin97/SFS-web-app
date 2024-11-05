@@ -12,6 +12,7 @@ function WalkerImageUploader() {
   const navigate = useNavigate()
   const fileInputRef = useRef(null)
   const { userLog } = useUser()
+  const token = localStorage.getItem('userToken');
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -28,9 +29,15 @@ function WalkerImageUploader() {
     
   
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       const response = await fetch(`http://localhost:3001/api/v1/image/walker/single/${userLog.id}`, {
         method: 'POST',
         body: formData,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
       });
   
       if (response.ok) { //si se cargo bien

@@ -5,7 +5,6 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Tooltip } from '@mui/material';
-import { useUnpaidBillsContext } from '../contexts/BillContext';
 
 
 function BillCard() {
@@ -13,13 +12,20 @@ function BillCard() {
   const [publicKey, setPublicKey] = useState(null);
   const billToPay = JSON.parse(localStorage.getItem('selectedBill'));
   const [mercadopagoDisponible, setMercadopagoDisponible] = useState(null); // Estado para mercadopagoDisponible
+  const token = localStorage.getItem('userToken')
+
 
   const fetchPaymentData = async () => {
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       const response = await fetch("http://localhost:3001/api/v1/bills/pay", {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+          
         },
         body: JSON.stringify({
           billId: billToPay.id // Pasar el ID de la factura al backend
@@ -43,10 +49,14 @@ function BillCard() {
 
   const verificarMercadoPago = async () => {
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       const response = await fetch(`http://localhost:3001/api/v1/walkers/byBill/${billToPay.id}`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
       });
 

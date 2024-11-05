@@ -14,6 +14,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
   const { userLog } = useUser();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const token = localStorage.getItem('userToken');
   
 
   // Función auxiliar para verificar si dos fechas son del mismo día
@@ -27,17 +28,22 @@ export const ConfirmedServicesProvider = ({ children }) => {
 
   const getConfirmedServices = async () => {
     try {
+      if(!token) {
+        return alert('Usuario no autorizado');
+      }
       let response;
 
       if (userLog?.tipo === 'walker') {
-        response = await fetch(`http://localhost:3001/api/v1/services/walker/${userLog.id}`);
+        response = await fetch(`http://localhost:3001/api/v1/services/walker/${userLog.id}`,
+          { headers: { 'Authorization': `Bearer ${token}` } 
+        });
       } else if (userLog?.tipo === 'client') {
-        response = await fetch(`http://localhost:3001/api/v1/services/client/${userLog.id}`);
+        response = await fetch(`http://localhost:3001/api/v1/services/client/${userLog.id}`,
+          { headers: { 'Authorization': `Bearer ${token}` } 
+        });
       } else {
         throw new Error('Tipo de usuario invalido')
       }
-
-
       if (!response.ok) {
         throw new Error('Error al obtener los servicios');
       }
@@ -119,14 +125,17 @@ export const ConfirmedServicesProvider = ({ children }) => {
   };
 
     //cargo todos los estados de servicio cada vez que cambia el userLog
-    useEffect(() => {
-      if (userLog) {
-        getConfirmedServices();
-      }
-    }, [userLog]);
+  useEffect(() => {
+    if (userLog) {
+      getConfirmedServices();
+    }
+  }, [userLog]);
 
   const deleteService = async (service) => {
     try {
+      if(!token) {
+        return alert('Usuario no autorizado');
+      }
       let data;
       if (userLog?.tipo === 'walker') {
         data = {
@@ -135,7 +144,11 @@ export const ConfirmedServicesProvider = ({ children }) => {
           fecha: service.fecha
         }
       } else if (userLog?.tipo === 'client') {
-        const turnResponse = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`)
+        const turnResponse = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         const turn = await turnResponse.json();
 
         data = {
@@ -154,7 +167,8 @@ export const ConfirmedServicesProvider = ({ children }) => {
       const deleteResponse = await fetch(`http://localhost:3001/api/v1/services/${service.id}`, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(data)
       });
@@ -178,13 +192,16 @@ export const ConfirmedServicesProvider = ({ children }) => {
 
   const authorizeService = async (service) => {
     try {
-
+      if(!token) {
+        return alert('Usuario no autorizado');
+      }
       service.aceptado = true;
 
       const response = await fetch(`http://localhost:3001/api/v1/services/${service.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(service)
       });

@@ -12,10 +12,19 @@ const ClientDetails = () => {
   const navigate = useNavigate();
   const [client, setClient] = useState(null);
   const [pets, setPets] = useState([]);
+  const token = localStorage.getItem('userToken');
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/v1/clients/${location.state.client.id}/pets`);
+        if(!token){ 
+          return alert('Usuario no autorizado')
+        }
+        const response = await fetch(`/api/v1/clients/${location.state.client.id}/pets`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         if (response.ok) {
           const data = await response.json();
           setClient(location.state.client);

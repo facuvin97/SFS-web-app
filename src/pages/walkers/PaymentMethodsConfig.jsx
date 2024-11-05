@@ -10,11 +10,19 @@ const PaymentMethodsConfig = () => {
   const [refresh_token, setRefresh_token] = useState(userLog.refresh_token || '' )
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');  
 
   useEffect(() => {
     const fetchWalker = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/walkers/${userLog.id}`);
+        if(!token){
+          return alert('Usuario no autorizado')
+        }
+        const response = await fetch(`http://localhost:3001/api/v1/walkers/${userLog.id}`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         if (response.ok) {
           const data = await response.json();
           setEfectivo(data.body.efectivo);
@@ -49,9 +57,15 @@ const PaymentMethodsConfig = () => {
     
 
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       const response = await fetch(`http://localhost:3001/api/v1/payments/manage/${userLog.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+           'Content-Type': 'application/json',
+           'Authorization': `Bearer ${token}`
+           },
         body: JSON.stringify({
           efectivo: efectivo,
           mercadopago: mercadoPago,

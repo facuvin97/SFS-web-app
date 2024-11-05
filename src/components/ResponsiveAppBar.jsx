@@ -67,11 +67,6 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
     if (chat) {
       // Navegar a la página de chat
       navigate(`/chat`, { state: { receiver: chat.User } });
-
-      // if (unreadChats.find((c) => c.id === chat.id)) {
-      // // Actualizar el estado unreadChats para quitar el chat seleccionado
-      // setUnreadChats((prevUnreadChats) => prevUnreadChats.filter((c) => c.id !== chat.id));
-      // }
     }
   };
 

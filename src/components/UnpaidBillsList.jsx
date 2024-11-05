@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import { ButtonBase, Divider } from '@mui/material';
-import { useUser } from '../contexts/UserLogContext';
 import { useUnpaidBillsContext } from '../contexts/BillContext';
 
 

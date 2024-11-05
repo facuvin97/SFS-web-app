@@ -14,6 +14,7 @@ function AddTurnForm({ userLog }) {
   const [errorTarifa, setErrorTarifa] = useState('');
   const [errorZona, setErrorZona] = useState('');
   const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
 
   const diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
 
@@ -73,10 +74,14 @@ function AddTurnForm({ userLog }) {
     };
 
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       const response = await fetch('http://localhost:3001/api/v1/turns', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(turnoData)
       });

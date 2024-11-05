@@ -9,11 +9,19 @@ export const useNotificationsContext = () => useContext(NotificationsContext);
 export const NotificationsProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const { userLog } = useUser();
+  const token = localStorage.getItem('userToken');
   
   // Función para cargar notificaciones del usuario
   const loadNotifications = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/notifications/${userLog.id}`);
+      if(!token) {
+        return alert('Usuario no autorizado');
+      }
+      const response = await fetch(`http://localhost:3001/api/v1/notifications/${userLog.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error('Error al obtener las notificaciones');
       }
@@ -37,10 +45,14 @@ export const NotificationsProvider = ({ children }) => {
   // Función para agregar una notificación
   const addNotification = async (notification) => {
     try {
+      if(!token) {
+        return alert('Usuario no autorizado');
+      }
       const response = await fetch('http://localhost:3001/api/v1/notifications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(notification),
       });
@@ -53,6 +65,9 @@ export const NotificationsProvider = ({ children }) => {
 
   // Función para marcar una notificación como leída
   const markAsRead = async (notificationId) => {
+    if(!token) {
+      return alert('Usuario no autorizado');
+    }
     try {
       const notification = notifications.find((n) => n.id === notificationId);
       if (notification) {
@@ -60,6 +75,7 @@ export const NotificationsProvider = ({ children }) => {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({ ...notification, leido: true }),
         });

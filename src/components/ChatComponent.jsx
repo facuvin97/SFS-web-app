@@ -17,11 +17,24 @@ const ChatComponent = () => {
   const [receiver, setReceiver] = useState(location.state?.receiver || null); // se llama receiver, pero es el "otro" usuario
   const navigate = useNavigate();
   const messageContainerRef = useRef(null);
-  let usuario = userLog.tipo === 'client' ? 'Paseador' : 'Cliente';
+  const token = localStorage.getItem('userToken');
+
+  useEffect(() => {
+    // Redirige a la página de inicio si el usuario no está logueado
+    if (!userLog) {
+      navigate('/');
+      return;
+    }
+  }, [userLog, navigate]);
+
+  if (!userLog) {
+    // Evita renderizar el componente si no hay un usuario logueado
+    return null;
+  }
+
+  const usuario = userLog.tipo === 'client' ? 'Paseador' : 'Cliente';
   const nombreUsuario = receiver?.nombre_usuario || 'Usuario desconocido';
   const { unreadChats, setUnreadChats, usersChats, setUsersChats } = useChatsContext();
-  
-  
 
 
   // Función para hacer scroll hasta el final
@@ -48,7 +61,14 @@ const ChatComponent = () => {
 
     const cargarMensajes = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/messages/${userLog.id}/${receiver.id}`);
+        if(!token){
+          return alert('Usuario no autorizado')
+        }
+        const response = await fetch(`http://localhost:3001/api/v1/messages/${userLog.id}/${receiver.id}`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         const data = await response.json();
         if (!response.ok) throw new Error('Error del servidor');
         setMessages(data.body);

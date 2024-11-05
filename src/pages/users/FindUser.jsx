@@ -5,11 +5,19 @@ function UserDetails({ userId }) {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const token = localStorage.getItem('userToken');
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/clients/${userId}`);
+        if(!token){
+          return alert('Usuario no autorizado')
+        }
+        const response = await fetch(`http://localhost:3001/api/v1/clients/${userId}`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         if (!response.ok) {
           throw new Error('No se pudo obtener los datos del usuario');
         }

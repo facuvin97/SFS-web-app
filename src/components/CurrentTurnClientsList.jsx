@@ -9,8 +9,7 @@ export default function CurrentTurnClientsList() {
   const location = useLocation()
   const { turn, fecha } = location.state || {};
   const now = new Date();
-  //restar 3 horas a new Date()
-  //now.setHours(now.getHours() - 3);
+  const token = localStorage.getItem('userToken');
   const dateNow = now.toISOString().split('T')[0];
 
   const getCurrentTime = (date) => {
@@ -38,8 +37,14 @@ export default function CurrentTurnClientsList() {
   const toggleServiceStatus = async (id, comenzado) => {
     if (!comenzado) { // cambiar el estado a comenzado
       try {
+        if (!token) {
+          return alert('Usuario no autorizado');
+        }
         const response = await fetch(`http://localhost:3001/api/v1/services/started/${id}`, {
           method: 'PUT',
+          headers: { 
+              'Authorization': `Bearer ${token}` 
+         }
         })
 
 
@@ -60,6 +65,9 @@ export default function CurrentTurnClientsList() {
       try {
         const response = await fetch(`http://localhost:3001/api/v1/services/finished/${id}`, {
           method: 'PUT',
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          }
         })
 
         if (!response.ok) {
@@ -86,8 +94,15 @@ export default function CurrentTurnClientsList() {
   useEffect(() => {
     async function fetchData() {
       try {
+        if (!token) {
+          return alert('Usuario no autorizado');
+        }
         // Cargo los servicios del turno actual
-        const response = await fetch(`http://localhost:3001/api/v1/services/turn/today/${turn.id}/${fecha}`);
+        const response = await fetch(`http://localhost:3001/api/v1/services/turn/today/${turn.id}/${fecha}`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         const data = await response.json();
         const services = data.body;
   
@@ -156,5 +171,3 @@ export default function CurrentTurnClientsList() {
     </div>
   )
 }
-//TODO:
-//mostrar y parar fecha de turno para ver botones si es hoy

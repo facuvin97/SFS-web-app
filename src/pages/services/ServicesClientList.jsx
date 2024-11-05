@@ -16,11 +16,19 @@ function ServicesList({ clientId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/services/client/${clientId}`);
+        if(!token){
+          return alert('Usuario no autorizado')
+        }
+        const response = await fetch(`http://localhost:3001/api/v1/services/client/${clientId}`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -42,6 +50,10 @@ function ServicesList({ clientId }) {
     try {
       const response = await fetch(`http://localhost:3001/api/v1/services/${serviceId}`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
       });
       if (!response.ok) {
         throw new Error('Error al eliminar el servicio');

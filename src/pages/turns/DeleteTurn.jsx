@@ -4,13 +4,18 @@ import { useNavigate } from 'react-router-dom';
 function DeleteTurn({ turnId }) {
   const [mensaje, setMensaje] = useState(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
 
   const onDelete = async () => {
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       const response = await fetch(`http://localhost:3001/api/v1/turns/${turnId}`, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
       });
 

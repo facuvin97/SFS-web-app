@@ -17,6 +17,7 @@ function AddReviewForm() {
   const { getConfirmedServices } = useConfirmedServicesContext()
   const [errorDescripcion, setErrorDescripcion] = useState('');
   const [errorValoracion, setErrorValoracion] = useState('');
+  const token = localStorage.getItem('userToken');
 
 
   const handleAddReview = async () => {
@@ -56,10 +57,14 @@ function AddReviewForm() {
 
 
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       const response = await fetch('http://localhost:3001/api/v1/review', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(reviewData)
       });

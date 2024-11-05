@@ -25,18 +25,30 @@ const WalkerProfile = () => {
   const { userLog } = useUser();
   const { imageSrc} = useUserImageContext();
   const [showDeleteUser, setShowDeleteUser] = useState(false);
+  const token = localStorage.getItem('userToken');
 
   useEffect(() => {
     const fetchWalker = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/walkers/${walkerId}`);
+        if(!token){
+          return alert('Usuario no autorizado')
+        }
+        const response = await fetch(`http://localhost:3001/api/v1/walkers/${walkerId}`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
         setWalker(data.body);
 
-        const turnsResponse = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`);
+        const turnsResponse = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         if (!turnsResponse.ok) {
           throw new Error('Network response was not ok');
         }
@@ -45,7 +57,11 @@ const WalkerProfile = () => {
 
         if(data.body.fotos){
           const images = await Promise.all(data.body.fotos.map(async (foto) => {
-            const imageResponse = await fetch(`http://localhost:3001/api/v1/image/walkers/${foto.url}`);
+            const imageResponse = await fetch(`http://localhost:3001/api/v1/image/walkers/${foto.url}`, { 
+              headers: { 
+                'Authorization': `Bearer ${token}` 
+              } 
+          });
             
             if (imageResponse.ok) {
               const blob = await imageResponse.blob();

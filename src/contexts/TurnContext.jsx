@@ -12,11 +12,19 @@ export const WalkerTurnsProvider = ({ children }) => {
   const [turns, setTurns] = useState([]);
   const { userLog } = useUser();
   const socket = useWebSocket();
+  const token = localStorage.getItem('userToken');
 
 
   const getWalkerTurns = async () => {
     try {
-      const turnsResponse = await fetch(`http://localhost:3001/api/v1/turns/walker/${userLog.id}`);
+      if(!token) {
+        return alert('Usuario no autorizado');
+      }
+      const turnsResponse = await fetch(`http://localhost:3001/api/v1/turns/walker/${userLog.id}`,{ 
+        headers: { 
+          'Authorization': `Bearer ${token}` 
+        }, 
+      });
       if (!turnsResponse.ok) {
         throw new Error('Network response was not ok');
       }

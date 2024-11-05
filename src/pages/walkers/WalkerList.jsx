@@ -18,11 +18,19 @@ function WalkersList() {
     zona: '',
     tarifa: ''
   });
+  const token = localStorage.getItem('userToken');
 
   useEffect(() => {
     const fetchWalkers = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/walkers`);
+        if(!token){
+          return alert('Usuario no autorizado')
+        }
+        const response = await fetch(`http://localhost:3001/api/v1/walkers`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

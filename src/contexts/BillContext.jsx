@@ -9,11 +9,19 @@ export const useUnpaidBillsContext = () => useContext(UnpaidBillsContext);
 export const UnpaidBillsProvider = ({ children }) => {
   const [unpaidBills, setUnpaidBills] = useState([]);
   const { userLog } = useUser();
-
+  const token = localStorage.getItem('userToken');
 
   const getUnpaidBills = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/bills/client/${userLog.id}`);
+      
+      if (!token) {
+        throw new Error('No se ha autenticado el usuario');
+      }
+      const response = await fetch(`http://localhost:3001/api/v1/bills/client/${userLog.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (!response.ok) {
         throw new Error('Error al obtener las facturas');
       }

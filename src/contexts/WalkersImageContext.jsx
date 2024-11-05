@@ -11,12 +11,21 @@ export const WalkersImageContextProvider = ({ children }) => {
   useEffect(() => {
     const getWalkerImages = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/v1/image/walkers');
+        const token = localStorage.getItem('userToken');
+        const response = await fetch('http://localhost:3001/api/v1/image/walkers', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
         if (response.ok) {
           const walkers = await response.json();
           const images = await Promise.all(walkers.map(async (walker) => {
-            const imageResponse = await fetch(`http://localhost:3001/api/v1/image/single/${walker.nombre_usuario}`);
-            if (imageResponse.status == 200) {
+            const imageResponse = await fetch(`http://localhost:3001/api/v1/image/single/${walker.nombre_usuario}`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (imageResponse.ok) {
               const blob = await imageResponse.blob();
               const objectURL = URL.createObjectURL(blob);
               return { ...walker, imageSrc: objectURL };
@@ -46,11 +55,14 @@ export const WalkersImageContextProvider = ({ children }) => {
   }, []);
 
   const getWalkerTurns = async (walkerId) => {
+    const token = localStorage.getItem('userToken');
     if (walkerTurns[walkerId]) {
       return walkerTurns[walkerId];
     }
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`);
+      const response = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       if (response.ok) {
         const data = await response.json();
         setWalkerTurns((prev) => ({ ...prev, [walkerId]: data.body }));

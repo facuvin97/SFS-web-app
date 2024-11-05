@@ -5,9 +5,14 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [userLog, setUserLog] = useState(JSON.parse(localStorage.getItem('userData')));
 
+  const logout = () => {
+    setUserLog(null);
+    localStorage.removeItem('userData');
+    localStorage.removeItem('userToken');
+  };
 
   return (
-    <UserContext.Provider value={{ userLog, setUserLog }}>
+    <UserContext.Provider value={{ userLog, setUserLog, logout }}>
       {children}
     </UserContext.Provider>
   );

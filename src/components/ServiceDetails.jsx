@@ -19,6 +19,7 @@ function ServiceDetails() {
   const onReview = location.state?.onReview;  // Obtener la función onReview
   const navigate = useNavigate();
   const { userLog } = useUser();
+  const token = localStorage.getItem('userToken');
   let serviceComenzado;
   let serviceFinalizado;
 
@@ -30,6 +31,9 @@ function ServiceDetails() {
 
   const handleReview = async () => {
     try {
+      if (!token) {
+        return alert('Usuario no autorizado');
+      }
       const serviceId = service.id;
   
       if (userLog.tipo === 'walker') {
@@ -37,7 +41,11 @@ function ServiceDetails() {
         navigate(`/add-review/${service.ClientId}`, { state: { serviceId } });
       } else {
         // Si la reseña la escribe un cliente
-        const response = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`);
+        const response = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
   
         if (!response.ok) {
           throw new Error('Error al obtener el turno');

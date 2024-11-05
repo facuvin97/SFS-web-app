@@ -8,12 +8,19 @@ const SuccessPayment = () => {
   const navigate = useNavigate();
   const { setUnpaidBills } = useUnpaidBillsContext()
   const billToPay = JSON.parse(localStorage.getItem('selectedBill'));
+  const token = localStorage.getItem('userToken');
 
   const successPay = async () => {
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       const response = await fetch(`http://localhost:3001/api/v1/bills/${billToPay.id}`, {
         method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           pagado: true,
           pendiente: false

@@ -11,9 +11,15 @@ export const ClientImageContextProvider = ({ children }) => {
   useEffect(() => {
     const getClientImages = async () => {
       try {
-        // Aquí debes usar la URL que incluya el ID del usuario seleccionado
-        if(selectedUserId) {
-          const response = await fetch(`http://localhost:3001/api/v1/image/single/${selectedUserId}`);
+        const token = localStorage.getItem('userToken');
+        if(!token) {
+          return alert('Usuario no autorizado');
+        }
+        if (selectedUserId) {
+          const response = await fetch(`http://localhost:3001/api/v1/image/single/${selectedUserId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          
           if (response.ok) {
             const clientImagesData = await response.json();
             setClientImages(clientImagesData);
@@ -27,7 +33,6 @@ export const ClientImageContextProvider = ({ children }) => {
     };
 
     getClientImages();
-
   }, [selectedUserId]);
 
   return (

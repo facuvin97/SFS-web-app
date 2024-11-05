@@ -14,6 +14,7 @@ function ServiceHistory({}) {
   const [mensaje, setMensaje] = useState('');
   const { userLog } = useUser()
   const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
 
   useEffect(() => {
     setLoading(false)
@@ -25,7 +26,14 @@ function ServiceHistory({}) {
     if (userLog.tipo === 'walker') { //si la reseña la escribe un paseador
       navigate(`/add-review/${service.ClientId}`, { state: { serviceId } }) //el receiver es el cliente del servicio
     } else { //si la reseña la escribe un cliente
-      const response = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`); //voy a buscar el turno para obtener el id del paseador
+      if (!token) {
+        return alert('Usuario no autorizado');
+      }
+      const response = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`, { 
+        headers: { 
+          'Authorization': `Bearer ${token}` 
+        } 
+    }); //voy a buscar el turno para obtener el id del paseador
       const turnData = await response.json();
 
       navigate(`/add-review/${turnData.body.WalkerId}`, { state: { serviceId }}) //el receiver es el paseador que esta en el turno

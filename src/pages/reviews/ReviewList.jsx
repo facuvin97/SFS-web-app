@@ -9,17 +9,29 @@ function ReviewList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
 
   useEffect(() => {
     // Fetch usuario de la base de datos
     const fetchUser = async () => {
       try {
-        let response = await fetch(`http://localhost:3001/api/v1/walkers/${userId}`);
+        if (!token) {
+          return alert('Usuario no autorizado');
+        }
+        let response = await fetch(`http://localhost:3001/api/v1/walkers/${userId}`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         let data = await response.json();
     
         if (data.body === null) {
           console.log('Walker no encontrado, buscando en clientes...');
-          response = await fetch(`http://localhost:3001/api/v1/clients/body/${userId}`);
+          response = await fetch(`http://localhost:3001/api/v1/clients/body/${userId}`, { 
+            headers: { 
+              'Authorization': `Bearer ${token}` 
+            } 
+        });
           data = await response.json();
           console.log("data: ", data)
         }
@@ -43,11 +55,18 @@ function ReviewList() {
     const fetchReviews = async () => {
       try {
         if (!user) return; // Asegurarse de que `user` esté definido
+        if (!token) {
+          return alert('Usuario no autorizado');
+        }
 
         setLoading(true);
         setError('');
         
-        const response = await fetch(`http://localhost:3001/api/v1/review/receiver/${user.id}`);
+        const response = await fetch(`http://localhost:3001/api/v1/review/receiver/${user.id}`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         
         if (response.ok) {
           const data = await response.json();

@@ -3,10 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Tooltip } from '@mui/material';
+
 
 function SelectedTurnCard() {
     const location = useLocation();
@@ -29,7 +26,6 @@ function SelectedTurnCard() {
         <Typography variant="body2" color="text.secondary">
           <strong>Hora de inicio:</strong> {turn.hora_inicio} - <strong>Hora de fin:</strong> {turn.hora_fin}
         </Typography>
-        {/* Aquí puedes agregar los detalles adicionales del turno */}
         <Typography variant="body2" color="text.secondary">
           Servicios agendados:
         </Typography>

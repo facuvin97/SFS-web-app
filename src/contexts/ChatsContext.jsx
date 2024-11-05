@@ -12,17 +12,30 @@ export const ChatsProvider = ({ children }) => {
   const [unreadChatsCount, setUnreadChatsCount] = useState(0); // Estado para almacenar el número de chats con mensajes no leídos
   const { userLog } = useUser();
   const socket = useWebSocket();
+  const token = localStorage.getItem('userToken');
+  
 
   const fetchUsersChats = async () => {
     try {
       let response;
+      if(!token) {
+        return alert('Usuario no autorizado');
+      }
       if (userLog.tipo === 'walker') {
-         response = await fetch(`http://localhost:3001/api/v1/contacts/clients/${userLog.id}`);
+         response = await fetch(`http://localhost:3001/api/v1/contacts/clients/${userLog.id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
       } else {
-         response = await fetch(`http://localhost:3001/api/v1/contacts/walkers/${userLog.id}`);
+         response = await fetch(`http://localhost:3001/api/v1/contacts/walkers/${userLog.id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
       }
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Error al obtener la respuesta del servidor');
       }
       const data = await response.json();
       setUsersChats(data.body);
@@ -33,7 +46,14 @@ export const ChatsProvider = ({ children }) => {
 
   const fetchUnreadChats = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/unread/${userLog.id}`);
+      if(!token) {
+        return alert('Usuario no autorizado');
+      }
+      const response = await fetch(`http://localhost:3001/api/v1/unread/${userLog.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -88,10 +108,17 @@ export const ChatsProvider = ({ children }) => {
 useEffect(() => {
   // Definimos `handleNewMessage` dentro del useEffect para que siempre acceda a los valores más recientes de usersChats y unreadChats
   const handleNewMessage = async (newMessage) => {
+    if(!token) {
+      return alert('Usuario no autorizado');
+    }
     if (newMessage.senderId === userLog.id) return; // No se procesa el mensaje de mi mismo
 
     // me traigo la info del mensaje nuevo desde la api para tener los datos completos
-    const response = await fetch(`http://localhost:3001/api/v1/messages/single/${newMessage.id}`);
+    const response = await fetch(`http://localhost:3001/api/v1/messages/single/${newMessage.id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
     const data = await response.json();
     const fullMessage = data.body;
     
@@ -115,12 +142,20 @@ useEffect(() => {
       let user;
 
       // hago un fetch para obtener el usuario que envia con el senderId
-      response = await fetch(`http://localhost:3001/api/v1/clients/body/${newMessage.senderId}`);
+      response = await fetch(`http://localhost:3001/api/v1/clients/body/${newMessage.senderId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
       user = await response.json();
       
       // si no es cliente, busco si es paseador
       if (!user.body) {
-        response = await fetch(`http://localhost:3001/api/v1/walkers/${newMessage.senderId}`);
+        response = await fetch(`http://localhost:3001/api/v1/walkers/${newMessage.senderId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         user = await response.json();
       }      
 

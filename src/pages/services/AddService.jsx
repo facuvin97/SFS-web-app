@@ -10,6 +10,7 @@ import { useConfirmedServicesContext } from '../../contexts/ServicesContext';
 function AddServiceForm({ userLog }) {
   const location = useLocation();
   const { turn } = location.state || {};
+  const token = localStorage.getItem('userToken');
 
   if (userLog.tipo === 'walker') {
     throw new Error('El paseador no puede ingresar servicios.');
@@ -107,10 +108,14 @@ function AddServiceForm({ userLog }) {
       ClientId: userLog.id // El ID del usuario logeado se utiliza como el ClientId del servicio
     };
     try {
+      if(!token){
+        return alert('Usuario no autorizado')
+      }
       const response = await fetch('http://localhost:3001/api/v1/services', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(serviceData)
         

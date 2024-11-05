@@ -8,11 +8,19 @@ function ClientsList() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const token = localStorage.getItem('userToken');
 
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/clients`);
+        if(!token){
+          return alert('Usuario no autorizado')
+        }
+        const response = await fetch(`http://localhost:3001/api/v1/clients`, { 
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          } 
+      });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

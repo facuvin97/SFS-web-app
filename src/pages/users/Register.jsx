@@ -119,17 +119,6 @@ function Register() {
     } catch (error) {
       console.error('Error:', error);
     }
-
-    // // Reiniciar el estado del formulario
-    // setUserData({
-    //   nombre_usuario: '',
-    //   contraseña: '',
-    //   direccion: '',
-    //   fecha_nacimiento: '',
-    //   email: '',
-    //   telefono: '',
-    //   calificacion: null
-    // });
   };
 
   return (
