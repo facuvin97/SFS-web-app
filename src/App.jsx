@@ -49,12 +49,13 @@ import ChatComponent from './components/ChatComponent';
 import ListChatClients from './pages/walkers/ListChatClients';
 import ServiceDetails from './components/ServiceDetails';
 import ReviewList from './pages/reviews/ReviewList';
+import SelectZone from './components/SelectZone';
+import AddPet from './pages/clients/AddPet';
 
 
 function App() {
   // const [userLog, setUserLog] = useState(null);
   const { userLog, setUserLog } = useUser();
-  const [selectedTurn, setSelectedTurn] = useState(null); 
 
 
   //Verificar si hay datos de inicio de sesión en localStorage al cargar la aplicación
@@ -69,8 +70,8 @@ function App() {
   const handleLogout = () => {
     // Limpiar el estado del usuario y los datos de sesión
     setUserLog(null);
-    // setUserLog(null);
     localStorage.removeItem('userData');
+    localStorage.removeItem('userToken');
   };
 
   return (
@@ -80,9 +81,10 @@ function App() {
         <Container className='root-container'>
           <div className='App'>
             <UserImageContextProvider>
-
+            <ResponsiveAppBar loggedInUser={userLog} onLogout={handleLogout} />
               <header className='App-header'>
-                <ResponsiveAppBar loggedInUser={userLog} onLogout={handleLogout} />
+              <Box sx={{ minHeight: '100vh', paddingTop: '64px' }}>
+              <Container>
                 <Routes>
                   <Route path='/' element={userLog ? (userLog.tipo === 'walker' ? <TodayTurns /> : <WalkersList clientId={userLog?.id} />) : <Contact />} /> {/* modificar service usuario */}
                   <Route path='/login' element={<LoginPage />} />
@@ -108,7 +110,8 @@ function App() {
                   <Route path={`/upload-photo`} element={<WalkerImageUploader/>}/>
                   <Route path={`/success-association`} element={<SuccessAsociationMP />}/>
                   <Route path={`/reviews/:userId`} element={<ReviewList />}/>  
-                  {/* <Route path={`/today-turn`} element={<TodayTurns />}/> */}
+                  <Route path={`/select-zone`} element={<SelectZone />}/>  
+                  <Route path={`/add-pet`} element={<AddPet />}/>
 
                   <Route path='/success' element={<Success/>} />
                   <Route path='/failure' element={<Failure/>} />
@@ -130,6 +133,8 @@ function App() {
 
                   <Route path="*" element={<div>404</div> } />
                 </Routes>
+                </Container>
+                </Box>
               </header>
 
             </UserImageContextProvider>

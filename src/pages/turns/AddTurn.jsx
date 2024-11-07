@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { TextField, Button, Grid, Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
+import { TextField, Button, Grid, Checkbox, FormControlLabel, FormHelperText, Modal, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import SelectNeighborhood from '../../components/SelectZone';
 
 function AddTurnForm({ userLog }) {
   const [dias, setDias] = useState([]);
@@ -13,12 +14,26 @@ function AddTurnForm({ userLog }) {
   const [errorFecha, setErrorFecha] = useState('');
   const [errorTarifa, setErrorTarifa] = useState('');
   const [errorZona, setErrorZona] = useState('');
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
+  const [openNeighborhoodModal, setOpenNeighborhoodModal] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem('userToken');
 
   const diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+  
+   // Abrir y cerrar el modal
+   const handleOpenNeighborhoodModal = () => setOpenNeighborhoodModal(true);
+   const handleCloseNeighborhoodModal = () => setOpenNeighborhoodModal(false);
+ 
+   // Actualizar el barrio seleccionado en tiempo real
+   const handleNeighborhoodSelect = (neighborhood) => {
+     setSelectedNeighborhood(neighborhood);
+     const neighborhoodName = neighborhood ? neighborhood.properties.nombre : '';
+     setZona(neighborhoodName); // Actualizar el estado `zona` con el nombre del barrio seleccionado
+   };
 
   const handleAddTurn = async () => {
+    if (!token) return alert('Usuario no autorizado');
     // Reiniciar mensajes de error
     setErrorHora('');
     setErrorTarifa('');
@@ -198,23 +213,38 @@ function AddTurnForm({ userLog }) {
               helperText={errorTarifa} // Muestra el mensaje de error
             />
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Zona"
-              value={zona}
-              onChange={(e) => setZona(e.target.value)}
-              variant="outlined"
-              error={!!errorZona} // Muestra error si existe
-              helperText={errorZona} // Muestra el mensaje de error
-            />
-          </Grid>
+            <Grid item xs={12}>
+              <Button variant="outlined" color="primary" onClick={handleOpenNeighborhoodModal}>
+                Seleccionar Barrio
+              </Button>
+              <TextField
+                fullWidth
+                label="Zona"
+                value={zona}
+                variant="outlined"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              {errorZona && <FormHelperText error>{errorZona}</FormHelperText>}
+            </Grid>
           <Grid item xs={12}>
             <Button variant="contained" color="primary" onClick={handleAddTurn}>
               Agregar Turno
             </Button>
           </Grid>
         </Grid>
+          <Modal open={openNeighborhoodModal} onClose={handleCloseNeighborhoodModal}>
+            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', boxShadow: 24, p: 4, width: '80%', maxWidth: 600 }}>
+              <SelectNeighborhood
+                initialSelectedNeighborhood={selectedNeighborhood}
+                onNeighborhoodSelect={handleNeighborhoodSelect}
+              />
+              <Button onClick={handleCloseNeighborhoodModal} variant="contained" color="secondary" style={{ marginTop: '20px' }}>
+                Confirmar Selección
+              </Button>
+            </Box>
+          </Modal>
         {mensaje && <p>{mensaje}</p>}
       </form>
     </div>

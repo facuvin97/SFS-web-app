@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap } from 'react-leaflet';
 import { useWebSocket } from '../contexts/WebSocketContext'; 
 import { useUser } from '../contexts/UserLogContext'; 
 import { useConfirmedServicesContext } from '../contexts/ServicesContext';
@@ -12,7 +12,24 @@ function Map() {
   const { confirmedServices } = useConfirmedServicesContext(); 
   const [loading, setLoading] = useState(true); // Estado para controlar la carga
   const activeServiceRef = useRef(null); // Ref para mantener el servicio activo
+  const [geoData, setGeoData] = useState(null); // Estado para almacenar los datos GeoJSON
 
+
+  // Efecto para cargar el archivo GeoJSON
+  useEffect(() => {
+    // Carga el archivo GeoJSON localmente
+    fetch('/barrios.geojson')
+      .then((response) => response.json())
+      .then((data) => setGeoData(data))
+      .catch((error) => console.error('Error al cargar el archivo GeoJSON:', error));
+  }, []);
+  
+    // Función para definir el estilo de los límites de barrios
+    const geoJSONStyle = {
+      color: 'blue',       // Color de los bordes
+      weight: 1,           // Grosor de los bordes
+      fillOpacity: 0       // Sin relleno en el área
+    };
 
   // Efecto para manejar la carga de servicios confirmados
   useEffect(() => {
@@ -65,6 +82,44 @@ function Map() {
     }
   }, [userLog, confirmedServices, socket]);
 
+  function CenterMapOnGeoJSON({ data, walkerLocation }) {
+    const map = useMap();
+    const [hasCentered, setHasCentered] = useState(false);
+  
+    useEffect(() => {
+      if (!data || !walkerLocation || hasCentered) return;
+  
+      try {
+        // Buscamos el barrio más cercano a la ubicación del paseador
+        const closestFeature = data.features.find((feature) => {
+          const coordinates = feature.geometry.coordinates[0];
+          return coordinates.some(coord => {
+            const [lng, lat] = coord;
+            // Calculamos la distancia entre walkerLocation y el punto del barrio
+            return (
+              Math.abs(lat - walkerLocation[0]) < 0.05 &&
+              Math.abs(lng - walkerLocation[1]) < 0.05
+            );
+          });
+        });
+  
+        if (closestFeature) {
+          // Extraemos los límites de ese barrio
+          const latlngs = closestFeature.geometry.coordinates[0].map(coord => [coord[1], coord[0]]);
+          const bounds = L.latLngBounds(latlngs);
+  
+          // Usamos flyToBounds para centrar la vista sin bloquear el movimiento posterior
+          map.flyToBounds(bounds, { maxZoom: 15 });
+          setHasCentered(true); // Evita re-centrar en cada render
+        }
+      } catch (error) {
+        console.error("Error procesando el archivo GeoJSON:", error);
+      }
+    }, [data, walkerLocation, map, hasCentered]);
+  
+    return null;
+  }
+  
   
 
   // Componente para centrar el mapa en la ubicación del paseador
@@ -85,11 +140,13 @@ function Map() {
   return (
     <>
     {!walkerLocation && <div>Esperando la ubicacion del paseador...</div>}
-    <MapContainer center={[-34.9011, -56.1645]} zoom={13} style={{ height: '400px', width: '100%' }}>
+    <MapContainer center={[-34.9011, -56.1645]} zoom={17} style={{ height: '400px', width: '400px' }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
+      {geoData && <GeoJSON data={geoData} style={geoJSONStyle}/>}
+      {geoData && <CenterMapOnGeoJSON data={geoData} walkerLocation={walkerLocation}/>}
       { walkerLocation && 
       <>
       <Marker position={walkerLocation}>

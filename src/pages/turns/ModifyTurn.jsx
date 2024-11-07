@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Grid, TextField, FormControlLabel, Checkbox, Button, FormHelperText } from '@mui/material';
+import { Grid, TextField, FormControlLabel, Checkbox, Button, FormHelperText, Modal, Box } from '@mui/material';
+import SelectNeighborhood from '../../components/SelectZone';
 
 function ModifyTurn() {
   const location = useLocation();
@@ -12,7 +13,6 @@ function ModifyTurn() {
   const [errorZona, setErrorZona] = useState('');
   const token = localStorage.getItem('userToken');
   
-
   // Estado para almacenar los datos del formulario
   const [turnData, setTurnData] = useState({
     dias: turn.dias || [],
@@ -23,9 +23,10 @@ function ModifyTurn() {
   });
 
   const [mensaje, setMensaje] = useState(null);
-
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState(turnData.zona ? { properties: { nombre: turnData.zona } } : null);
+  const [openNeighborhoodModal, setOpenNeighborhoodModal] = useState(false);
+  
   const diasOrdenados = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
-
 
   // Función para manejar cambios en los inputs del formulario
   const handleInputChange = (e) => {
@@ -37,21 +38,21 @@ function ModifyTurn() {
   };
 
   // Función para manejar cambios en los checkboxes de días
-    // Función para manejar cambios en los checkboxes de días
-    const handleDayChange = (e) => {
-      const { name, checked } = e.target;
-      let updatedDias = checked
-        ? [...turnData.dias, name]
-        : turnData.dias.filter((d) => d !== name);
-      
-      // Ordenar los días según el array de referencia
-      updatedDias = updatedDias.sort((a, b) => diasOrdenados.indexOf(a) - diasOrdenados.indexOf(b));
+  const handleDayChange = (e) => {
+    const { name, checked } = e.target;
+    let updatedDias = checked
+      ? [...turnData.dias, name]
+      : turnData.dias.filter((d) => d !== name);
+    
+    // Ordenar los días según el array de referencia
+    updatedDias = updatedDias.sort((a, b) => diasOrdenados.indexOf(a) - diasOrdenados.indexOf(b));
   
-      setTurnData((prevData) => ({
-        ...prevData,
-        dias: updatedDias
-      }));
-    };
+    setTurnData((prevData) => ({
+      ...prevData,
+      dias: updatedDias
+    }));
+  };
+
   // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,11 +102,9 @@ function ModifyTurn() {
 
     if (!valid) return; // Si hay errores, no continuar
 
-    
-
     try {
-      if(!token){
-        return alert('Usuario no autorizado')
+      if (!token) {
+        return alert('Usuario no autorizado');
       }
       const response = await fetch(`http://localhost:3001/api/v1/turns/${turn.id}`, {
         method: 'PUT',
@@ -121,8 +120,8 @@ function ModifyTurn() {
         setMensaje(responseData.message);
         navigate('/turns');
       } else {
-        console.error('Error al agregar el turno:', response.statusText);
-        setMensaje('Error al agregar el turno');
+        console.error('Error al modificar el turno:', response.statusText);
+        setMensaje('Error al modificar el turno');
         alert(mensaje);
       }
     } catch (error) {
@@ -130,6 +129,20 @@ function ModifyTurn() {
       setMensaje('Error al conectar con el servidor');
       alert(mensaje);
     }
+  };
+
+  // Abrir y cerrar el modal de selección de barrio
+  const handleOpenNeighborhoodModal = () => setOpenNeighborhoodModal(true);
+  const handleCloseNeighborhoodModal = () => setOpenNeighborhoodModal(false);
+
+  // Función para manejar la selección de barrio
+  const handleNeighborhoodSelect = (neighborhood) => {
+    setSelectedNeighborhood(neighborhood);
+    const neighborhoodName = neighborhood ? neighborhood.properties.nombre : '';
+    setTurnData((prevData) => ({
+      ...prevData,
+      zona: neighborhoodName // Actualizar zona con el nombre del barrio seleccionado
+    }));
   };
 
   return (
@@ -204,31 +217,49 @@ function ModifyTurn() {
               onChange={handleInputChange}
               variant="outlined"
               inputProps={{ min: 1 }}
-              error={!!errorTarifa} // Muestra error si existe
-              helperText={errorTarifa} // Muestra el mensaje de error
+              error={!!errorTarifa}
+              helperText={errorTarifa}
             />
           </Grid>
           <Grid item xs={12}>
+            <Button variant="outlined" color="primary" onClick={handleOpenNeighborhoodModal}>
+              Seleccionar Barrio
+            </Button>
             <TextField
               fullWidth
-              type='text'
               label="Zona"
-              name='zona'
+              name="zona"
               value={turnData.zona}
               onChange={handleInputChange}
               variant="outlined"
-              error={!!errorZona} // Muestra error si existe
-              helperText={errorZona} // Muestra el mensaje de error
+              InputProps={{
+                readOnly: true,
+              }}
             />
+            {errorZona && 
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2px' }}>
+                <FormHelperText error style={{ margin: 0 }}>{errorZona}</FormHelperText>
+              </div>
+            }
           </Grid>
           <Grid item xs={12}>
-            <Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
-              Modificar
+            <Button variant="contained" color="primary" type="submit">
+              Guardar
             </Button>
           </Grid>
         </Grid>
-        {mensaje && <p>{mensaje}</p>}
       </form>
+          <Modal open={openNeighborhoodModal} onClose={handleCloseNeighborhoodModal}>
+            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', boxShadow: 24, p: 4, width: '80%', maxWidth: 600 }}>
+              <SelectNeighborhood
+                initialSelectedNeighborhood={selectedNeighborhood}
+                onNeighborhoodSelect={handleNeighborhoodSelect}
+              />
+              <Button onClick={handleCloseNeighborhoodModal} variant="contained" color="secondary" style={{ marginTop: '20px' }}>
+                Confirmar Selección
+              </Button>
+            </Box>
+          </Modal>
     </div>
   );
 }
