@@ -75,9 +75,7 @@ const ChatList = () => {
       >
         {usersChats.length > 0 ? (
           usersChats.map((userChat) => {
-
             const isUnread = unreadChats.has(userChat.User.id);
-
             return (
               <MenuItem
                 key={userChat.User.id}

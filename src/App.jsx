@@ -46,7 +46,6 @@ import TodayTurns from './pages/walkers/TodayTurns';
 import CurrentTurnClientsList from './components/CurrentTurnClientsList';
 import Map from './components/Map';
 import ChatComponent from './components/ChatComponent';
-import ListChatClients from './pages/walkers/ListChatClients';
 import ServiceDetails from './components/ServiceDetails';
 import ReviewList from './pages/reviews/ReviewList';
 import SelectZone from './components/SelectZone';
@@ -127,7 +126,6 @@ function App() {
                   <Route path={`/map`} element={<Map />}/>
 
                   <Route path='/chat' element={<ChatComponent/>} />
-                  <Route path='/chats' element={<ListChatClients />} />
 
                   
 

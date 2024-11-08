@@ -24,7 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import ChatList from './ChatList';
 
 
-const pagesWalker = ['Turnos', 'Solicitudes', 'Servicios', 'Historial', 'Chats'];
+const pagesWalker = ['Turnos', 'Solicitudes', 'Servicios', 'Historial'];
 const pagesClient = ['Servicios', 'Historial', 'Facturas'];
 
 function ResponsiveAppBar({ loggedInUser, onLogout }) {
@@ -42,7 +42,6 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
     Servicios: `/services`,
     Solicitudes: `/walker-service-request/${loggedInUser?.id}`,
     Historial: `/service-history`,
-    Chats: `/chats`
   };
   
   // Rutas para los clientes
@@ -112,7 +111,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
               SFS
             </Typography>
           </Link>
-
+  
           {loggedInUser ? (
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {pages.map((page) => (
@@ -136,18 +135,15 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
           ) : (
             <Box sx={{ flexGrow: 1 }} />
           )}
-
+  
           {loggedInUser ? (
             <>
               <Box sx={{ flexGrow: 0, margin: '10px' }}>
                 <Notifications />
               </Box>
-
-              {/* Botón de Chat */}
               <Box sx={{ flexGrow: 0, margin: '10px' }}>
                 <ChatList />
               </Box>
-
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -229,7 +225,8 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
               </Link>
             </>
           )}
-
+  
+          {/* Menú desplegable para pantallas pequeñas */}
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -260,7 +257,12 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem
+                  key={page}
+                  component={Link}
+                  to={routes[page]}
+                  onClick={handleCloseNavMenu}
+                >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -270,6 +272,7 @@ function ResponsiveAppBar({ loggedInUser, onLogout }) {
       </Container>
     </AppBar>
   );
+  
 }
 
 export default ResponsiveAppBar;

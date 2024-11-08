@@ -81,7 +81,7 @@ function Map() {
 
   // Efecto para gestionar la unión a la sala del paseador y la ubicación inicial
   useEffect(() => {
-    if (userLog.tipo === 'client' && confirmedServices.length > 0) {
+    if (userLog?.tipo === 'client' && confirmedServices.length > 0) {
       const service = confirmedServices.find(service => service.comenzado === true && service.finalizado === false);
       
       if (service && (!activeServiceRef.current || activeServiceRef.current.TurnId !== service.TurnId)) {

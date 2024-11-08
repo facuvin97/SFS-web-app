@@ -26,7 +26,7 @@ const ChatComponent = () => {
     }
   }, [token, navigate]);
 
-  const usuario = userLog.tipo === 'client' ? 'Paseador' : 'Cliente';
+  const usuario = userLog?.tipo === 'client' ? 'Paseador' : 'Cliente';
   const nombreUsuario = receiver?.nombre_usuario || 'Usuario desconocido';
   const { unreadChats, setUnreadChats, usersChats, setUsersChats } = useChatsContext();
 
@@ -51,7 +51,8 @@ const ChatComponent = () => {
 
   // Cargar mensajes desde la API al cargar el componente
   useEffect(() => {
-    if (!receiver) navigate('/');
+    if (!userLog || !receiver) return;
+
 
     const cargarMensajes = async () => {
       try {
@@ -69,11 +70,11 @@ const ChatComponent = () => {
     };
     
     cargarMensajes();
-  }, [receiver, navigate, userLog.id]);
+  }, [receiver, navigate, userLog]);
 
   // Solicitar mensajes no leídos
   useEffect(() => {
-    if (!socket || !receiver) return;
+    if (!socket || !receiver || !userLog) return;
 
     emitSocketEvent('getUnreadMessages', { receiverId: userLog.id, senderId: receiver.id });
 
@@ -92,11 +93,11 @@ const ChatComponent = () => {
     });
 
     return () => socket.off('unreadMessages');
-  }, [socket, receiver, userLog.id]);
+  }, [socket, receiver, userLog]);
 
   //nuevo useEffect para actualizar el estado de messages cuando recibe un mensaje
   useEffect(() => {
-    if (!socket || !receiver) return;
+    if (!socket || !receiver || !userLog) return;
   
     const handleNewMessage = (newMessage) => {
   
@@ -106,8 +107,7 @@ const ChatComponent = () => {
         setMessages((prevMessages) => {
           return [...prevMessages, newMessage];
         });
-      }
-      
+      }      
       if (newMessage.receiverId === userLog.id && newMessage.senderId === receiver.id){
           emitSocketEvent('messageRead', { messageId: newMessage.id });
       }
@@ -118,12 +118,12 @@ const ChatComponent = () => {
     return () => {
       socket.off('receiveMessage', handleNewMessage);
     };
-  }, [socket, receiver, userLog.id]); // Agrega receiver como dependencia
+  }, [socket, receiver, userLog]); // Agrega receiver como dependencia
   
 
   // Actualizar mensajes como leídos
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !receiver) return;
     socket.on('messageRead', ({ messageId, read }) => {
       setMessages((prevMessages) =>
         prevMessages.map((msg) => (msg.id === messageId ? { ...msg, read } : msg))
@@ -145,7 +145,8 @@ const ChatComponent = () => {
 
   // Enviar un mensaje
   const sendMessage = () => {
-    if (socket && message && userLog?.id && receiver?.id) {
+    if (!userLog || !receiver) return;
+    if (socket && message && userLog.id && receiver.id) {
       const newMessage = { senderId: userLog.id, receiverId: receiver.id, contenido: message };
 
       // cambio el orden del estado de usersChats, para que el chat con id receiver.id se muestre al principio

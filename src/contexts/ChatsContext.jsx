@@ -77,10 +77,12 @@ export const ChatsProvider = ({ children }) => {
     }        
   }
 
-  //useEffect que actualiza el contador cada vez que cambia el estado de unreadChats
-  useEffect(() => {
-    setUnreadChatsCount(unreadChats.size);
-  }, [unreadChats]);
+    //useEffect que actualiza el contador cada vez que cambia el estado de unreadChats
+    useEffect(() => {
+      console.log('useEffect para actualizar el count en el context: ', unreadChats.size);
+      console.log('unreadChats en el useEffect de la cuenta: ', unreadChats);
+      setUnreadChatsCount(unreadChats.size);
+    }, [unreadChats]);
   
   // useEffect que carga los estados de los chats del usuario logueado
   useEffect(() => {

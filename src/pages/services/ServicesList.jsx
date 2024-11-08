@@ -29,35 +29,38 @@ function ServicesList({}) {
     }
   }, [token, navigate]);
 
-  useEffect(() => {
-    if (selectedDate) {
-      setFilteredServices(notInProgressServices.filter(service => {
+// Primer useEffect: Filtra y actualiza inProgressServices y notInProgressServices solo cuando cambie confirmedServices
+useEffect(() => {
+  const inProgress = confirmedServices.filter(service => service.comenzado && !service.finalizado);
+  setInProgressServices(inProgress);
+
+  const notInProgress = confirmedServices.filter(service => !service.comenzado);
+  setNotInProgressServices(notInProgress);
+
+  setLoading(false);
+}, [confirmedServices]); // Dependemos solo de confirmedServices
+
+// Segundo useEffect: Filtra y actualiza filteredServices cuando cambien notInProgressServices o selectedDate
+useEffect(() => {
+  if (selectedDate) {
+    setFilteredServices(
+      notInProgressServices.filter(service => {
         const serviceDate = new Date(service.fecha);
         serviceDate.setHours(serviceDate.getHours() + 3);
-        
-        console.log('service.fecha: ', service.fecha);
-        console.log('serviceDate: ', serviceDate);
-        
+
         return (
           serviceDate.getFullYear() === selectedDate.getFullYear() &&
           serviceDate.getMonth() === selectedDate.getMonth() &&
           serviceDate.getDate() === selectedDate.getDate()
         );
-      }));
-    } else {
-      setFilteredServices(notInProgressServices);
-    }
+      })
+    );
+  } else {
+    setFilteredServices(notInProgressServices);
+  }
+}, [selectedDate, notInProgressServices]); // Dependemos solo de selectedDate y notInProgressServices
 
-    // Filtrar servicios en ejecución (comenzado: true, finalizado: false)
-    const inProgress = confirmedServices.filter(service => service.comenzado && !service.finalizado);
-    setInProgressServices(inProgress);
 
-    // Filtrar servicios no en ejecución (comenzado: false, finalizado: false)
-    const notInProgress = confirmedServices.filter(service => !service.comenzado);
-    setNotInProgressServices(notInProgress);
-
-    setLoading(false);
-  }, [confirmedServices, selectedDate, inProgressServices, notInProgressServices, pendingServices]);
 
   const handleDeleteService = async (service) => {
     const msg = await deleteService(service);

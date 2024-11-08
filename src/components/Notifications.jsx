@@ -48,9 +48,9 @@ const Notifications = () => {
   };
 
   return (
-    <div className="notifications-container"> {/* Aplica la clase del contenedor */}
-      <IconButton aria-describedby={id} onClick={handleClick}> {/* Botón de icono para abrir el popover */}
-        <Badge badgeContent={unreadCount} color="secondary"> {/* Muestra el conteo de notificaciones no leídas */}
+    <div className="notifications-container">
+      <IconButton aria-describedby={id} onClick={handleClick}>
+        <Badge badgeContent={unreadCount} color="secondary">
           <NotificationsIcon />
         </Badge>
       </IconButton>
@@ -68,43 +68,43 @@ const Notifications = () => {
           horizontal: 'center',
         }}
       >
-        <List className="notification-list"> {/* Aplica la clase de la lista */}
-          {notifications.length === 0 ? ( // Muestra un mensaje si no hay notificaciones
+        <List className="notification-list">
+          {notifications.length === 0 ? (
             <ListItem>
               <ListItemText primary="No hay notificaciones disponibles" />
             </ListItem>
           ) : (
-            notifications.map((notification) => ( // Mapea las notificaciones y las muestra en una lista
+            notifications.map((notification) => (
               <ListItem 
                 key={notification.id} 
                 className={`notification-list-item ${notification.leido ? 'notification-read' : 'notification-unread'}`} 
                 onMouseEnter={(e) => e.currentTarget.classList.add('notification-hover')}
                 onMouseLeave={(e) => e.currentTarget.classList.remove('notification-hover')}
-                onClick={() => handleNotificationClick(notification.url)} // Añade la función de redirección al hacer clic
+                onClick={() => handleNotificationClick(notification.url)}
                 style={{ cursor: 'pointer' }}
-              > {/* Aplica la clase del ListItem */}
+              >
                 <ListItemText 
                   primary={
-                    <Typography variant="subtitle1" className="notification-title"> {/* Aplica la clase del título */}
+                    <Typography variant="subtitle1" component="span" className="notification-title">
                       {notification.titulo}
                     </Typography>
                   }
                   secondary={
                     <>
-                      <Typography variant="body2" className="notification-subtitle"> {/* Aplica la clase del subtítulo */}
+                      <Typography variant="body2" component="span" className="notification-subtitle">
                         {notification.contenido}
                       </Typography>
-                      <Typography variant="caption" align="right" display="block" className="notification-time"> {/* Aplica la clase del tiempo */}
+                      <Typography variant="caption" component="span" align="right" display="block" className="notification-time">
                         {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
                       </Typography>
                     </>
                   }
                 />
-                {!notification.leido && ( // Muestra un botón para marcar como leída si la notificación no está leída
-                  <div className="notification-actions"> {/* Contenedor para el botón */}
+                {!notification.leido && (
+                  <div className="notification-actions">
                     <Tooltip title="Marcar como leído" arrow>
                       <IconButton onClick={(e) => {
-                        e.stopPropagation(); // Detiene la propagación del evento para que no se dispare el redireccionamiento
+                        e.stopPropagation();
                         markAsRead(notification.id);
                       }}>
                         <DraftsIcon />
