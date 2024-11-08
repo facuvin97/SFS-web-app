@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -23,6 +23,14 @@ function ServiceDetails() {
   let serviceComenzado;
   let serviceFinalizado;
 
+  
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio 
+    if (!token) {
+      navigate('/');
+    } 
+  }, [token, navigate]);
+
 
   const handleDeleteService = async () => {
     const msg = await deleteService(service);
@@ -31,9 +39,6 @@ function ServiceDetails() {
 
   const handleReview = async () => {
     try {
-      if (!token) {
-        return alert('Usuario no autorizado');
-      }
       const serviceId = service.id;
   
       if (userLog.tipo === 'walker') {
@@ -41,6 +46,7 @@ function ServiceDetails() {
         navigate(`/add-review/${service.ClientId}`, { state: { serviceId } });
       } else {
         // Si la reseña la escribe un cliente
+        
         const response = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 

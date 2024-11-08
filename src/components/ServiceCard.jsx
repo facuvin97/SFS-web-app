@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -15,6 +15,15 @@ function ServiceCard({ service, onDelete, onReview, viewLocation }) {
   const navigate = useNavigate();
   const fechaFormateada = new Date(service.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' });
   const { userLog } = useUser()
+  const token = localStorage.getItem('userToken');
+  
+  
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio 
+    if (!token) {
+      navigate('/');
+    } 
+  }, [token, navigate]);
 
 
   const handleMouseEnter = () => {

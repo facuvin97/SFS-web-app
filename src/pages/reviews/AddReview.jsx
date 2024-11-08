@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Checkbox, FormControlLabel } from '@mui/material';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useUser } from '../../contexts/UserLogContext';
@@ -19,6 +19,13 @@ function AddReviewForm() {
   const [errorValoracion, setErrorValoracion] = useState('');
   const token = localStorage.getItem('userToken');
 
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   const handleAddReview = async () => {
 
@@ -57,9 +64,7 @@ function AddReviewForm() {
 
 
     try {
-      if(!token){
-        return alert('Usuario no autorizado')
-      }
+ 
       const response = await fetch('http://localhost:3001/api/v1/review', {
         method: 'POST',
         headers: {

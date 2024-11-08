@@ -1,18 +1,26 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function UserDetails({ userId }) {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const token = localStorage.getItem('userToken');
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        if(!token){
-          return alert('Usuario no autorizado')
-        }
+
         const response = await fetch(`http://localhost:3001/api/v1/clients/${userId}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 

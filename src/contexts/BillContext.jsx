@@ -1,6 +1,7 @@
 // contexts/ServicesContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useUser } from './UserLogContext';
+import { useNavigate } from 'react-router-dom';
 
 const UnpaidBillsContext = createContext();
 
@@ -10,12 +11,13 @@ export const UnpaidBillsProvider = ({ children }) => {
   const [unpaidBills, setUnpaidBills] = useState([]);
   const { userLog } = useUser();
   const token = localStorage.getItem('userToken');
+  const navigate = useNavigate();
 
   const getUnpaidBills = async () => {
     try {
       
       if (!token) {
-        throw new Error('No se ha autenticado el usuario');
+        return navigate('/');
       }
       const response = await fetch(`http://localhost:3001/api/v1/bills/client/${userLog.id}`, {
         headers: {

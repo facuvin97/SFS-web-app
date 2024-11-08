@@ -9,14 +9,22 @@ import { Button, IconButton, MenuItem, Tooltip } from '@mui/material';
 import { useUserImageContext } from '../contexts/UserImageContext';
 import noImage from '../assets/no_image.png'
 import { useUser } from '../contexts/UserLogContext'; 
-
-// Método que fuerza la actualización del componente  
+import { useNavigate } from 'react-router-dom';
 
 
 function Account () {
   const [showDeleteUser, setShowDeleteUser] = useState(false);
   const { imageSrc} = useUserImageContext();
   const { userLog } = useUser();
+  const token = localStorage.getItem('userToken')
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   const handleDeleteUser = () => {
     setShowDeleteUser(true);

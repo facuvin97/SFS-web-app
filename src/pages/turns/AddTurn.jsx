@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Checkbox, FormControlLabel, FormHelperText, Modal, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SelectNeighborhood from '../../components/SelectZone';
@@ -19,6 +19,15 @@ function AddTurnForm({ userLog }) {
   const navigate = useNavigate();
   const token = localStorage.getItem('userToken');
 
+
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+
   const diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
   
    // Abrir y cerrar el modal
@@ -33,7 +42,8 @@ function AddTurnForm({ userLog }) {
    };
 
   const handleAddTurn = async () => {
-    if (!token) return alert('Usuario no autorizado');
+    if (!token) return navigate('/')
+
     // Reiniciar mensajes de error
     setErrorHora('');
     setErrorTarifa('');
@@ -90,7 +100,8 @@ function AddTurnForm({ userLog }) {
 
     try {
       if(!token){
-        return alert('Usuario no autorizado')
+        return navigate('/')
+
       }
       const response = await fetch('http://localhost:3001/api/v1/turns', {
         method: 'POST',

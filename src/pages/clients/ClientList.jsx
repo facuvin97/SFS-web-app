@@ -3,19 +3,25 @@ import ClientCard from '../../components/ClientCard';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { ClientImageContextProvider } from '../../contexts/ClientImageContext';
+import { useNavigate } from 'react-router-dom';
 
 function ClientsList() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const token = localStorage.getItem('userToken');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        if(!token){
-          return alert('Usuario no autorizado')
-        }
         const response = await fetch(`http://localhost:3001/api/v1/clients`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 

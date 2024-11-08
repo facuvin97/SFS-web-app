@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Grid, TextField, FormControlLabel, Checkbox, Button, FormHelperText, Modal, Box } from '@mui/material';
 import SelectNeighborhood from '../../components/SelectZone';
@@ -12,6 +12,13 @@ function ModifyTurn() {
   const [errorTarifa, setErrorTarifa] = useState('');
   const [errorZona, setErrorZona] = useState('');
   const token = localStorage.getItem('userToken');
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
   
   // Estado para almacenar los datos del formulario
   const [turnData, setTurnData] = useState({
@@ -104,7 +111,8 @@ function ModifyTurn() {
 
     try {
       if (!token) {
-        return alert('Usuario no autorizado');
+        return navigate('/')
+
       }
       const response = await fetch(`http://localhost:3001/api/v1/turns/${turn.id}`, {
         method: 'PUT',

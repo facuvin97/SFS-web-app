@@ -1,4 +1,4 @@
-import React from 'react';
+import React , { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -8,7 +8,16 @@ import Typography from '@mui/material/Typography';
 function SelectedTurnCard() {
     const location = useLocation();
     const turn = location.state.turn;
+    const token = localStorage.getItem('userToken');
+    const navigate = useNavigate();
 
+
+    useEffect(() => {
+      // Si no hay token, redirigir al inicio
+      if (!token) {
+        navigate('/');
+      }
+    }, [token, navigate]);
 
   if (!turn) {
     return <div>Error: No se encontró información del turno.</div>;

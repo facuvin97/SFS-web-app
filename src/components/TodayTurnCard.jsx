@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importamos useNavigate para la navegación programática
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 
 function TodayTurnCard({ turn, fecha}) {
   const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
   // Filtrar los servicios del turno que coincidan con el día especificado y estén aceptados
   const filteredServices = turn.Services.filter(service => {
     const fechaServicio = service.fecha.split('T')[0]; // Obtener solo la fecha (sin la hora)
@@ -15,6 +16,14 @@ function TodayTurnCard({ turn, fecha}) {
     // Filtrar por el día pasado y que el servicio esté aceptado
     return fechaServicio === fecha && !service.finalizado && service.aceptado;
   });
+
+  
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio 
+    if (!token) {
+      navigate('/');
+    } 
+  }, [token, navigate]);
 
   const handleClick = () => {
     navigate('/current-turn-clients', { state: { turn, fecha } });

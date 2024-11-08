@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useUser } from './UserLogContext';
 import { useWalkerTurnsContext } from '../contexts/TurnContext';
 import { useWebSocket } from '../contexts/WebSocketContext';
+import { useNavigate } from 'react-router-dom';
 
 const WalkerLocationContext = createContext();
 
@@ -12,6 +13,8 @@ export const WalkerLocationProvider = ({ children }) => {
   const [activeTurnId, setActiveTurnId] = useState(null);
   const [watchId, setWatchId] = useState(null);
   const socket = useWebSocket();
+  const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
 
   // Función para emitir eventos de WebSocket
   const emitSocketEvent = (eventName, data) => {

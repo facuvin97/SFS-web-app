@@ -13,9 +13,19 @@ import {
   IconButton 
 } from '@mui/material'
 import { CheckCircle, RadioButtonUnchecked } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 
 export default function CurrentTurnClientsList() {
   const [clients, setClients] = useState([])
+  const token = localStorage.getItem('userToken')
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   const toggleServiceStatus = (id) => {
     setClients(clients.map(client => 

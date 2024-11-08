@@ -14,6 +14,14 @@ function WalkerImageUploader() {
   const { userLog } = useUser()
   const token = localStorage.getItem('userToken');
 
+  // si no hay token redirijo al inicio
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
     setImage(selectedImage);
@@ -30,7 +38,8 @@ function WalkerImageUploader() {
   
     try {
       if(!token){
-        return alert('Usuario no autorizado')
+        return navigate('/')
+
       }
       const response = await fetch(`http://localhost:3001/api/v1/image/walker/single/${userLog.id}`, {
         method: 'POST',
@@ -42,7 +51,6 @@ function WalkerImageUploader() {
   
       if (response.ok) { //si se cargo bien
         const data = await response.json();
-        console.log('Imagen subida con éxito:', data);
 
         // Asumiendo que la respuesta del servidor contiene la URL de la nueva imagen
         const newImage = data.newImage;

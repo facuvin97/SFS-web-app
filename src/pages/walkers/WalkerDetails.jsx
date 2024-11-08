@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation , useNavigate} from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -11,7 +11,16 @@ const WalkerDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { walker, turns } = location.state || {};
+  const token = localStorage.getItem('userToken');
 
+  // si no hay token redirijo al inicio
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+  
   if (!walker || !walker.User) {
     return <p>No hay datos disponibles para este paseador.</p>;
   }

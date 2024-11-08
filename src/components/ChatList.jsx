@@ -10,6 +10,14 @@ const ChatList = () => {
   const { usersChats, setUsersChats , unreadChats, setUnreadChats, unreadChatsCount} = useChatsContext();
   const navigate = useNavigate();
   const { userLog } = useUser();
+  const token = localStorage.getItem('userToken');
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     // Redibujo el componente cuando cambia alguno de los estados

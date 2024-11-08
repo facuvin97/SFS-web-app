@@ -1,11 +1,22 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useWalkerTurnsContext } from '../../contexts/TurnContext'; 
 import TodayTurnCard from '../../components/TodayTurnCard';
 import { Container } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const TodayTurns = () => {
   const { turns } = useWalkerTurnsContext();
+  const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
 
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+  
   // Obtener el día de hoy en español
   const diasSemana = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
   const hoy = new Date();

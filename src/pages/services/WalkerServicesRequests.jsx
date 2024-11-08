@@ -13,14 +13,22 @@ function WalkerServicesRequests({ walkerId }) {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { userLog } = useUser();
+  const token = localStorage.getItem('userToken');
 
+
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+  
   useEffect(() => {
     if (userLog.tipo !== 'walker') {
       navigate('/')
     }
   });
-
-  console.log("servicios pendientes en WalkerServiceRequest: ", pendingServices)
 
   const handleRejectService = async (service) => {
     try {

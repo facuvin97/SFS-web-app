@@ -13,7 +13,7 @@ export const ClientImageContextProvider = ({ children }) => {
       try {
         const token = localStorage.getItem('userToken');
         if(!token) {
-          return alert('Usuario no autorizado');
+          throw new Error('No hay token');
         }
         if (selectedUserId) {
           const response = await fetch(`http://localhost:3001/api/v1/image/single/${selectedUserId}`, {
@@ -32,7 +32,9 @@ export const ClientImageContextProvider = ({ children }) => {
       }
     };
 
-    getClientImages();
+    if (selectedUserId) {
+      getClientImages();
+    }
   }, [selectedUserId]);
 
   return (

@@ -1,6 +1,8 @@
 // UserImageContext.js
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from './UserLogContext';
 
 const UserImageContext = createContext();
 
@@ -9,13 +11,15 @@ export const useUserImageContext = () => useContext(UserImageContext);
 export const UserImageContextProvider = ({ children }) => {
   const [imageSrc, setImageSrc] = useState(null);
   const token = localStorage.getItem('userToken');
+  const navigate = useNavigate();
+  const { userLog } = useUser();
 
    // Obtener la imagen de perfil del usuario logueado al cargar la aplicación
    useEffect(() => {
     const getUserImage = async () => {
       try {
         if(!token) {
-          return alert('Usuario no autorizado');
+          return navigate('/');
         }
         const userData = localStorage.getItem('userData');
         if (userData) {
@@ -38,7 +42,9 @@ export const UserImageContextProvider = ({ children }) => {
       }
     };
 
-    getUserImage();
+    if (userLog) {
+      getUserImage();
+    }
 
     // Limpiar el objectURL cuando el componente se desmonta para evitar fugas de memoria
     return () => {
@@ -46,7 +52,7 @@ export const UserImageContextProvider = ({ children }) => {
         URL.revokeObjectURL(imageSrc);
       }
     };
-  }, []);
+  }, [token, navigate, userLog]);
 
 
   return (

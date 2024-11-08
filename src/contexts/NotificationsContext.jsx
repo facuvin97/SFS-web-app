@@ -1,6 +1,7 @@
 // contexts/NotificationsContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useUser } from './UserLogContext';
+import { useNavigate } from 'react-router-dom';
 
 const NotificationsContext = createContext();
 
@@ -10,12 +11,13 @@ export const NotificationsProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const { userLog } = useUser();
   const token = localStorage.getItem('userToken');
+  const navigate = useNavigate();
   
   // Función para cargar notificaciones del usuario
   const loadNotifications = async () => {
     try {
       if(!token) {
-        return alert('Usuario no autorizado');
+        return navigate('/');
       }
       const response = await fetch(`http://localhost:3001/api/v1/notifications/${userLog.id}`, {
         headers: {
@@ -46,7 +48,7 @@ export const NotificationsProvider = ({ children }) => {
   const addNotification = async (notification) => {
     try {
       if(!token) {
-        return alert('Usuario no autorizado');
+        return navigate('/');
       }
       const response = await fetch('http://localhost:3001/api/v1/notifications', {
         method: 'POST',

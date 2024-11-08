@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/AccountForm.css';
 
@@ -19,6 +19,14 @@ function AddPet() {
   const [errors, setErrors] = useState({});
   const [mensaje, setMensaje] = useState(null);
 
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+  
   // Función para manejar cambios en los inputs del formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -81,9 +89,7 @@ function AddPet() {
     }
 
     try {
-        if (!token) {
-            return alert('Usuario no autorizado');
-          }
+       
       const response = await fetch('http://localhost:3001/api/v1/pets', {
         method: 'POST',
         headers: {

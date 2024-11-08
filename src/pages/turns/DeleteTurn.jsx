@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function DeleteTurn({ turnId }) {
@@ -6,10 +6,18 @@ function DeleteTurn({ turnId }) {
   const navigate = useNavigate();
   const token = localStorage.getItem('userToken');
 
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+
   const onDelete = async () => {
     try {
       if(!token){
-        return alert('Usuario no autorizado')
+        return navigate('/')
+
       }
       const response = await fetch(`http://localhost:3001/api/v1/turns/${turnId}`, {
         method: 'DELETE',

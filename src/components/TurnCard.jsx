@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { useNavigate } from 'react-router-dom'; // Importamos useNavigate para la navegación programática
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -12,6 +12,15 @@ import {Tooltip } from '@mui/material';
 function TurnCard({ turn, onDelete }) {
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate(); // Obtener la función de navegación programática
+  const token = localStorage.getItem('userToken');
+
+  
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio 
+    if (!token) {
+      navigate('/');
+    } 
+  }, [token, navigate]);
 
   const handleMouseEnter = () => {
     setIsActive(true);

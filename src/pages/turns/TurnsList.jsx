@@ -18,10 +18,18 @@ function TurnsList({ walkerId }) {
   const token = localStorage.getItem('userToken');
 
   useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+
+  useEffect(() => {
     const fetchTurns = async () => {
       try {
         if(!token){
-          return alert('Usuario no autorizado')
+          return navigate('/')
+
         }
         const response = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`, { 
           headers: { 
@@ -49,7 +57,8 @@ function TurnsList({ walkerId }) {
     // Lógica para eliminar el turno con el ID proporcionado
     try {
       if(!token){
-        return alert('Usuario no autorizado')
+        return navigate('/')
+
       }
       const response = await fetch(`http://localhost:3001/api/v1/turns/${turnId}`, {
         method: 'DELETE',

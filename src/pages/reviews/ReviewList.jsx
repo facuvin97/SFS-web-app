@@ -11,13 +11,19 @@ function ReviewList() {
   const navigate = useNavigate();
   const token = localStorage.getItem('userToken');
 
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+  
   useEffect(() => {
     // Fetch usuario de la base de datos
     const fetchUser = async () => {
       try {
-        if (!token) {
-          return alert('Usuario no autorizado');
-        }
+
         let response = await fetch(`http://localhost:3001/api/v1/walkers/${userId}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
@@ -55,9 +61,6 @@ function ReviewList() {
     const fetchReviews = async () => {
       try {
         if (!user) return; // Asegurarse de que `user` esté definido
-        if (!token) {
-          return alert('Usuario no autorizado');
-        }
 
         setLoading(true);
         setError('');

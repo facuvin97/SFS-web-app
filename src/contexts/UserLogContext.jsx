@@ -3,7 +3,14 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [userLog, setUserLog] = useState(JSON.parse(localStorage.getItem('userData')));
+  const [userLog, setUserLog] = useState(null);
+
+  useEffect(() => {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      setUserLog(JSON.parse(storedUserData));
+    }
+  }, []);
 
   const logout = () => {
     setUserLog(null);
@@ -18,6 +25,7 @@ export const UserProvider = ({ children }) => {
   );
 };
 
+// El hook useUser para acceder al contexto
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {

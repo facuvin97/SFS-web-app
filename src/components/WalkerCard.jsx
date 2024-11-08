@@ -16,6 +16,14 @@ const WalkerCard = ({ walker }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { walkerImages, getWalkerTurns } = useWalkersImageContext();
+  const token = localStorage.getItem('userToken');
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   const handleMouseEnter = async () => {
     setIsExpanded(true);

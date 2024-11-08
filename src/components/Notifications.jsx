@@ -6,12 +6,22 @@ import { useNotificationsContext } from '../contexts/NotificationsContext';
 import { formatDistanceToNow } from 'date-fns';
 import '../styles/Notification.css';
 import { useUser } from '../contexts/UserLogContext';
+import { useNavigate } from 'react-router-dom';
 
 const Notifications = () => {
   const { notifications, markAsRead } = useNotificationsContext(); // Obtiene notificaciones y función para marcarlas como leídas del contexto
   const [anchorEl, setAnchorEl] = useState(null); // Estado para el elemento de anclaje del popover
   const [unreadCount, setUnreadCount] = useState(0); // Estado para el conteo de notificaciones no leídas
   const { userLog } = useUser();
+  const navigate = useNavigate(); 
+  const token = localStorage.getItem('userToken');  
+  
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     // Actualiza el conteo de notificaciones no leídas cada vez que cambian las notificaciones

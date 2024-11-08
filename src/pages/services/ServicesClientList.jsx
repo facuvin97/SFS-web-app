@@ -19,11 +19,15 @@ function ServicesList({ clientId }) {
   const token = localStorage.getItem('userToken');
 
   useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+
+  useEffect(() => {
     const fetchServices = async () => {
       try {
-        if(!token){
-          return alert('Usuario no autorizado')
-        }
         const response = await fetch(`http://localhost:3001/api/v1/services/client/${clientId}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 

@@ -15,11 +15,16 @@ const ClientDetails = () => {
   const token = localStorage.getItem('userToken');
 
   useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        if(!token){ 
-          return alert('Usuario no autorizado')
-        }
+      
         const response = await fetch(`/api/v1/clients/${location.state.client.id}/pets`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 

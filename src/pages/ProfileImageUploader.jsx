@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../styles/Account.css';
 import { useNavigate } from 'react-router-dom';
 import { useUserImageContext } from '../contexts/UserImageContext'; // Importa el contexto
-import { Save, Token } from '@mui/icons-material';
+import { Save } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { useUser } from '../contexts/UserLogContext';
 
@@ -13,6 +13,14 @@ function ProfileImageUploader() {
   const fileInputRef = useRef(null)
   const { userLog } = useUser()
   const token = localStorage.getItem('userToken');
+  
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -29,9 +37,7 @@ function ProfileImageUploader() {
     
   
     try {
-      if(!token){
-        return alert('Usuario no autorizado')
-      }
+
       const response = await fetch(`http://localhost:3001/api/v1/image/single/${userLog.nombre_usuario}`, {
         method: 'POST',
         body: formData,

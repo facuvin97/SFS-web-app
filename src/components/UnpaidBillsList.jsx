@@ -5,11 +5,20 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import { ButtonBase, Divider } from '@mui/material';
 import { useUnpaidBillsContext } from '../contexts/BillContext';
+import { useEffect } from 'react';
 
 
 function UnpaidBillsList() {
   const { unpaidBills, setBillToPay } = useUnpaidBillsContext(); // Estado para almacenar las facturas impagas
   const navigate = useNavigate(); // Hook para navegar entre rutas
+  const token = localStorage.getItem('userToken');
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio 
+    if (!token) {
+      navigate('/');
+    } 
+  }, [token, navigate]);
 
   // Función para manejar el clic en una factura
   const handleBillClick = async (bill) => {
@@ -25,7 +34,7 @@ function UnpaidBillsList() {
       <List>
         {unpaidBills.map((bill) => (
           <React.Fragment key={bill.id}>
-            <ButtonBase button onClick={() => handleBillClick(bill)}>
+            <ButtonBase onClick={() => handleBillClick(bill)}>
               {/* Mostrar el ID de la factura y la fecha en la lista */}
               <ListItemText
                 primary={`Factura ID: ${bill.id}`}

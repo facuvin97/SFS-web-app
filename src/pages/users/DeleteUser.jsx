@@ -10,12 +10,17 @@ function DeleteUser({onCancel}) {
   const navigate = useNavigate();
   const token = localStorage.getItem('userToken');
 
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+  
   // Función para manejar cambios en los inputs del formulario
   const onDelete = async (onCancel) => {
     try {
-      if(!token){
-        return alert('Usuario no autorizado')
-      }
+      
       var response;
       if (userLog.tipo == 'client') {
         response = await fetch(`http://localhost:3001/api/v1/clients/${userLog.id}`, {

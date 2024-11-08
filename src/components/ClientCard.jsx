@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -15,6 +15,14 @@ const ClientCard = ({ client }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
   const { clientImages } = useClientImageContext();
+  const token = localStorage.getItem('userToken');
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   // Función para manejar la expansión de la tarjeta al pasar el mouse
   const handleMouseEnter = () => {

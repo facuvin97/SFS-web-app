@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Table,TableBody,TableCell,TableContainer, TableHead,TableRow, Paper, Button, IconButton } from '@mui/material'
 import { CheckCircle, RadioButtonUnchecked } from '@mui/icons-material'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function CurrentTurnClientsList() {
   const [services, setServices] = useState([])
@@ -10,18 +10,28 @@ export default function CurrentTurnClientsList() {
   const { turn, fecha } = location.state || {};
   const now = new Date();
   const token = localStorage.getItem('userToken');
-  const dateNow = now.toISOString().split('T')[0];
+  const dateNow = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   const getCurrentTime = (date) => {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
   };
 
   // Función para sumar minutos a una hora en formato HH:MM:SS
   const addMinutesToTime = (time, minutesToAdd) => {
-    const [hours, minutes] = time.split(':').map(Number);
+    const [hours, minutes, seconds] = time.split(':').map(Number);
     const totalMinutes = hours * 60 + minutes + minutesToAdd;
+
   
     // Convertimos 23:59 a minutos (1439 minutos)
     const maxMinutesInDay = 23 * 60 + 59;
@@ -32,14 +42,11 @@ export default function CurrentTurnClientsList() {
     const newHours = Math.floor(finalMinutes / 60); // Sin usar el módulo % 24 para evitar volver a 00:00
     const newMinutes = finalMinutes % 60;
   
-    return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
+    return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
   const toggleServiceStatus = async (id, comenzado) => {
     if (!comenzado) { // cambiar el estado a comenzado
       try {
-        if (!token) {
-          return alert('Usuario no autorizado');
-        }
         const response = await fetch(`http://localhost:3001/api/v1/services/started/${id}`, {
           method: 'PUT',
           headers: { 
@@ -87,16 +94,12 @@ export default function CurrentTurnClientsList() {
   const isWithinTurnHours = () => {
     
     const horaFinConMargen = addMinutesToTime(turn.hora_fin, 60);
-    
     return getCurrentTime(now) >= turn.hora_inicio && getCurrentTime(now) <= horaFinConMargen && dateNow == fecha
   }
 
   useEffect(() => {
     async function fetchData() {
       try {
-        if (!token) {
-          return alert('Usuario no autorizado');
-        }
         // Cargo los servicios del turno actual
         const response = await fetch(`http://localhost:3001/api/v1/services/turn/today/${turn.id}/${fecha}`, { 
           headers: { 
@@ -156,7 +159,7 @@ export default function CurrentTurnClientsList() {
                   color={service.comenzado ? "secondary" : "primary"}
                   onClick={() => toggleServiceStatus(service.id, service.comenzado)}
                   size="small"
-                  disabled={!isWithinTurnHours()}  // Si isWithinTurnHours() es falso, el botón estará deshabilitado
+                  disabled={!isWithinTurnHours() && !service.comenzado}  // Si isWithinTurnHours() es falso, el botón estará deshabilitado
                 >
                   {service.comenzado ? "Finalizar" : "Iniciar"}
                 </Button>

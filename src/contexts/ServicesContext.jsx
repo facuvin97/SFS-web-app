@@ -1,6 +1,7 @@
 // contexts/ServicesContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useUser } from './UserLogContext';
+import { useNavigate } from 'react-router-dom';
 
 const ConfirmedServicesContext = createContext();
 
@@ -15,6 +16,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const token = localStorage.getItem('userToken');
+  const navigate = useNavigate();
   
 
   // Función auxiliar para verificar si dos fechas son del mismo día
@@ -29,7 +31,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
   const getConfirmedServices = async () => {
     try {
       if(!token) {
-        return alert('Usuario no autorizado');
+        return navigate('/');
       }
       let response;
 
@@ -134,7 +136,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
   const deleteService = async (service) => {
     try {
       if(!token) {
-        return alert('Usuario no autorizado');
+        return navigate('/');
       }
       let data;
       if (userLog?.tipo === 'walker') {
@@ -181,6 +183,11 @@ export const ConfirmedServicesProvider = ({ children }) => {
       setConfirmedServices(prevServices =>
         prevServices.filter(s => s.id !== service.id)
       );
+
+      // Actualizar la lista de servicios guardada en el estado
+      setPendingServices(prevServices =>
+        prevServices.filter(s => s.id !== service.id)
+      );
    
       return "Servicio cancelado correctamente";
       
@@ -193,7 +200,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
   const authorizeService = async (service) => {
     try {
       if(!token) {
-        return alert('Usuario no autorizado');
+        return navigate('/');
       }
       service.aceptado = true;
 

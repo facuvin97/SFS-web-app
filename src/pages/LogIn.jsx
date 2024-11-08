@@ -10,12 +10,6 @@ function LoginPage() {
   const { userLog, setUserLog } = useUser();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Si el usuario ya está logueado, redirige a la página principal
-    if (userLog) {
-      navigate('/');
-    }
-  }, [userLog, navigate]);
 
   const handleLogin = async () => {
     try {

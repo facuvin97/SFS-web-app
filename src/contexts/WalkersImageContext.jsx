@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useUser } from './UserLogContext';
 
 const WalkersImageContext = createContext();
 
@@ -7,6 +8,7 @@ export const useWalkersImageContext = () => useContext(WalkersImageContext);
 export const WalkersImageContextProvider = ({ children }) => {
   const [walkerImages, setWalkerImages] = useState([]);
   const [walkerTurns, setWalkerTurns] = useState({});
+  const { userLog } = useUser();
 
   useEffect(() => {
     const getWalkerImages = async () => {
@@ -43,7 +45,9 @@ export const WalkersImageContextProvider = ({ children }) => {
       }
     };
 
-    getWalkerImages();
+    if (userLog) {
+      getWalkerImages();
+    }
 
     return () => {
       walkerImages.forEach(walker => {
@@ -52,7 +56,7 @@ export const WalkersImageContextProvider = ({ children }) => {
         }
       });
     };
-  }, []);
+  }, [userLog]);
 
   const getWalkerTurns = async (walkerId) => {
     const token = localStorage.getItem('userToken');

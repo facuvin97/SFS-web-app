@@ -16,6 +16,14 @@ function ServiceHistory({}) {
   const navigate = useNavigate();
   const token = localStorage.getItem('userToken');
 
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+
   useEffect(() => {
     setLoading(false)
   }, [oldServices]);
@@ -26,9 +34,7 @@ function ServiceHistory({}) {
     if (userLog.tipo === 'walker') { //si la reseña la escribe un paseador
       navigate(`/add-review/${service.ClientId}`, { state: { serviceId } }) //el receiver es el cliente del servicio
     } else { //si la reseña la escribe un cliente
-      if (!token) {
-        return alert('Usuario no autorizado');
-      }
+  
       const response = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`, { 
         headers: { 
           'Authorization': `Bearer ${token}` 

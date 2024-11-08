@@ -3,6 +3,15 @@ import { useNavigate } from 'react-router-dom';
 
 const Failure = () => {
   const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
+
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     // Redirigir a la página anterior después de 5 segundos

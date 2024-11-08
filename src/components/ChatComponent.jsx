@@ -20,17 +20,11 @@ const ChatComponent = () => {
   const token = localStorage.getItem('userToken');
 
   useEffect(() => {
-    // Redirige a la página de inicio si el usuario no está logueado
-    if (!userLog) {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
       navigate('/');
-      return;
     }
-  }, [userLog, navigate]);
-
-  if (!userLog) {
-    // Evita renderizar el componente si no hay un usuario logueado
-    return null;
-  }
+  }, [token, navigate]);
 
   const usuario = userLog.tipo === 'client' ? 'Paseador' : 'Cliente';
   const nombreUsuario = receiver?.nombre_usuario || 'Usuario desconocido';
@@ -61,9 +55,6 @@ const ChatComponent = () => {
 
     const cargarMensajes = async () => {
       try {
-        if(!token){
-          return alert('Usuario no autorizado')
-        }
         const response = await fetch(`http://localhost:3001/api/v1/messages/${userLog.id}/${receiver.id}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 

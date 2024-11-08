@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Tooltip } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 function BillCard() {
@@ -13,13 +14,18 @@ function BillCard() {
   const billToPay = JSON.parse(localStorage.getItem('selectedBill'));
   const [mercadopagoDisponible, setMercadopagoDisponible] = useState(null); // Estado para mercadopagoDisponible
   const token = localStorage.getItem('userToken')
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
 
   const fetchPaymentData = async () => {
     try {
-      if(!token){
-        return alert('Usuario no autorizado')
-      }
       const response = await fetch("http://localhost:3001/api/v1/bills/pay", {
         method: 'POST',
         headers: {
@@ -49,9 +55,6 @@ function BillCard() {
 
   const verificarMercadoPago = async () => {
     try {
-      if(!token){
-        return alert('Usuario no autorizado')
-      }
       const response = await fetch(`http://localhost:3001/api/v1/walkers/byBill/${billToPay.id}`, {
         method: 'GET',
         headers: {
@@ -102,7 +105,8 @@ function BillCard() {
         <Typography variant="body2" color="text.secondary">
           <strong>Monto: $</strong> {billToPay.monto}
         </Typography>
-        {billToPay.Service.comenzado ? <Tooltip>
+        {billToPay.Service.comenzado ? 
+        <>
           {preferenceId && mercadopagoDisponible && <Wallet initialization={{ preferenceId: preferenceId }} />}
           <Button
             variant="contained"
@@ -112,7 +116,7 @@ function BillCard() {
           >
             Pagar en efectivo
           </Button>
-        </Tooltip>
+        </>
         : <Tooltip title='El pago sera habilitado cuando el servicio este en curso.' arrow>
             <span>
               <Button

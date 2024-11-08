@@ -1,7 +1,8 @@
 // contexts/ServicesContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useUser } from './UserLogContext';
-import{useWebSocket} from './WebSocketContext';
+import{useWebSocket} from './WebSocketContext'
+import { useNavigate } from 'react-router-dom';
 
 
 const WalkerTurnsContext = createContext();
@@ -13,12 +14,13 @@ export const WalkerTurnsProvider = ({ children }) => {
   const { userLog } = useUser();
   const socket = useWebSocket();
   const token = localStorage.getItem('userToken');
+  const navigate = useNavigate();
 
 
   const getWalkerTurns = async () => {
     try {
       if(!token) {
-        return alert('Usuario no autorizado');
+        return navigate('/');
       }
       const turnsResponse = await fetch(`http://localhost:3001/api/v1/turns/walker/${userLog.id}`,{ 
         headers: { 

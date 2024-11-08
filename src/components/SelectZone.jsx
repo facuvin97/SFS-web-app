@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import { useNavigate } from 'react-router-dom';
 
 function SelectNeighborhood({ initialSelectedNeighborhood = null, onNeighborhoodSelect }) {
   const [geoData, setGeoData] = useState(null);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState(initialSelectedNeighborhood);
   const [hoveredNeighborhood, setHoveredNeighborhood] = useState(null);
+  const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   // Cargar el archivo GeoJSON
   useEffect(() => {

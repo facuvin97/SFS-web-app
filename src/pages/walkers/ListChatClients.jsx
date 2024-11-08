@@ -11,13 +11,19 @@ const ListChatClients = () => {
   const [clients, setClients] = useState([]);
   const { userLog } = useUser();
   const token = localStorage.getItem('userToken');
+  
 
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+  
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        if(!token){
-          return alert('Usuario no autorizado')
-        }
+
         const response = await fetch(`http://localhost:3001/api/v1/contacts/${userLog.id}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 

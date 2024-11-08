@@ -10,6 +10,8 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import ClearIcon from '@mui/icons-material/Clear';
 import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
+
 
 function WalkersList() {
   const [walkers, setWalkers] = useState([]);
@@ -24,6 +26,16 @@ function WalkersList() {
   const [clientLocation, setClientLocation] = useState(null);
   const [zones, setZones] = useState({});
   const token = localStorage.getItem('userToken');
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+
 
   // Función para calcular la distancia entre dos coordenadas (fórmula de Haversine)
   const haversineDistance = (lat1, lon1, lat2, lon2) => {
@@ -74,7 +86,7 @@ function WalkersList() {
     const fetchWalkers = async () => {
       try {
         if(!token){
-          return alert('Usuario no autorizado');
+          return navigate('/');
         }
         const response = await fetch(`http://localhost:3001/api/v1/walkers`, { 
           headers: { 

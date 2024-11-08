@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, GeoJSON, useMap } from 'react-l
 import { useWebSocket } from '../contexts/WebSocketContext'; 
 import { useUser } from '../contexts/UserLogContext'; 
 import { useConfirmedServicesContext } from '../contexts/ServicesContext';
+import { useNavigate } from 'react-router-dom';
 
 function Map() {
   const [walkerLocation, setWalkerLocation] = useState(null); // Ubicación inicial
@@ -13,7 +14,15 @@ function Map() {
   const [loading, setLoading] = useState(true); // Estado para controlar la carga
   const activeServiceRef = useRef(null); // Ref para mantener el servicio activo
   const [geoData, setGeoData] = useState(null); // Estado para almacenar los datos GeoJSON
+  const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
 
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   // Efecto para cargar el archivo GeoJSON
   useEffect(() => {

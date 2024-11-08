@@ -20,6 +20,14 @@ function ServicesList({}) {
   const [notInProgressServices, setNotInProgressServices] = useState([]); // Nuevo estado para servicios confirmados no en ejecución
   const { userLog } = useUser();
   const navigate = useNavigate();
+  const token = localStorage.getItem('userToken');
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     if (selectedDate) {
@@ -49,7 +57,7 @@ function ServicesList({}) {
     setNotInProgressServices(notInProgress);
 
     setLoading(false);
-  }, [confirmedServices, selectedDate, inProgressServices, notInProgressServices]);
+  }, [confirmedServices, selectedDate, inProgressServices, notInProgressServices, pendingServices]);
 
   const handleDeleteService = async (service) => {
     const msg = await deleteService(service);

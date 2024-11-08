@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, useCallback  } from 'react';
 import { useUser } from './UserLogContext';
 import { useWebSocket } from '../contexts/WebSocketContext';
+import { useNavigate } from 'react-router-dom';
 
 const ChatsContext = createContext();
 
@@ -13,13 +14,14 @@ export const ChatsProvider = ({ children }) => {
   const { userLog } = useUser();
   const socket = useWebSocket();
   const token = localStorage.getItem('userToken');
+  const navigate = useNavigate();
   
 
   const fetchUsersChats = async () => {
     try {
       let response;
       if(!token) {
-        return alert('Usuario no autorizado');
+        return navigate('/');
       }
       if (userLog.tipo === 'walker') {
          response = await fetch(`http://localhost:3001/api/v1/contacts/clients/${userLog.id}`, {
@@ -47,7 +49,7 @@ export const ChatsProvider = ({ children }) => {
   const fetchUnreadChats = async () => {
     try {
       if(!token) {
-        return alert('Usuario no autorizado');
+        return navigate('/');
       }
       const response = await fetch(`http://localhost:3001/api/v1/unread/${userLog.id}`, {
         headers: {
@@ -109,7 +111,7 @@ useEffect(() => {
   // Definimos `handleNewMessage` dentro del useEffect para que siempre acceda a los valores más recientes de usersChats y unreadChats
   const handleNewMessage = async (newMessage) => {
     if(!token) {
-      return alert('Usuario no autorizado');
+      return navigate('/');
     }
     if (newMessage.senderId === userLog.id) return; // No se procesa el mensaje de mi mismo
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Typography, FormHelperText } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { format, parseISO, getDay } from 'date-fns';
@@ -12,7 +12,7 @@ function AddServiceForm({ userLog }) {
   const { turn } = location.state || {};
   const token = localStorage.getItem('userToken');
 
-  if (userLog.tipo === 'walker') {
+  if (userLog?.tipo === 'walker') {
     throw new Error('El paseador no puede ingresar servicios.');
   }
 
@@ -28,6 +28,14 @@ function AddServiceForm({ userLog }) {
   const [errorMascotas, setErrorMascotas] = useState('');
   const [errorNota, setErrorNota] = useState('');
 
+
+  useEffect(() => {
+    // Si no hay token, redirigir al inicio
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
+  
   //pasamos los dias del turno a numeros
   const turnDays = turn.dias.map(day => {
     switch (day.toLowerCase()) {
@@ -79,25 +87,38 @@ function AddServiceForm({ userLog }) {
     const dayNames = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
 
 
-    if(selectedDay <0 && selectedDay >6){
-      setErrorFecha(`Debe seleccionar un dìa valido`);
+    // Validar que la fecha esté en un día permitido y no esté vacía
+    if (!fecha) {
+      setErrorFecha('La fecha no puede estar vacía');
       valid = false;
-    }
-    else if (!turnDays.includes(selectedDay) & selectedDay) {
+    } else if (selectedDay < 0 || selectedDay > 6) {
+      setErrorFecha('Debe seleccionar un día válido');
+      valid = false;
+    } else if (!turnDays.includes(selectedDay)) {
       setErrorFecha(`El día seleccionado (${dayNames[selectedDay]}) no coincide con los días permitidos del turno (${turn.dias.join(', ')}).`);
       valid = false;
     }
 
-    // valido que fecha no este vacia
-    if (!fecha) {
-      setErrorFecha('La fecha no puede estar vacia')
+    // Validar que la fecha no sea anterior a hoy
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Establecer la hora a las 00:00 para comparar solo las fechas
+    if (fecha < today) {
+      setErrorFecha('La fecha no puede ser anterior a hoy');
+      valid = false;
+    }
+    
+    // si fecha seleccionada es la fecha de hoy
+    if (fecha.getDate() === today.getDate()) {
+      //comprobar que la hora actual, no sea mayor a la hora de fin que viene en formato string
+      const horaFin = new Date();
+      horaFin.setHours(parseInt(turn.hora_fin.split(':')[0]), parseInt(turn.hora_fin.split(':')[1]), 0, 0);
+      if(horaFin < new Date()){
+        setErrorFecha('No puede solicitar un servicio para hoy, porque ya se ha terminado el turno');
+        valid = false;
+      }
     }
 
-
-
     if (!valid) return; // Si hay errores, no continuar
-
-
 
     const serviceData = {
       fecha: format(fecha, 'yyyy-MM-dd'),
@@ -108,9 +129,7 @@ function AddServiceForm({ userLog }) {
       ClientId: userLog.id // El ID del usuario logeado se utiliza como el ClientId del servicio
     };
     try {
-      if(!token){
-        return alert('Usuario no autorizado')
-      }
+
       const response = await fetch('http://localhost:3001/api/v1/services', {
         method: 'POST',
         headers: {
@@ -148,7 +167,11 @@ function AddServiceForm({ userLog }) {
   // Función para deshabilitar días no incluidos en turnDays
   const disableDates = (date) => {
     const day = date.getDay();
-    return !turnDays.includes(day);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Establecer la hora a las 00:00 para comparar solo las fechas
+  
+    // Deshabilitar días no permitidos y fechas anteriores a hoy
+    return !turnDays.includes(day) || date < today;
   };
 
   return (
