@@ -14,6 +14,10 @@ export const WalkersImageContextProvider = ({ children }) => {
     const getWalkerImages = async () => {
       try {
         const token = localStorage.getItem('userToken');
+
+        if (!userLog || !token) {
+          return;
+        }
         const response = await fetch('http://localhost:3001/api/v1/image/walkers', {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -60,6 +64,10 @@ export const WalkersImageContextProvider = ({ children }) => {
 
   const getWalkerTurns = async (walkerId) => {
     const token = localStorage.getItem('userToken');
+
+        if (!userLog || !token) {
+          return;
+        }
     if (walkerTurns[walkerId]) {
       return walkerTurns[walkerId];
     }

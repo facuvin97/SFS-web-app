@@ -159,7 +159,8 @@ const WalkerProfile = () => {
 
   //manejo de la imagen de perfils
   const walkerImage = walkerImages.find(img => img.nombre_usuario === walker.User.nombre_usuario);
-  const imageUrl = walkerImage ? imageSrc : 'url_de_no_profile_image'; // URL de imagen por defecto
+  const imageUrl = walkerImage ? walkerImage.imageSrc : 'url_de_no_profile_image'; // URL de imagen por defecto
+  
 
   return (
     <>

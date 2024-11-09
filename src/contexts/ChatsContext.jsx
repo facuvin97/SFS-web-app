@@ -17,11 +17,22 @@ export const ChatsProvider = ({ children }) => {
   const navigate = useNavigate();
   
 
+  const removeUnreadChat = (chatId) => {
+    setUnreadChats((prevUnreadChats) => {
+      const updatedUnreadChats = new Set(prevUnreadChats); // Crear una copia del Set
+      updatedUnreadChats.delete(chatId); // Eliminar el ID del Set
+      return updatedUnreadChats;
+    });
+    setUnreadChatsCount((prevCount) => (prevCount > 0 ? prevCount - 1 : 0));
+  };
+  
+  
+
   const fetchUsersChats = async () => {
     try {
       let response;
       if(!token) {
-        return navigate('/');
+        throw new Error("Usuario no autorizado")
       }
       if (userLog.tipo === 'walker') {
          response = await fetch(`http://localhost:3001/api/v1/contacts/clients/${userLog.id}`, {
@@ -179,13 +190,6 @@ useEffect(() => {
 
 
       addUnreadChat(newMessage.senderId);
-    } else {
-      setUsersChats((prevUsersChats) => {
-        const updatedUsersChats = [...prevUsersChats]; // Crear una copia de los chats existentes
-        const chatIndex = updatedUsersChats.findIndex((chat) => chat.id === newMessage.senderId);
-        updatedUsersChats[chatIndex].lastMessage = fullMessage;
-        return updatedUsersChats;
-      });
     }
   
     setUsersChats((prevUsersChats) => {
@@ -208,7 +212,7 @@ useEffect(() => {
 
   return (
     <ChatsContext.Provider
-      value={{  usersChats, addChat, unreadChats, setUnreadChats, unreadChatsCount, setUnreadChatsCount, setUsersChats }}
+      value={{ removeUnreadChat, usersChats, addChat, unreadChats, setUnreadChats, unreadChatsCount, setUnreadChatsCount, setUsersChats }}
     >
       {children}
     </ChatsContext.Provider>

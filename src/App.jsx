@@ -46,7 +46,6 @@ import TodayTurns from './pages/walkers/TodayTurns';
 import CurrentTurnClientsList from './components/CurrentTurnClientsList';
 import Map from './components/Map';
 import ChatComponent from './components/ChatComponent';
-import ServiceDetails from './components/ServiceDetails';
 import ReviewList from './pages/reviews/ReviewList';
 import SelectZone from './components/SelectZone';
 import AddPet from './pages/clients/AddPet';
@@ -101,7 +100,6 @@ function App() {
                   <Route path={`/walker-service-request/${userLog?.id}`} element={<WalkerServiceRequest walkerId={userLog?.id} />} />                 
                   <Route path={`/agregar-turno`} element={<AddTurnForm userLog={userLog} />} />
                   <Route path={`/services`} element={<ServicesList />} />
-                  <Route path={`/service-details`} element={<ServiceDetails />} />
                   <Route path={`/service-history`} element={<ServiceHistory />} />
                   <Route path={`/add-review/:receiverId`} element={<AddReviewForm />} />
                   <Route path={`/profile/:walkerId`} element={<WalkerProfile />} />

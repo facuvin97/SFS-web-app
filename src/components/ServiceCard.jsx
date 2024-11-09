@@ -25,17 +25,12 @@ function ServiceCard({ service, onDelete, onReview, viewLocation }) {
     } 
   }, [token, navigate]);
 
-
   const handleMouseEnter = () => {
     setIsActive(true);
   };
 
   const handleMouseLeave = () => {
     setIsActive(false);
-  };
-
-  const handleClick = () => {
-    navigate('/service-details', { state: { service} });
   };
 
   const handleDeleteClick = (event) => {
@@ -58,7 +53,6 @@ function ServiceCard({ service, onDelete, onReview, viewLocation }) {
       sx={{ maxWidth: 'none', minWidth: '250px', maxHeight: 'none', height: '100%' }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={handleClick}
     >
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">

@@ -16,6 +16,7 @@ const ChatComponent = () => {
   const location = useLocation();
   const [receiver, setReceiver] = useState(location.state?.receiver || null); // se llama receiver, pero es el "otro" usuario
   const navigate = useNavigate();
+  const [currentChatUserId, setCurrentChatUserId] = useState(null);
   const messageContainerRef = useRef(null);
   const token = localStorage.getItem('userToken');
 
@@ -28,7 +29,17 @@ const ChatComponent = () => {
 
   const usuario = userLog?.tipo === 'client' ? 'Paseador' : 'Cliente';
   const nombreUsuario = receiver?.nombre_usuario || 'Usuario desconocido';
-  const { unreadChats, setUnreadChats, usersChats, setUsersChats } = useChatsContext();
+  const { unreadChats, setUnreadChats, removeUnreadChat, usersChats, setUsersChats } = useChatsContext();
+
+
+  useEffect(() => {
+    // Limpiar el chat activo de unreadChats
+    if (receiver && unreadChats.has(receiver.id)) {
+      // Eliminar el ID del chat activo de unreadChats en ChatsContext
+      removeUnreadChat(receiver.id);
+    }
+  }, [receiver, unreadChats]);
+  
 
 
   // Función para hacer scroll hasta el final
