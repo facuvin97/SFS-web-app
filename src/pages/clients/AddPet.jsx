@@ -1,95 +1,62 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { TextField, Button, Grid, FormHelperText, Modal, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/AccountForm.css';
+import { useUser } from '../../contexts/UserLogContext';
 
 function AddPet() {
+  const { userLog } = useUser();
+  const [name, setName] = useState('');
+  const [breed, setBreed] = useState('');
+  const [size, setSize] = useState('');
+  const [age, setAge] = useState('');
+  const [image, setImage] = useState('');
+  const [mensaje, setMensaje] = useState('');
+  const [error, setError] = useState({});
   const navigate = useNavigate();
   const token = localStorage.getItem('userToken');
 
-  
-  // Estado para los datos del formulario y los errores
-  const [petData, setPetData] = useState({
-    name: '',
-    breed: '',
-    size: '',
-    age: '',
-    image: '',
-    clientId: '' // Este campo debe ser el ID del cliente que está agregando la mascota
-  });
-  const [errors, setErrors] = useState({});
-  const [mensaje, setMensaje] = useState(null);
-
-
   useEffect(() => {
-    // Si no hay token, redirigir al inicio
-    if (!token) {
-      navigate('/');
-    }
+    if (!token) navigate('/');
   }, [token, navigate]);
-  
-  // Función para manejar cambios en los inputs del formulario
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setPetData({
-      ...petData,
-      [name]: value
-    });
-    validateField(name, value);
-  };
 
-  // Función para validar cada campo individualmente
-  const validateField = (name, value) => {
-    let error = '';
-
-    switch (name) {
-      case 'name':
-        if (!value.trim()) error = 'El nombre de la mascota es obligatorio';
-        break;
-
-      case 'breed':
-        if (!value.trim()) error = 'La raza de la mascota es obligatoria';
-        break;
-
-      case 'size':
-        if (!value.trim()) error = 'El tamaño de la mascota es obligatorio';
-        break;
-
-      case 'age':
-        if (!value.trim()) error = 'La edad de la mascota es obligatoria';
-        break;
-
-      case 'clientId':
-        if (!value.trim()) error = 'El ID del cliente es obligatorio';
-        break;
-
-      default:
-        break;
-    }
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: error
-    }));
-  };
-
-  // Función para manejar el envío del formulario
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validar todos los campos antes de enviar
+  const handleAddPet = async () => {
+    // Reiniciar errores
+    setError({});
     let valid = true;
-    Object.keys(petData).forEach((field) => {
-      validateField(field, petData[field]);
-      if (errors[field]) valid = false;
-    });
+    const newErrors = {};
 
+    if (!name.trim()) {
+      newErrors.name = 'El nombre es obligatorio';
+      valid = false;
+    }
+    if (!breed.trim()) {
+      newErrors.breed = 'La raza es obligatoria';
+      valid = false;
+    }
+    if (!size.trim()) {
+      newErrors.size = 'El tamaño es obligatorio';
+      valid = false;
+    }
+    if (!age || isNaN(age) || age <= 0) {
+      newErrors.age = 'La edad debe ser un número positivo';
+      valid = false;
+    }
+    
     if (!valid) {
-      console.log('Errores en el formulario');
+      setError(newErrors);
       return;
     }
 
+    const petData = {
+      name,
+      breed,
+      size,
+      age: parseInt(age),
+      image,
+      clientId: userLog.id
+    };
+
     try {
-       
       const response = await fetch('http://localhost:3001/api/v1/pets', {
         method: 'POST',
         headers: {
@@ -100,91 +67,85 @@ function AddPet() {
       });
 
       if (response.ok) {
-        const responseData = await response.json();
-        setMensaje(responseData.message);
-        alert('Mascota creada correctamente');
-        navigate('/');
+        setMensaje('Mascota agregada correctamente');
+        alert('Mascota agregada correctamente');
+        navigate('/pets');
       } else {
-        const responseData = await response.json();
-        console.error('Error al registrar mascota:', responseData);
-        setMensaje(responseData.error);
+        const errorData = await response.json();
+        setMensaje(errorData.message || 'Error al agregar la mascota');
+        alert(mensaje);
       }
     } catch (error) {
       console.error('Error:', error);
+      setMensaje('Error al conectar con el servidor');
     }
   };
 
   return (
-    <div className="account-container">
-      <h2>Agregar Mascota</h2>
-      <form className="account-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <input
-            type="text"
-            name="name"
-            placeholder="Nombre de la mascota"
-            value={petData.name}
-            onChange={handleInputChange}
-          />
-          {errors.name && <p className="error">{errors.name}</p>}
-        </div>
-
-        <div className="form-group">
-          <input
-            type="text"
-            name="breed"
-            placeholder="Raza"
-            value={petData.breed}
-            onChange={handleInputChange}
-          />
-          {errors.breed && <p className="error">{errors.breed}</p>}
-        </div>
-
-        <div className="form-group">
-          <input
-            type="text"
-            name="size"
-            placeholder="Tamaño"
-            value={petData.size}
-            onChange={handleInputChange}
-          />
-          {errors.size && <p className="error">{errors.size}</p>}
-        </div>
-
-        <div className="form-group">
-          <input
-            type="number"
-            name="age"
-            placeholder="Edad"
-            value={petData.age}
-            onChange={handleInputChange}
-          />
-          {errors.age && <p className="error">{errors.age}</p>}
-        </div>
-
-        <div className="form-group">
-          <input
-            type="text"
-            name="image"
-            placeholder="URL de la imagen"
-            value={petData.image}
-            onChange={handleInputChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <input
-            type="text"
-            name="clientId"
-            placeholder="ID del Cliente"
-            value={petData.clientId}
-            onChange={handleInputChange}
-          />
-          {errors.clientId && <p className="error">{errors.clientId}</p>}
-        </div>
-
-        {mensaje && <p className="mensaje">{mensaje}</p>}
-        <button type="submit">Agregar Mascota</button>
+    <div className='account-container'>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Nombre"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              variant="outlined"
+              error={!!error.name}
+              helperText={error.name}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Raza"
+              value={breed}
+              onChange={(e) => setBreed(e.target.value)}
+              variant="outlined"
+              error={!!error.breed}
+              helperText={error.breed}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Tamaño"
+              value={size}
+              onChange={(e) => setSize(e.target.value)}
+              variant="outlined"
+              error={!!error.size}
+              helperText={error.size}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Edad"
+              type="number"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              variant="outlined"
+              error={!!error.age}
+              helperText={error.age}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="URL de Imagen"
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" color="primary" onClick={handleAddPet}>
+              Agregar Mascota
+            </Button>
+          </Grid>
+        </Grid>
+        {mensaje && <p>{mensaje}</p>}
       </form>
     </div>
   );
