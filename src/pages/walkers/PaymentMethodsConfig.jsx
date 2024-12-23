@@ -116,7 +116,7 @@ const PaymentMethodsConfig = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=8409884849533418&response_type=code&platform_id=mp&state=${userLog.nombre_usuario}&redirect_uri=https://breezy-impalas-doubt.loca.lt/success-association`}
+            onClick={() => window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=8409884849533418&response_type=code&platform_id=mp&state=${userLog.nombre_usuario}&redirect_uri=https://c3aeb7e013c606.lhr.life/success-association`}
           >
             Asociar Mercado Pago
           </Button>

@@ -19,7 +19,6 @@ const SuccessAsociationMP = () => {
 
   const successAsociation = async (code) => {
     try {
-      
       const response = await fetch(`http://localhost:3001/api/v1/walkers/mercadopago/${userLog.id}`, {
         method: 'PUT',
         headers: {
@@ -39,7 +38,7 @@ const SuccessAsociationMP = () => {
         }));
 
         setLoading(false);
-        navigate('/success'); // Redirige a una página de éxito
+        navigate(`/profile/${userLog.id}`);
       } else {
         console.error('Error al actualizar mercadopago');
       }
