@@ -33,7 +33,8 @@ function WalkerImageUploader() {
 
   const uploadImage = async () => {
     const formData = new FormData()
-    formData.append('imagenPaseador', image)
+    const renamedImage = new File([image], `${userLog.nombre_usuario}Photo.jpg`, { type: image.type });
+    formData.append('imagenPaseador', renamedImage)
     
   
     try {

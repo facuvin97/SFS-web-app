@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Card, CardContent, CardMedia, Typography, Avatar, Grid, Box, Button, IconButton, Tooltip, Rating } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography, Avatar, Grid, Box, Button, IconButton, Tooltip, Rating, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 import { useWalkersImageContext } from '../../contexts/WalkersImageContext';
 import { useUser } from '../../contexts/UserLogContext'; 
 import EditIcon from '@mui/icons-material/Edit';
@@ -12,6 +12,7 @@ import { useUserImageContext } from '../../contexts/UserImageContext';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DeleteUser from '../users/DeleteUser';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const WalkerProfile = () => {
   const { walkerId } = useParams();
@@ -25,6 +26,9 @@ const WalkerProfile = () => {
   const { userLog } = useUser();
   const { imageSrc} = useUserImageContext();
   const [showDeleteUser, setShowDeleteUser] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null); // Estado para la imagen seleccionada
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // Estado para controlar el modal
+
   const token = localStorage.getItem('userToken');
 
   useEffect(() => {
@@ -131,6 +135,47 @@ const WalkerProfile = () => {
     navigate('/chat', { state: {receiver: walker.User } });
   }
 
+  const handleDeleteImageClick = (url) => {
+    setSelectedImage(url); // Guarda la URL de la imagen a eliminar
+    setIsDeleteDialogOpen(true); // Abre el modal
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      console.log(`Eliminar imagen con URL: ${selectedImage}`);
+    
+    // Eliminar la imagen seleccionada llamada a la api
+    const response = await fetch(`http://localhost:3001/api/v1/image/${userLog.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ imageUrl: selectedImage }),
+    });
+    const data = await response.json();
+    console.log('data', data);
+
+    if (!response.ok) {
+      throw new Error('Error al eliminar la imagen');
+    }
+
+    //actualizo al lista de fotos del walker
+    const updatedWalker = walker;
+    updatedWalker.fotos = updatedWalker.fotos.filter(foto => foto.url !== selectedImage);
+    setWalker(updatedWalker);
+
+    setIsDeleteDialogOpen(false); // Cierra el modal
+    } catch (error) {
+      console.error('Error al eliminar la imagen:', error);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setSelectedImage(null); // Limpia la imagen seleccionada
+    setIsDeleteDialogOpen(false); // Cierra el modal
+  };
+
   const onCancel = () => {
     setShowDeleteUser(false);
   };
@@ -234,19 +279,38 @@ const WalkerProfile = () => {
         <Box mt={2}>
           {walker.fotos?.length > 0 && <Typography variant="h6">Fotos</Typography>}
           <Grid container spacing={2} alignItems="center" justifyContent="center">
-            { walker.fotos?.length > 0 && walker.fotos?.map((foto, index) => {
-              const imageUrl = images[index] ? images[index].imageSrc : 'url_de_no_profile_image'; // URL de imagen por defecto
-              return (
-                <Grid item key={index}>
+          {walker.fotos?.length > 0 &&
+          walker.fotos.map((foto, index) => {
+            const imageUrl = images[index] ? images[index].imageSrc : 'url_de_no_profile_image'; // URL de imagen por defecto
+            return (
+              <Grid item key={index}>
+                <div style={{ position: 'relative', display: 'inline-block' }}>
                   <CardMedia
                     component="img"
                     height="100"
                     image={imageUrl}
                     alt={`Foto ${index + 1}`}
+                    style={{ display: 'block' }}
                   />
-                </Grid>
-              );
-            })}
+                  <div
+                    onClick={() => handleDeleteImageClick(foto.url)} // Abre el modal con la URL seleccionada
+                    style={{
+                      position: 'absolute',
+                      bottom: '8px',
+                      right: '8px',
+                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                      borderRadius: '50%',
+                      padding: '4px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <DeleteIcon style={{ color: 'white', fontSize: '15px' }} />
+                  </div>
+                </div>
+              </Grid>
+            );
+          })}
+
             { userLog.id == walker.id && 
             <Grid container spacing={2} alignItems="center" justifyContent="center">
               <Grid item sx={{ marginTop: 2, marginBottom: 4 }}>
@@ -302,6 +366,29 @@ const WalkerProfile = () => {
         
       </CardContent>
     </Card>
+
+    {/* Modal para confirmar eliminación */}
+    <Dialog
+        open={isDeleteDialogOpen}
+        onClose={handleCancelDelete}
+        aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-description"
+      >
+        <DialogTitle id="delete-dialog-title">¿Eliminar Foto?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="delete-dialog-description">
+            ¿Estás seguro de que deseas eliminar esta foto? Esta acción no se puede deshacer.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleConfirmDelete} color="secondary">
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
