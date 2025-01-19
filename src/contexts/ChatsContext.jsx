@@ -144,7 +144,6 @@ useEffect(() => {
     });
 
     let existingUnreadChat;
-    let existingChatList = usersChats;
 
     if (unreadChats.size > 0) {
       // chequeo si el senderId ya está en el estado de unreadChats
