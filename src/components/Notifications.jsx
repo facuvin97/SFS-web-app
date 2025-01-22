@@ -42,11 +42,6 @@ const Notifications = () => {
   const open = Boolean(anchorEl); // Determina si el popover está abierto
   const id = open ? 'simple-popover' : undefined; // Asigna un id al popover si está abierto
 
-  const handleNotificationClick = (url) => {
-    handleClose();
-    window.location.href = `/walker-service-request/${userLog.id}`; // Redirige a la URL proporcionada
-  };
-
   return (
     <div className="notifications-container">
       <IconButton aria-describedby={id} onClick={handleClick}>
@@ -80,7 +75,6 @@ const Notifications = () => {
                 className={`notification-list-item ${notification.leido ? 'notification-read' : 'notification-unread'}`} 
                 onMouseEnter={(e) => e.currentTarget.classList.add('notification-hover')}
                 onMouseLeave={(e) => e.currentTarget.classList.remove('notification-hover')}
-                onClick={() => handleNotificationClick(notification.url)}
                 style={{ cursor: 'pointer' }}
               >
                 <ListItemText 
@@ -100,18 +94,6 @@ const Notifications = () => {
                     </>
                   }
                 />
-                {!notification.leido && (
-                  <div className="notification-actions">
-                    <Tooltip title="Marcar como leído" arrow>
-                      <IconButton onClick={(e) => {
-                        e.stopPropagation();
-                        markAsRead(notification.id);
-                      }}>
-                        <DraftsIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </div>
-                )}
               </ListItem>
             ))
           )}
