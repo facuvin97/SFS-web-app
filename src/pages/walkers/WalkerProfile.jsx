@@ -292,7 +292,8 @@ const WalkerProfile = () => {
                     alt={`Foto ${index + 1}`}
                     style={{ display: 'block' }}
                   />
-                  <div
+                  {userLog.id == walker.id ? 
+                  <div 
                     onClick={() => handleDeleteImageClick(foto.url)} // Abre el modal con la URL seleccionada
                     style={{
                       position: 'absolute',
@@ -305,7 +306,7 @@ const WalkerProfile = () => {
                     }}
                   >
                     <DeleteIcon style={{ color: 'white', fontSize: '15px' }} />
-                  </div>
+                  </div>: null}
                 </div>
               </Grid>
             );
