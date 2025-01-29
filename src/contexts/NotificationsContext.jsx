@@ -2,6 +2,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useUser } from './UserLogContext';
 import { useNavigate } from 'react-router-dom';
+import { useWebSocket } from '../contexts/WebSocketContext';
 
 const NotificationsContext = createContext();
 
@@ -12,6 +13,21 @@ export const NotificationsProvider = ({ children }) => {
   const { userLog } = useUser();
   const token = localStorage.getItem('userToken');
   const navigate = useNavigate();
+  const socket = useWebSocket();
+
+  useEffect(() => {
+    const agregarNotification = async (notification) => {
+      if (notification.userId !== userLog.id) return;
+      setNotifications((prevNotifications) => [ notification,...prevNotifications ]);
+    };
+    // Vinculamos el evento del socket dentro del useEffect
+    if (!socket) return;
+    socket.on('notification', agregarNotification);
+
+    // Cleanup para eliminar el evento cuando se desmonte el componente o cambie socket
+    return () => socket.off('notification', agregarNotification);
+  }, [socket]);
+
   
   // Función para cargar notificaciones del usuario
   const loadNotifications = async () => {

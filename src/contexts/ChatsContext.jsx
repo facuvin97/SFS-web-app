@@ -193,7 +193,7 @@ useEffect(() => {
   
     setUsersChats((prevUsersChats) => {
       const updatedChats = [...prevUsersChats]; // Crear una copia de los chats existentes
-      const orderedChats = updatedChats.sort((b, a) => new Date(a.lastMessage.createdAt) - new Date(b.lastMessage.createdAt));
+      const orderedChats = updatedChats.sort((b, a) => new Date(a.lastMessage?.createdAt) - new Date(b.lastMessage?.createdAt));
       return orderedChats; // Actualiza el estado con los chats ordenados
     });
   };
