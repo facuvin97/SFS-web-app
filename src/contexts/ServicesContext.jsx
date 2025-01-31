@@ -86,34 +86,39 @@ export const ConfirmedServicesProvider = ({ children }) => {
 
 
       // Obtengo solo los servicios concretados
+      console.log('data.body', data.body);
       const serviciosConcretados = data.body.filter(service => {
-        const serviceDate = new Date(service.fecha); // Convierte service.fecha a un objeto Date
+        // Convertimos la fecha del servicio y ajustamos la diferencia horaria
+        const serviceDate = new Date(service.fecha);
         serviceDate.setHours(serviceDate.getHours() + 3);
-
-        // Verifica si el servicio está aceptado y si la fecha es igual o menor a hoy
-        if (service.aceptado && serviceDate <= today) {
-          // Si la fecha es hoy, verifica si service.Turn.hora_fin es menor a la hora actual
-          if (isSameDay(serviceDate, today) && service.Turn.hora_fin) {
-    
-            const horaActual = new Date(); // Hora actual 
-            const horaFinString = `1970-01-01T${service.Turn.hora_fin}`;
-            const horaFin = new Date(horaFinString);
-            horaFin.setHours(horaFin.getHours() + 3);
-            horaFin.setFullYear(horaActual.getFullYear());
-            horaFin.setMonth(horaActual.getMonth());
-            horaFin.setDate(horaActual.getDate());
-
-            // Compara la hora especificada (horaFin) con la hora actual (horaActual)
-            if (horaFin <= horaActual) {
-              return true; // Si la hora final es antes o igual a la hora actual, el servicio está concretado
-            }
-          } else {
-            return true; // Si no es hoy, el servicio está concretado sin importar la hora
-          }
+      
+        // Validamos si el servicio fue aceptado y la fecha es hoy o pasada
+        if (!service.aceptado || serviceDate > today) {
+          return false;
         }
-        
-        return false; // Si no está aceptado o la fecha es futura, el servicio no está concretado
+      
+        // Si el servicio ya está finalizado, no es necesario seguir validando
+        if (service.finalizado) {
+          return true;
+        }
+      
+        // Si el servicio es hoy y tiene hora de finalización, la comparamos con la hora actual
+        if (isSameDay(serviceDate, today) && service.Turn?.hora_fin) {
+          const horaActual = new Date();
+          const horaFin = new Date(`1970-01-01T${service.Turn.hora_fin}`);
+          
+          // Ajustamos la hora fin a hoy y sumamos la diferencia horaria
+          horaFin.setHours(horaFin.getHours() + 3);
+          horaFin.setFullYear(horaActual.getFullYear(), horaActual.getMonth(), horaActual.getDate());
+      
+          return horaFin <= horaActual; // Si la hora de finalización ya pasó, el servicio está concretado
+        }
+      
+        // Si no es hoy, el servicio está concretado sin importar la hora
+        return true;
       });
+      
+      
 
       // Ordena los servicios concretados por fecha, del más reciente al más antiguo
       serviciosConcretados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
