@@ -13,6 +13,7 @@ function UnpaidBillsList() {
   const navigate = useNavigate(); // Hook para navegar entre rutas
   const token = localStorage.getItem('userToken');
 
+
   useEffect(() => {
     // Si no hay token, redirigir al inicio 
     if (!token) {
@@ -32,13 +33,18 @@ function UnpaidBillsList() {
         Facturas
       </Typography>
       <List>
-        {unpaidBills.map((bill) => (
+        {unpaidBills.map((bill) => {
+            const today =new Date(bill.fecha);
+
+            today.setHours(today.getHours() +3);
+            const fecha= today.toISOString().split('T')[0];
+          return(
           <React.Fragment key={bill.id}>
             <ButtonBase onClick={() => handleBillClick(bill)}>
               {/* Mostrar el ID de la factura y la fecha en la lista */}
               <ListItemText
                 primary={`Factura ID: ${bill.id}`}
-                secondary={`Fecha: ${new Date(bill.fecha).toLocaleDateString()} - Monto: $${bill.monto}`}
+                secondary={`Fecha: ${fecha} - Monto: $${bill.monto}`}
               />              
             </ButtonBase>
             {bill.pendiente ? (<ListItemText
@@ -48,7 +54,7 @@ function UnpaidBillsList() {
             />}
             <Divider /> {/* Separador entre elementos de la lista */}
           </React.Fragment>
-        ))}
+        )})}
       </List>
     </div>
   );

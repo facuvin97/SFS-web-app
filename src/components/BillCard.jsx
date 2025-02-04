@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { te } from 'date-fns/locale';
 
 
 function BillCard() {
@@ -15,6 +16,11 @@ function BillCard() {
   const [mercadopagoDisponible, setMercadopagoDisponible] = useState(null); // Estado para mercadopagoDisponible
   const token = localStorage.getItem('userToken')
   const navigate = useNavigate()
+  const [efectivoDisponible, setEfectivoDisponible] = useState(null); // Estado para efectivoDisponible
+  const today =new Date(billToPay.fecha);
+
+  today.setHours(today.getHours() +3);
+  const fecha= today.toISOString().split('T')[0];
 
   useEffect(() => {
     // Si no hay token, redirigir al inicio
@@ -68,10 +74,37 @@ function BillCard() {
       }
 
       const data = await response.json();
-
+      console.log('data',data);
       return data.body;
     } catch (error) {
       console.error('Failed to fetch walker data:', error);
+    }
+  };
+
+  const handlePendingPayment = async () => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/v1/bills/${billToPay.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`          
+        },
+        body: JSON.stringify({
+          pagado: false,
+          pendiente: true
+        })
+      });   
+      const data = await response.json();
+      
+      console.log('data',data);
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      navigate(-1);
+    } catch (error) {
+      console.error('Failed to fetch payment data:', error);
     }
   };
 
@@ -79,10 +112,12 @@ function BillCard() {
   useEffect(() => {
     async function fetchData() {
       if (billToPay) {
-        const mercadopago = await verificarMercadoPago();
-        setMercadopagoDisponible(mercadopago); // Actualizar el estado
+        const walker = await verificarMercadoPago();
+        setMercadopagoDisponible(walker.mercadopago); // Actualizar el estado
+        setEfectivoDisponible(walker.efectivo); // Actualizar el estado
+        console.log('walker',walker);
 
-        if (mercadopago) {
+        if (walker.mercadopago) {
           fetchPaymentData();
         }
       }
@@ -100,24 +135,32 @@ function BillCard() {
           Factura ID: {billToPay.id}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          <strong>Fecha:</strong> {new Date(billToPay.fecha).toLocaleDateString()}
+          <strong>Fecha:</strong> {fecha}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           <strong>Monto: $</strong> {billToPay.monto}
         </Typography>
-        {billToPay.Service.comenzado ? 
-        <>
-          {preferenceId && mercadopagoDisponible && <Wallet initialization={{ preferenceId: preferenceId }} />}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={null}
-            sx={{ marginTop: 2 }}
-          >
-            Pagar en efectivo
-          </Button>
-        </>
-        : <Tooltip title='El pago sera habilitado cuando el servicio este en curso.' arrow>
+        {billToPay.Service.comenzado ? (
+          !billToPay.pendiente ? (
+            <>
+              {preferenceId && mercadopagoDisponible && <Wallet initialization={{ preferenceId: preferenceId }} />}
+              {efectivoDisponible && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handlePendingPayment}
+                  sx={{ marginTop: 2 }}
+                >
+                  Pagar en efectivo
+                </Button>
+              )}
+            </>
+          ) : <Typography variant="body2" color="text.secondary" marginTop={3}>
+            <strong>El pago sera confirmado por el paseador <br />
+               al momento de abonar el servicio.</strong>
+              </Typography>
+        ) : (
+          <Tooltip title="El pago será habilitado cuando el servicio esté en curso." arrow>
             <span>
               <Button
                 variant="contained"
@@ -129,7 +172,9 @@ function BillCard() {
                 Pagar
               </Button>
             </span>
-          </Tooltip>}
+          </Tooltip>
+        )}
+
       </CardContent>
     </Card>
   );
