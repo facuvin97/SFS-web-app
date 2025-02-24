@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function DeleteTurn({ turnId }) {
   const [mensaje, setMensaje] = useState(null);
   const navigate = useNavigate();
@@ -19,7 +21,7 @@ function DeleteTurn({ turnId }) {
         return navigate('/')
 
       }
-      const response = await fetch(`http://localhost:3001/api/v1/turns/${turnId}`, {
+      const response = await fetch(`${baseUrl}/turns/${turnId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

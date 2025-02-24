@@ -14,6 +14,8 @@ import DeleteUser from '../users/DeleteUser';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const WalkerProfile = () => {
   const { walkerId } = useParams();
   const navigate = useNavigate();
@@ -42,7 +44,7 @@ const WalkerProfile = () => {
     const fetchWalker = async () => {
       try {
 
-        const response = await fetch(`http://localhost:3001/api/v1/walkers/${walkerId}`, { 
+        const response = await fetch(`${baseUrl}/walkers/${walkerId}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 
@@ -53,7 +55,7 @@ const WalkerProfile = () => {
         const data = await response.json();
         setWalker(data.body);
 
-        const turnsResponse = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`, { 
+        const turnsResponse = await fetch(`${baseUrl}/turns/walker/${walkerId}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 
@@ -66,7 +68,7 @@ const WalkerProfile = () => {
 
         if(data.body.fotos){
           const images = await Promise.all(data.body.fotos.map(async (foto) => {
-            const imageResponse = await fetch(`http://localhost:3001/api/v1/image/walkers/${foto.url}`, { 
+            const imageResponse = await fetch(`${baseUrl}/image/walkers/${foto.url}`, { 
               headers: { 
                 'Authorization': `Bearer ${token}` 
               } 
@@ -145,7 +147,7 @@ const WalkerProfile = () => {
       console.log(`Eliminar imagen con URL: ${selectedImage}`);
     
     // Eliminar la imagen seleccionada llamada a la api
-    const response = await fetch(`http://localhost:3001/api/v1/image/${userLog.id}`, {
+    const response = await fetch(`${baseUrl}/image/${userLog.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

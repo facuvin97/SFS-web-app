@@ -4,7 +4,7 @@ import { useUser } from './UserLogContext';
 import{useWebSocket} from './WebSocketContext'
 import { useNavigate } from 'react-router-dom';
 
-
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const WalkerTurnsContext = createContext();
 
 export const useWalkerTurnsContext = () => useContext(WalkerTurnsContext);
@@ -22,7 +22,7 @@ export const WalkerTurnsProvider = ({ children }) => {
       if(!token) {
         return navigate('/');
       }
-      const turnsResponse = await fetch(`http://localhost:3001/api/v1/turns/walker/${userLog.id}`,{ 
+      const turnsResponse = await fetch(`${baseUrl}/turns/walker/${userLog.id}`,{ 
         headers: { 
           'Authorization': `Bearer ${token}` 
         }, 

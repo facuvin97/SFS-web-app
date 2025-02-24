@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUnpaidBillsContext } from '../../contexts/BillContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 
 const PaymentPending = () => {
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ const PaymentPending = () => {
         return;
       }
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/bills/${billToPay.id}`, {
+      const response = await fetch(`${baseUrl}/bills/${billToPay.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

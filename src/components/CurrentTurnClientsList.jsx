@@ -3,6 +3,8 @@ import { Table,TableBody,TableCell,TableContainer, TableHead,TableRow, Paper, Bu
 import { CheckCircle, RadioButtonUnchecked } from '@mui/icons-material'
 import { useLocation, useNavigate } from 'react-router-dom';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 export default function CurrentTurnClientsList() {
   const [services, setServices] = useState([])
   const [loading, setLoading] = useState(true);
@@ -47,7 +49,7 @@ export default function CurrentTurnClientsList() {
   const toggleServiceStatus = async (id, comenzado) => {
     if (!comenzado) { // cambiar el estado a comenzado
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/services/started/${id}`, {
+        const response = await fetch(`${baseUrl}/services/started/${id}`, {
           method: 'PUT',
           headers: { 
               'Authorization': `Bearer ${token}` 
@@ -70,7 +72,7 @@ export default function CurrentTurnClientsList() {
       }
     } else { //cambiar el estado a finalizado
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/services/finished/${id}`, {
+        const response = await fetch(`${baseUrl}/services/finished/${id}`, {
           method: 'PUT',
           headers: { 
             'Authorization': `Bearer ${token}` 
@@ -101,7 +103,7 @@ export default function CurrentTurnClientsList() {
     async function fetchData() {
       try {
         // Cargo los servicios del turno actual
-        const response = await fetch(`http://localhost:3001/api/v1/services/turn/today/${turn.id}/${fecha}`, { 
+        const response = await fetch(`${baseUrl}/services/turn/today/${turn.id}/${fecha}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 

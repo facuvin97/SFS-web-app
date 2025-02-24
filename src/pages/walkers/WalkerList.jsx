@@ -12,6 +12,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 
 function WalkersList() {
   const [walkers, setWalkers] = useState([]);
@@ -82,13 +84,14 @@ function WalkersList() {
       .catch((error) => console.error("Error cargando barrios.geojson:", error));
   }, []);
 
+  // Carga los datos de los paseadores
   useEffect(() => {
     const fetchWalkers = async () => {
       try {
         if(!token){
           return navigate('/');
         }
-        const response = await fetch(`http://localhost:3001/api/v1/walkers`, { 
+        const response = await fetch(`${baseUrl}/walkers`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 
@@ -97,7 +100,10 @@ function WalkersList() {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setWalkers(data.body);
+        console.log('data.body en turn', data);
+        //filtra los paseadores que no tienen turnos
+        const filteredWalkers = data.body.filter((walker) => walker.Turns.length > 0);
+        setWalkers(filteredWalkers);
       } catch (err) {
         setError(err.message);
       } finally {

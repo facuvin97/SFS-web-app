@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Switch, Button, Typography, Box } from '@mui/material';
 import { useUser } from '../../contexts/UserLogContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const mpBaseUrl = import.meta.env.VITE_API_MP_BASE_URL;
+const mpClientId = import.meta.env.VITE_API_MP_CLIENT_ID;
+const mpRedirectUri = import.meta.env.VITE_API_MP_REDIRECT_URI;
+
 const PaymentMethodsConfig = () => {
   const { userLog, setUserLog } = useUser();
   const [efectivo, setEfectivo] = useState(userLog.efectivo || false);
@@ -24,7 +29,7 @@ const PaymentMethodsConfig = () => {
     const fetchWalker = async () => {
       try {
 
-        const response = await fetch(`http://localhost:3001/api/v1/walkers/${userLog.id}`, { 
+        const response = await fetch(`${baseUrl}/walkers/${userLog.id}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 
@@ -64,7 +69,7 @@ const PaymentMethodsConfig = () => {
 
     try {
 
-      const response = await fetch(`http://localhost:3001/api/v1/payments/manage/${userLog.id}`, {
+      const response = await fetch(`${baseUrl}/payments/manage/${userLog.id}`, {
         method: 'PUT',
         headers: {
            'Content-Type': 'application/json',
@@ -116,7 +121,7 @@ const PaymentMethodsConfig = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => window.location.href = `https://auth.mercadopago.com.uy/authorization?client_id=8409884849533418&response_type=code&platform_id=mp&state=${userLog.nombre_usuario}&redirect_uri=https://c3aeb7e013c606.lhr.life/success-association`}
+            onClick={() => window.location.href = `${mpBaseUrl}client_id=${mpClientId}&response_type=code&platform_id=mp&state=${userLog.nombre_usuario}&redirect_uri=${mpRedirectUri}`}
           >
             Asociar Mercado Pago
           </Button>

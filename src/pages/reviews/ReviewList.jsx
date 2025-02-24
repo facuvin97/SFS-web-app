@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, Grid, Paper, Rating, CircularProgress, Button } from '@mui/material';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function ReviewList() {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
@@ -24,7 +26,7 @@ function ReviewList() {
     const fetchUser = async () => {
       try {
 
-        let response = await fetch(`http://localhost:3001/api/v1/walkers/${userId}`, { 
+        let response = await fetch(`${baseUrl}/walkers/${userId}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 
@@ -33,7 +35,7 @@ function ReviewList() {
     
         if (data.body === null) {
           console.log('Walker no encontrado, buscando en clientes...');
-          response = await fetch(`http://localhost:3001/api/v1/clients/body/${userId}`, { 
+          response = await fetch(`${baseUrl}/clients/body/${userId}`, { 
             headers: { 
               'Authorization': `Bearer ${token}` 
             } 
@@ -65,7 +67,7 @@ function ReviewList() {
         setLoading(true);
         setError('');
         
-        const response = await fetch(`http://localhost:3001/api/v1/review/receiver/${user.id}`, { 
+        const response = await fetch(`${baseUrl}/review/receiver/${user.id}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 

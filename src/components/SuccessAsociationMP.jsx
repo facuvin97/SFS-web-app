@@ -3,6 +3,8 @@ import { CircularProgress, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserLogContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const SuccessAsociationMP = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -19,7 +21,7 @@ const SuccessAsociationMP = () => {
 
   const successAsociation = async (code) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/walkers/mercadopago/${userLog.id}`, {
+      const response = await fetch(`${baseUrl}/walkers/mercadopago/${userLog.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

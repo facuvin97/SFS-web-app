@@ -3,6 +3,7 @@ import { useUser } from './UserLogContext';
 import { useWebSocket } from '../contexts/WebSocketContext';
 import { useNavigate } from 'react-router-dom';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const ChatsContext = createContext();
 
 export const useChatsContext = () => useContext(ChatsContext);
@@ -35,13 +36,13 @@ export const ChatsProvider = ({ children }) => {
         throw new Error("Usuario no autorizado")
       }
       if (userLog.tipo === 'walker') {
-         response = await fetch(`http://localhost:3001/api/v1/contacts/clients/${userLog.id}`, {
+         response = await fetch(`${baseUrl}/contacts/clients/${userLog.id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         });
       } else {
-         response = await fetch(`http://localhost:3001/api/v1/contacts/walkers/${userLog.id}`, {
+         response = await fetch(`${baseUrl}/contacts/walkers/${userLog.id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -62,7 +63,7 @@ export const ChatsProvider = ({ children }) => {
       if(!token) {
         return navigate('/');
       }
-      const response = await fetch(`http://localhost:3001/api/v1/unread/${userLog.id}`, {
+      const response = await fetch(`${baseUrl}/unread/${userLog.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -129,7 +130,7 @@ useEffect(() => {
     if (newMessage.senderId === userLog.id) return; // No se procesa el mensaje de mi mismo
 
     // me traigo la info del mensaje nuevo desde la api para tener los datos completos
-    const response = await fetch(`http://localhost:3001/api/v1/messages/single/${newMessage.id}`, {
+    const response = await fetch(`${baseUrl}/messages/single/${newMessage.id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -156,7 +157,7 @@ useEffect(() => {
       let user;
 
       // hago un fetch para obtener el usuario que envia con el senderId
-      response = await fetch(`http://localhost:3001/api/v1/clients/body/${newMessage.senderId}`, {
+      response = await fetch(`${baseUrl}/clients/body/${newMessage.senderId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -165,7 +166,7 @@ useEffect(() => {
       
       // si no es cliente, busco si es paseador
       if (!user.body) {
-        response = await fetch(`http://localhost:3001/api/v1/walkers/${newMessage.senderId}`, {
+        response = await fetch(`${baseUrl}/walkers/${newMessage.senderId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

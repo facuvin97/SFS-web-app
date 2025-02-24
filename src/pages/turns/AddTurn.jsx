@@ -3,6 +3,8 @@ import { TextField, Button, Grid, Checkbox, FormControlLabel, FormHelperText, Mo
 import { useNavigate } from 'react-router-dom';
 import SelectNeighborhood from '../../components/SelectZone';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function AddTurnForm({ userLog }) {
   const [dias, setDias] = useState([]);
   const [horaInicio, setHoraInicio] = useState('');
@@ -103,7 +105,7 @@ function AddTurnForm({ userLog }) {
         return navigate('/')
 
       }
-      const response = await fetch('http://localhost:3001/api/v1/turns', {
+      const response = await fetch(`${baseUrl}/turns`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

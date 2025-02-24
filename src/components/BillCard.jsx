@@ -6,7 +6,8 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { te } from 'date-fns/locale';
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 
 function BillCard() {
@@ -32,7 +33,7 @@ function BillCard() {
 
   const fetchPaymentData = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/v1/bills/pay", {
+      const response = await fetch(`${baseUrl}/bills/pay` , {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +62,7 @@ function BillCard() {
 
   const verificarMercadoPago = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/walkers/byBill/${billToPay.id}`, {
+      const response = await fetch(`${baseUrl}/walkers/byBill/${billToPay.id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +84,7 @@ function BillCard() {
 
   const handlePendingPayment = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/bills/${billToPay.id}`, {
+      const response = await fetch(`${baseUrl}/bills/${billToPay.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -3,6 +3,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useUser } from './UserLogContext';
 import { useNavigate } from 'react-router-dom';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const ConfirmedServicesContext = createContext();
 
 export const useConfirmedServicesContext = () => useContext(ConfirmedServicesContext);
@@ -36,11 +37,11 @@ export const ConfirmedServicesProvider = ({ children }) => {
       let response;
 
       if (userLog?.tipo === 'walker') {
-        response = await fetch(`http://localhost:3001/api/v1/services/walker/${userLog.id}`,
+        response = await fetch(`${baseUrl}/services/walker/${userLog.id}`,
           { headers: { 'Authorization': `Bearer ${token}` } 
         });
       } else if (userLog?.tipo === 'client') {
-        response = await fetch(`http://localhost:3001/api/v1/services/client/${userLog.id}`,
+        response = await fetch(`${baseUrl}/services/client/${userLog.id}`,
           { headers: { 'Authorization': `Bearer ${token}` } 
         });
       } else {
@@ -151,7 +152,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
           fecha: service.fecha
         }
       } else if (userLog?.tipo === 'client') {
-        const turnResponse = await fetch(`http://localhost:3001/api/v1/turns/${service.TurnId}`, {
+        const turnResponse = await fetch(`${baseUrl}/turns/${service.TurnId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -171,7 +172,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
 
       
       // Intenta eliminar el servicio
-      const deleteResponse = await fetch(`http://localhost:3001/api/v1/services/${service.id}`, {
+      const deleteResponse = await fetch(`${baseUrl}/services/${service.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -209,7 +210,7 @@ export const ConfirmedServicesProvider = ({ children }) => {
       }
       service.aceptado = true;
 
-      const response = await fetch(`http://localhost:3001/api/v1/services/${service.id}`, {
+      const response = await fetch(`${baseUrl}/services/${service.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

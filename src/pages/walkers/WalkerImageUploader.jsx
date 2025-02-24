@@ -6,6 +6,8 @@ import { Save } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { useUser } from '../../contexts/UserLogContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function WalkerImageUploader() { 
   const [image, setImage] = useState(null);
   const { walkerImages, setWalkerImages } = useWalkersImageContext(); // Obtiene setImageSrc del contexto
@@ -42,7 +44,7 @@ function WalkerImageUploader() {
         return navigate('/')
 
       }
-      const response = await fetch(`http://localhost:3001/api/v1/image/walker/single/${userLog.id}`, {
+      const response = await fetch(`${baseUrl}/image/walker/single/${userLog.id}`, {
         method: 'POST',
         body: formData,
         headers: {

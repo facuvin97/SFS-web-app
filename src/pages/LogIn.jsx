@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/LoginPage.css';
 import { useUser } from '../contexts/UserLogContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +15,7 @@ function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/v1/login', {
+      const response = await fetch(`${baseUrl}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

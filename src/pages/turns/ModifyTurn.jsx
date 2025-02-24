@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Grid, TextField, FormControlLabel, Checkbox, Button, FormHelperText, Modal, Box } from '@mui/material';
 import SelectNeighborhood from '../../components/SelectZone';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 function ModifyTurn() {
   const location = useLocation();
   const turn = location.state.turn;
@@ -114,7 +115,7 @@ function ModifyTurn() {
         return navigate('/')
 
       }
-      const response = await fetch(`http://localhost:3001/api/v1/turns/${turn.id}`, {
+      const response = await fetch(`${baseUrl}/turns/${turn.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

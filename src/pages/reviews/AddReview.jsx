@@ -4,6 +4,8 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useUser } from '../../contexts/UserLogContext';
 import { useConfirmedServicesContext } from '../../contexts/ServicesContext'
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 
 function AddReviewForm() {
   const [valoracion, setValoracion] = useState('');
@@ -65,7 +67,7 @@ function AddReviewForm() {
 
     try {
  
-      const response = await fetch('http://localhost:3001/api/v1/review', {
+      const response = await fetch(`${baseUrl}/review`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

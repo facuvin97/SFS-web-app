@@ -4,6 +4,7 @@ import { useUser } from './UserLogContext';
 import { useNavigate } from 'react-router-dom';
 import { useWebSocket } from '../contexts/WebSocketContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const NotificationsContext = createContext();
 
 export const useNotificationsContext = () => useContext(NotificationsContext);
@@ -35,7 +36,7 @@ export const NotificationsProvider = ({ children }) => {
       if(!token) {
         return navigate('/');
       }
-      const response = await fetch(`http://localhost:3001/api/v1/notifications/${userLog.id}`, {
+      const response = await fetch(`${baseUrl}/notifications/${userLog.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -66,7 +67,7 @@ export const NotificationsProvider = ({ children }) => {
       if(!token) {
         return navigate('/');
       }
-      const response = await fetch('http://localhost:3001/api/v1/notifications', {
+      const response = await fetch(`${baseUrl}/notifications`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +90,7 @@ export const NotificationsProvider = ({ children }) => {
     try {
       const notification = notifications.find((n) => n.id === notificationId);
       if (notification) {
-        const response = await fetch(`http://localhost:3001/api/v1/notifications/${notificationId}`, {
+        const response = await fetch(`${baseUrl}/notifications/${notificationId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const ClientImageContext = createContext();
 
 export const useClientImageContext = () => useContext(ClientImageContext);
@@ -16,7 +17,7 @@ export const ClientImageContextProvider = ({ children }) => {
           throw new Error('No hay token');
         }
         if (selectedUserId) {
-          const response = await fetch(`http://localhost:3001/api/v1/image/single/${selectedUserId}`, {
+          const response = await fetch(`${baseUrl}/image/single/${selectedUserId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           

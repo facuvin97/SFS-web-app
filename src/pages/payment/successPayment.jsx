@@ -3,6 +3,8 @@ import { CircularProgress, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useUnpaidBillsContext } from '../../contexts/BillContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const SuccessPayment = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ const SuccessPayment = () => {
   const successPay = async () => {
     try {
 
-      const response = await fetch(`http://localhost:3001/api/v1/bills/${billToPay.id}`, {
+      const response = await fetch(`${baseUrl}/bills/${billToPay.id}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',

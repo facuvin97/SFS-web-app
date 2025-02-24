@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function UserDetails({ userId }) {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,7 +23,7 @@ function UserDetails({ userId }) {
     const fetchUserData = async () => {
       try {
 
-        const response = await fetch(`http://localhost:3001/api/v1/clients/${userId}`, { 
+        const response = await fetch(`${baseUrl}/clients/${userId}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 

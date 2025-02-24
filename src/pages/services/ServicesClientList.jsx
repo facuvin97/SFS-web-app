@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { Tooltip } from '@mui/material';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function ServicesList({ clientId }) {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +30,7 @@ function ServicesList({ clientId }) {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/services/client/${clientId}`, { 
+        const response = await fetch(`${baseUrl}/services/client/${clientId}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 
@@ -52,7 +54,7 @@ function ServicesList({ clientId }) {
 
   const handleDeleteService = async (serviceId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/services/${serviceId}`, {
+      const response = await fetch(`${baseUrl}/services/${serviceId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useUser } from './UserLogContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const WalkersImageContext = createContext();
 
 export const useWalkersImageContext = () => useContext(WalkersImageContext);
@@ -18,7 +19,7 @@ export const WalkersImageContextProvider = ({ children }) => {
         if (!userLog || !token) {
           return;
         }
-        const response = await fetch('http://localhost:3001/api/v1/image/walkers', {
+        const response = await fetch(`${baseUrl}/image/walkers`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -27,7 +28,7 @@ export const WalkersImageContextProvider = ({ children }) => {
         if (response.ok) {
           const walkers = await response.json();
           const images = await Promise.all(walkers.map(async (walker) => {
-            const imageResponse = await fetch(`http://localhost:3001/api/v1/image/single/${walker.nombre_usuario}`, {
+            const imageResponse = await fetch(`${baseUrl}/image/single/${walker.nombre_usuario}`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
             
@@ -72,7 +73,7 @@ export const WalkersImageContextProvider = ({ children }) => {
       return walkerTurns[walkerId];
     }
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`, {
+      const response = await fetch(`${baseUrl}/turns/walker/${walkerId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {

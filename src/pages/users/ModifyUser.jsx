@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserLogContext'; 
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 
 function ModifyUser() {
   const { userLog, setUserLog } = useUser();
@@ -38,7 +40,7 @@ function ModifyUser() {
 
       let response;
       if (userLog.tipo == 'client') {
-        response = await fetch(`http://localhost:3001/api/v1/clients/${userData.id}`, {
+        response = await fetch(`${baseUrl}/clients/${userData.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -47,7 +49,7 @@ function ModifyUser() {
           body: JSON.stringify(userData)
         });
       } else {
-        response = await fetch(`http://localhost:3001/api/v1/walkers/${userData.id}`, {
+        response = await fetch(`${baseUrl}/walkers/${userData.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

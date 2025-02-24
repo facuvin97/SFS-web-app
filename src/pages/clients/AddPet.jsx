@@ -3,6 +3,8 @@ import { TextField, Button, Grid, FormHelperText, Modal, Box } from '@mui/materi
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserLogContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function AddPet() {
   const { userLog } = useUser();
   const [name, setName] = useState('');
@@ -57,7 +59,7 @@ function AddPet() {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/api/v1/pets', {
+      const response = await fetch(`${baseUrl}/pets`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

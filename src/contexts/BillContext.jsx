@@ -3,6 +3,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useUser } from './UserLogContext';
 import { useNavigate } from 'react-router-dom';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const UnpaidBillsContext = createContext();
 
 export const useUnpaidBillsContext = () => useContext(UnpaidBillsContext);
@@ -19,7 +20,7 @@ export const UnpaidBillsProvider = ({ children }) => {
       if (!token) {
         return navigate('/');
       }
-      const response = await fetch(`http://localhost:3001/api/v1/bills/client/${userLog.id}`, {
+      const response = await fetch(`${baseUrl}/bills/client/${userLog.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

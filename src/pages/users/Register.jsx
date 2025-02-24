@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../styles/AccountForm.css';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function Register() {
   const navigate = useNavigate();
   let { typeUser } = useParams();
@@ -96,7 +98,7 @@ function Register() {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/v1/${typeUser === 'client' ? 'clients' : 'walkers'}`,
+        `${baseUrl}/${typeUser === 'client' ? 'clients' : 'walkers'}`,
         {
           method: 'POST',
           headers: {

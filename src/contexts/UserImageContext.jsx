@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from './UserLogContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const UserImageContext = createContext();
 
 export const useUserImageContext = () => useContext(UserImageContext);
@@ -24,7 +25,7 @@ export const UserImageContextProvider = ({ children }) => {
         const userData = localStorage.getItem('userData');
         if (userData) {
           const user = JSON.parse(userData);
-          const response = await fetch(`http://localhost:3001/api/v1/image/single/${user.nombre_usuario}`, { 
+          const response = await fetch(`${baseUrl}/image/single/${user.nombre_usuario}`, { 
               headers: { 
                 'Authorization': `Bearer ${token}` 
               } 

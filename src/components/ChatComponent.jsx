@@ -20,6 +20,8 @@ const ChatComponent = () => {
   const messageContainerRef = useRef(null);
   const token = localStorage.getItem('userToken');
 
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     // Si no hay token, redirigir al inicio
     if (!token) {
@@ -67,7 +69,7 @@ const ChatComponent = () => {
 
     const cargarMensajes = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/messages/${userLog.id}/${receiver.id}`, { 
+        const response = await fetch(`${baseUrl}/messages/${userLog.id}/${receiver.id}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 

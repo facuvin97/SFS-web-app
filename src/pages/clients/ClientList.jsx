@@ -5,6 +5,8 @@ import Box from '@mui/material/Box';
 import { ClientImageContextProvider } from '../../contexts/ClientImageContext';
 import { useNavigate } from 'react-router-dom';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function ClientsList() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +24,7 @@ function ClientsList() {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/v1/clients`, { 
+        const response = await fetch(`${baseUrl}/clients`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 

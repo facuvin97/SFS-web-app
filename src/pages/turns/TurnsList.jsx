@@ -10,6 +10,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import {Tooltip } from '@mui/material';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function TurnsList({ walkerId }) {
   const [turns, setTurns] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +33,7 @@ function TurnsList({ walkerId }) {
           return navigate('/')
 
         }
-        const response = await fetch(`http://localhost:3001/api/v1/turns/walker/${walkerId}`, { 
+        const response = await fetch(`${baseUrl}/turns/walker/${walkerId}`, { 
           headers: { 
             'Authorization': `Bearer ${token}` 
           } 
@@ -60,7 +62,7 @@ function TurnsList({ walkerId }) {
         return navigate('/')
 
       }
-      const response = await fetch(`http://localhost:3001/api/v1/turns/${turnId}`, {
+      const response = await fetch(`${baseUrl}/turns/${turnId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

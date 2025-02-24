@@ -6,6 +6,8 @@ import { Save } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { useUser } from '../contexts/UserLogContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function ProfileImageUploader() { 
   const [image, setImage] = useState(null);
   const { setImageSrc } = useUserImageContext(); // Obtiene setImageSrc del contexto
@@ -38,7 +40,7 @@ function ProfileImageUploader() {
   
     try {
 
-      const response = await fetch(`http://localhost:3001/api/v1/image/single/${userLog.nombre_usuario}`, {
+      const response = await fetch(`${baseUrl}/image/single/${userLog.nombre_usuario}`, {
         method: 'POST',
         body: formData,
         headers: {
@@ -54,7 +56,7 @@ function ProfileImageUploader() {
             const userData = localStorage.getItem('userData');
             if (userData) {
               const user = JSON.parse(userData);
-              const response = await fetch(`http://localhost:3001/api/v1/image/single/${user.nombre_usuario}`, { 
+              const response = await fetch(`${baseUrl}/image/single/${user.nombre_usuario}`, { 
                 headers: { 
                   'Authorization': `Bearer ${token}` 
                 } 

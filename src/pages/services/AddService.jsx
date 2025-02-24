@@ -7,6 +7,8 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { es } from 'date-fns/locale';
 import { useConfirmedServicesContext } from '../../contexts/ServicesContext';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function AddServiceForm({ userLog }) {
   const location = useLocation();
   const { turn } = location.state || {};
@@ -130,7 +132,7 @@ function AddServiceForm({ userLog }) {
     };
     try {
 
-      const response = await fetch('http://localhost:3001/api/v1/services', {
+      const response = await fetch(`${baseUrl}/services`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
