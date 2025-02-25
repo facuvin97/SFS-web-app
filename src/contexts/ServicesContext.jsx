@@ -54,18 +54,16 @@ export const ConfirmedServicesProvider = ({ children }) => {
       const data = await response.json();
 
       // filtro la lista de servicios pendientes 
-        const serviciosPendientes = data.body.filter(service => {
+      const serviciosPendientes = data.body.filter(service => {
         const serviceDate = new Date(service.fecha); // Convierte service.fecha a un objeto Date
         serviceDate.setHours(serviceDate.getHours() + 3);
-        
-
-        return (
-          !service.aceptado &&
-          serviceDate.getFullYear() >= today.getFullYear() &&
-          serviceDate.getMonth() >= today.getMonth() &&
-          serviceDate.getDate() >= today.getDate()
-        );     
-
+      
+        // Obtiene la fecha de hoy sin horas/minutos/segundos
+        const today = new Date();
+        today.setHours(today.getHours() + 3);
+        today.setHours(0, 0, 0, 0);
+      
+        return !service.aceptado && serviceDate >= today;
       });
 
       // cargo la lista de servicios pendientes
