@@ -60,7 +60,6 @@ export const ConfirmedServicesProvider = ({ children }) => {
       
         // Obtiene la fecha de hoy sin horas/minutos/segundos
         const today = new Date();
-        today.setHours(today.getHours() + 3);
         today.setHours(0, 0, 0, 0);
       
         return !service.aceptado && serviceDate >= today;
@@ -96,25 +95,22 @@ export const ConfirmedServicesProvider = ({ children }) => {
           return false;
         }
       
-        // Si el servicio ya está finalizado, no es necesario seguir validando
-        if (service.finalizado) {
-          return true;
-        }
+        return service.finalizado;
       
-        // Si el servicio es hoy y tiene hora de finalización, la comparamos con la hora actual
-        if (isSameDay(serviceDate, today) && service.Turn?.hora_fin) {
-          const horaActual = new Date();
-          const horaFin = new Date(`1970-01-01T${service.Turn.hora_fin}`);
+        // // Si el servicio es hoy y tiene hora de finalización, la comparamos con la hora actual
+        // if (isSameDay(serviceDate, today) && service.Turn?.hora_fin) {
+        //   const horaActual = new Date();
+        //   const horaFin = new Date(`1970-01-01T${service.Turn.hora_fin}`);
           
-          // Ajustamos la hora fin a hoy y sumamos la diferencia horaria
-          horaFin.setHours(horaFin.getHours() + 3);
-          horaFin.setFullYear(horaActual.getFullYear(), horaActual.getMonth(), horaActual.getDate());
+        //   // Ajustamos la hora fin a hoy y sumamos la diferencia horaria
+        //   horaFin.setHours(horaFin.getHours() + 3);
+        //   horaFin.setFullYear(horaActual.getFullYear(), horaActual.getMonth(), horaActual.getDate());
       
-          return horaFin <= horaActual; // Si la hora de finalización ya pasó, el servicio está concretado
-        }
+        //   return horaFin <= horaActual; // Si la hora de finalización ya pasó, el servicio está concretado
+        // }
       
-        // Si no es hoy, el servicio está concretado sin importar la hora
-        return true;
+        // // Si no es hoy, el servicio está concretado sin importar la hora
+        // return true;
       });
       
       
